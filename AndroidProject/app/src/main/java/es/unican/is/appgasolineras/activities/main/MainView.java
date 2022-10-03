@@ -22,7 +22,7 @@ import es.unican.is.appgasolineras.activities.info.InfoView;
 
 public class MainView extends AppCompatActivity implements IMainContract.View {
 
-    private MainPresenter presenter;
+    private IMainContract.Presenter presenter;
 
     /*
     Activity lifecycle methods
