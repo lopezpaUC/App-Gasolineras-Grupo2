@@ -27,7 +27,7 @@ public class Gasolinera implements Parcelable {
     @SerializedName("C.P.")                         private String cp;
     @SerializedName("Dirección")                    private String direccion;
     @SerializedName("Municipio")                    private String municipio;
-
+    @SerializedName("Horario")                      private String horario;
     @SerializedName("Precio Gasoleo A")             private String dieselA;
     @SerializedName("Precio Gasolina 95 E5")        private String normal95;  // 95 octanes
 
@@ -76,6 +76,14 @@ public class Gasolinera implements Parcelable {
         this.municipio = municipio;
     }
 
+    public String getHorario() {
+        return horario;
+    }
+
+    public void setHorario(String horario) {
+        this.horario = horario;
+    }
+
     public String getDieselA() {
         return dieselA;
     }
@@ -105,6 +113,7 @@ public class Gasolinera implements Parcelable {
         cp = in.readString();
         direccion = in.readString();
         municipio = in.readString();
+        horario = in.readString();
         dieselA = in.readString();
         normal95 = in.readString();
     }
@@ -133,6 +142,7 @@ public class Gasolinera implements Parcelable {
         dest.writeString(cp);
         dest.writeString(direccion);
         dest.writeString(municipio);
+        dest.writeString(horario);
         dest.writeString(dieselA);
         dest.writeString(normal95);
     }
