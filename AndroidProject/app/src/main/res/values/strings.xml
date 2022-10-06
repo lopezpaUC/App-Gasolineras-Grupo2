@@ -6,4 +6,7 @@
     <string name="info">Info</string>
     <string name="loadCorrect">Se han cargado %d gasolineras</string>
     <string name="loadError">Ha habido un error cargando las gasolineras</string>
+    <string name="prices">Precios</string>
+    <string name="schedule">Horario</string>
+    <string name="sumPrice">Precio Sumario</string>
 </resources>

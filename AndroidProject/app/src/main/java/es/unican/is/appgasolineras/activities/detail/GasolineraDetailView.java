@@ -3,14 +3,11 @@ package es.unican.is.appgasolineras.activities.detail;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import es.unican.is.appgasolineras.R;
-import es.unican.is.appgasolineras.activities.main.IMainContract;
-import es.unican.is.appgasolineras.activities.main.MainPresenter;
 import es.unican.is.appgasolineras.model.Gasolinera;
 
 public class GasolineraDetailView extends AppCompatActivity implements IGasolineraDetailContract.View {
@@ -21,6 +18,12 @@ public class GasolineraDetailView extends AppCompatActivity implements IGasoline
     private ImageView ivRotulo;
     private TextView tvRotulo;
     private TextView tvMunicipio;
+    private TextView tvDireccion;
+    private TextView tvCP;
+    private TextView tv95PrecioDet;
+    private TextView tvDieselAPrecioDet;
+    private TextView tvHorarioDet;
+    private TextView tvPrecioSumarioDet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +54,18 @@ public class GasolineraDetailView extends AppCompatActivity implements IGasoline
     public void init() {
         ivRotulo = findViewById(R.id.ivRotulo);
         tvRotulo = findViewById(R.id.tvRotulo);
+        tvDireccion = findViewById(R.id.tvDireccion);
         tvMunicipio = findViewById(R.id.tvMunicipio);
+        tvCP = findViewById(R.id.tvCP);
+        tv95PrecioDet = findViewById(R.id.tv95PrecioDet);
+        tvDieselAPrecioDet = findViewById(R.id.tvDieselAPrecioDet);
+        tvHorarioDet = findViewById(R.id.tvHorarioDet);
+        tvPrecioSumarioDet = findViewById(R.id.tvPrecioSumarioDet);
     }
 
     @Override
     public Gasolinera getSelectedGasolinera() {
-        Gasolinera gasolinera = getIntent().getExtras().getParcelable(INTENT_GASOLINERA);
-        return gasolinera;
+        return getIntent().getExtras().getParcelable(INTENT_GASOLINERA);
     }
 
     @Override
@@ -76,7 +84,36 @@ public class GasolineraDetailView extends AppCompatActivity implements IGasoline
     }
 
     @Override
+    public void showDirection(String direccion) {
+        tvDireccion.setText(direccion);
+    }
+
+    @Override
     public void showMunicipality(String municipio) {
         tvMunicipio.setText(municipio);
+    }
+
+    @Override
+    public void showCP(String cp) {
+        tvCP.setText(cp);
+    }
+
+    @Override
+    public void showPrice95(String precio) {
+        tv95PrecioDet.setText(precio);}
+
+    @Override
+    public void showPriceDieselA(String precio) {
+        tvDieselAPrecioDet.setText(precio);
+    }
+
+    @Override
+    public void showSchedule(String horario) {
+        tvHorarioDet.setText(horario);
+    }
+
+    @Override
+    public void showSummary(String sumario) {
+        tvPrecioSumarioDet.setText(sumario);
     }
 }
