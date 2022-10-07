@@ -32,7 +32,7 @@ public class Gasolinera implements Parcelable {
     @SerializedName("Precio Gasolina 95 E5")        private String normal95;  // 95 octanes
 
     public Gasolinera() {
-
+        id = "";
     }
 
     @NonNull
