@@ -146,4 +146,10 @@ public class Gasolinera implements Parcelable {
         dest.writeString(dieselA);
         dest.writeString(normal95);
     }
+
+    @Override
+    public String toString() {
+        return rotulo + cp + direccion + municipio + horario + dieselA
+                + normal95;
+    }
 }

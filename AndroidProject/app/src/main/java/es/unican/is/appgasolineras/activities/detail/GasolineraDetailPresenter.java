@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Locale;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
@@ -31,6 +32,7 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         String precioGasolinaStr = gasolinera.getNormal95();
         Double precioDiesel = 0.0;
         Double precioGasolina = 0.0;
+        Double sumario;
 
         NumberFormat formato = NumberFormat.getInstance(Locale.FRANCE);
 
@@ -48,12 +50,23 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
             precioGasolina = 0.0;
         }
 
-        Double sumario = (precioDiesel + precioGasolina * 2.0) / 3.0;
+        if (precioDiesel == 0.0) {
+            sumario = precioGasolina;
+        } else if(precioGasolina == 0.0) {
+            sumario = precioDiesel;
+        } else {
+            sumario = (precioDiesel + precioGasolina * 2.0) / 3.0;
+        }
+
+        if (sumario == 0.0) {
+            precioSumario = "-";
+        }
+
         precioSumario = String.format("%.3f", sumario);
     }
 
     private void loadGasolineraDetails() {
-        view.showSummary(precioSumario);
+        view.showSummary(precioSumario + " €/L");
         view.showName(checkValid(gasolinera.getRotulo()));
         view.showMunicipality(checkValid(gasolinera.getMunicipio()));
         view.showLogo(searchLogoID());
@@ -62,6 +75,12 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         view.showPrice95(checkValid(gasolinera.getNormal95()) + " €/L");
         view.showPriceDieselA(checkValid(gasolinera.getDieselA())  + " €/L");
         view.showSchedule(checkValid(gasolinera.getHorario()));
+
+        if(gasolinera.toString().equals(gasolinera.getRotulo())) {
+            //
+        }
+
+
     }
 
     private int searchLogoID() {
