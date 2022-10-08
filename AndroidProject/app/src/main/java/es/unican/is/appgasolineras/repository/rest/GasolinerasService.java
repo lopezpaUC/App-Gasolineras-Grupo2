@@ -21,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class GasolinerasService {
 
-    public static long TIMEOUT_SECONDS = 60L;
+    public static final long TIMEOUT_SECONDS = 60L;
 
     private static GasolinerasAPI api;
 
@@ -61,7 +61,10 @@ public class GasolinerasService {
         executor.shutdown();
         try {
             executor.awaitTermination(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {}
+        } catch (InterruptedException e) {
+            // Restore interrupted state...
+            Thread.currentThread().interrupt();
+        }
 
         // if there was some problem, response is null
         GasolinerasResponse response = runnable.response;

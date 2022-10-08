@@ -32,7 +32,7 @@ public class Gasolinera implements Parcelable {
     @SerializedName("Precio Gasolina 95 E5")        private String normal95;  // 95 octanes
 
     public Gasolinera() {
-
+        id = "";
     }
 
     @NonNull
@@ -145,5 +145,11 @@ public class Gasolinera implements Parcelable {
         dest.writeString(horario);
         dest.writeString(dieselA);
         dest.writeString(normal95);
+    }
+
+    @Override
+    public String toString() {
+        return rotulo + cp + direccion + municipio + horario + dieselA
+                + normal95;
     }
 }
