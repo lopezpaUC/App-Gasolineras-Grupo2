@@ -2,6 +2,9 @@ package es.unican.is.appgasolineras.activities.detail;
 
 import android.content.Context;
 
+import java.util.List;
+import java.util.Map;
+
 import es.unican.is.appgasolineras.model.Gasolinera;
 
 /**
@@ -32,58 +35,8 @@ public interface IGasolineraDetailContract {
         void init();
 
         /**
-         * Return Gas Station from the intent that triggered the activity
+         * Show info of tha Gas Station.
          */
-        Gasolinera getSelectedGasolinera();
-
-        /**
-         * Return context from the activity.
-         */
-        Context getContext();
-
-        /**
-         * Show logo image of the Gas Station.
-         */
-        void showLogo(int imageID);
-
-        /**
-         * Show name of the Gas Station.
-         */
-        void showName(String rotulo);
-
-        /**
-         * Show direction of the Gas Station.
-         */
-        void showDirection(String direccion);
-
-        /**
-         * Show name of the Gas Station's municipality.
-         */
-        void showMunicipality(String municipio);
-
-        /**
-         * Show CP of the Gas Station's municipality.
-         */
-        void showCP(String cp);
-
-        /**
-         * Show Gasolina95's price.
-         */
-        void showPrice95(String precio);
-
-        /**
-         * Show DieselA's price.
-         */
-        void showPriceDieselA(String precio);
-
-        /**
-         * Show schedule of the Gas Station.
-         */
-        void showSchedule(String horario);
-
-        /**
-         * Show summary of the Gas Station.
-         */
-        void showSummary(String sumario);
+        void showInfo(Map<String, String> info);
     }
 }

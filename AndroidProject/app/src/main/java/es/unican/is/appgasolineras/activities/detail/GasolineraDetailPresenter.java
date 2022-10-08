@@ -6,7 +6,9 @@ import android.widget.Toast;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 
@@ -14,20 +16,26 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
 
     private final IGasolineraDetailContract.View view;
     private Gasolinera gasolinera;
-    private String precioSumario;
+    private String precioSumarioStr;
 
-    public GasolineraDetailPresenter(IGasolineraDetailContract.View view) {
+    public GasolineraDetailPresenter(IGasolineraDetailContract.View view, Gasolinera gasolinera) {
         this.view = view;
+        this.gasolinera = gasolinera;
     }
 
     @Override
     public void init() {
-        gasolinera = view.getSelectedGasolinera();
-        calculateSummaryPrice();
+        double precioSumario = calculateSummaryPrice();
+
+        if (precioSumario == 0.0) {
+            precioSumarioStr = "-";
+        }
+        precioSumarioStr = String.format("%.3f", precioSumario);
+
         loadGasolineraDetails();
     }
 
-    private void calculateSummaryPrice() {
+    private double calculateSummaryPrice() {
         String precioDieselStr = gasolinera.getDieselA();
         String precioGasolinaStr = gasolinera.getNormal95();
         Double precioDiesel = 0.0;
@@ -58,43 +66,21 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
             sumario = (precioDiesel + precioGasolina * 2.0) / 3.0;
         }
 
-        if (sumario == 0.0) {
-            precioSumario = "-";
-        }
-
-        precioSumario = String.format("%.3f", sumario);
+        return sumario;
     }
 
     private void loadGasolineraDetails() {
-        view.showSummary(precioSumario + " €/L");
-        view.showName(checkValid(gasolinera.getRotulo()));
-        view.showMunicipality(checkValid(gasolinera.getMunicipio()));
-        view.showLogo(searchLogoID());
-        view.showDirection(checkValid(gasolinera.getDireccion()));
-        view.showCP(checkValid(gasolinera.getCp()));
-        view.showPrice95(checkValid(gasolinera.getNormal95()) + " €/L");
-        view.showPriceDieselA(checkValid(gasolinera.getDieselA())  + " €/L");
-        view.showSchedule(checkValid(gasolinera.getHorario()));
+        Map<String, String> info = new HashMap<>();
+        info.put("summary", precioSumarioStr + " €/L");
+        info.put("label", checkValid(gasolinera.getRotulo()));
+        info.put("municipality", checkValid(gasolinera.getMunicipio()));
+        info.put("direction", checkValid(gasolinera.getDireccion()));
+        info.put("cp", checkValid(gasolinera.getCp()));
+        info.put("price95", checkValid(gasolinera.getNormal95()) + " €/L");
+        info.put("priceDieselA", checkValid(gasolinera.getDieselA()) + " €/L");
+        info.put("schedule", checkValid(gasolinera.getHorario()));
 
-        if(gasolinera.toString().equals(gasolinera.getRotulo())) {
-            //
-        }
-
-
-    }
-
-    private int searchLogoID() {
-        Context context = view.getContext();
-        String rotulo = gasolinera.getRotulo().toLowerCase(Locale.ROOT);
-
-        int imageID = context.getResources().getIdentifier(rotulo, "drawable",
-                context.getPackageName());
-
-        if (imageID == 0) {
-            imageID = context.getResources().getIdentifier("generic", "drawable",
-                    context.getPackageName());
-        }
-        return imageID;
+        view.showInfo(info);
     }
 
     private String checkValid(String texto) {
@@ -103,5 +89,9 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
             correccion = "-";
         }
         return correccion;
+    }
+
+    public String getPrecioSumario() {
+        return precioSumarioStr;
     }
 }

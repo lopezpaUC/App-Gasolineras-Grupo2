@@ -7,12 +7,17 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Locale;
+import java.util.Map;
+
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.model.Gasolinera;
 
 public class GasolineraDetailView extends AppCompatActivity implements IGasolineraDetailContract.View {
 
     public static final String INTENT_GASOLINERA = "INTENT_GASOLINERA";
+    private static final int NO_ECONTRADO = 0;
+
     private IGasolineraDetailContract.Presenter presenter;
 
     private ImageView ivRotulo;
@@ -30,24 +35,10 @@ public class GasolineraDetailView extends AppCompatActivity implements IGasoline
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gasolinera_detail_view);
 
-        presenter = new GasolineraDetailPresenter(this);
+        presenter = new GasolineraDetailPresenter(this,
+                getIntent().getExtras().getParcelable(INTENT_GASOLINERA));
         this.init();
         presenter.init();
-        /** Link to view elements
-        ImageView ivRotulo = findViewById(R.id.ivRotulo);
-        TextView tvRotulo = findViewById(R.id.tvRotulo);
-        TextView tvMunicipio = findViewById(R.id.tvMunicipio);
-
-        // Get Gas Station from the intent that triggered this activity
-        Gasolinera gasolinera = getIntent().getExtras().getParcelable(INTENT_GASOLINERA);
-
-        // Set logo
-        int imageID = getResources().getIdentifier("generic", "drawable", getPackageName());
-        ivRotulo.setImageResource(imageID);
-
-        // Set Texts
-        tvRotulo.setText(gasolinera.getRotulo());
-        tvMunicipio.setText(gasolinera.getMunicipio());*/
     }
 
     @Override
@@ -64,56 +55,30 @@ public class GasolineraDetailView extends AppCompatActivity implements IGasoline
     }
 
     @Override
-    public Gasolinera getSelectedGasolinera() {
-        return getIntent().getExtras().getParcelable(INTENT_GASOLINERA);
+    public void showInfo(Map<String, String> info) {
+        // Muestra los campos de texto
+        String label = info.get("label");
+        tvPrecioSumarioDet.setText(info.get("summary"));
+        tvRotulo.setText(label);
+        tvDireccion.setText(info.get("direction"));
+        tvMunicipio.setText(info.get("municipality"));
+        tvCP.setText(info.get("cp"));
+        tv95PrecioDet.setText(info.get("price95"));
+        tvDieselAPrecioDet.setText(info.get("priceDieselA"));
+        tvHorarioDet.setText(info.get("schedule"));
+
+        // Muestra el logotipo de la gasolinera
+        ivRotulo.setImageResource(loadLogoID(label));
     }
 
-    @Override
-    public Context getContext(){
-        return this;
-    }
+    private int loadLogoID(String label) {
+        int imageID = getResources().getIdentifier(label.toLowerCase(Locale.ROOT),
+                "drawable", getPackageName());
 
-    @Override
-    public void showLogo(int imageID) {
-        ivRotulo.setImageResource(imageID);
-    }
-
-    @Override
-    public void showName(String rotulo) {
-        tvRotulo.setText(rotulo);
-    }
-
-    @Override
-    public void showDirection(String direccion) {
-        tvDireccion.setText(direccion);
-    }
-
-    @Override
-    public void showMunicipality(String municipio) {
-        tvMunicipio.setText(municipio);
-    }
-
-    @Override
-    public void showCP(String cp) {
-        tvCP.setText(cp);
-    }
-
-    @Override
-    public void showPrice95(String precio) {
-        tv95PrecioDet.setText(precio);}
-
-    @Override
-    public void showPriceDieselA(String precio) {
-        tvDieselAPrecioDet.setText(precio);
-    }
-
-    @Override
-    public void showSchedule(String horario) {
-        tvHorarioDet.setText(horario);
-    }
-
-    @Override
-    public void showSummary(String sumario) {
-        tvPrecioSumarioDet.setText(sumario);
+        if (imageID == NO_ECONTRADO) {
+            imageID = getResources().getIdentifier("generic", "drawable",
+                    getPackageName());
+        }
+        return imageID;
     }
 }
