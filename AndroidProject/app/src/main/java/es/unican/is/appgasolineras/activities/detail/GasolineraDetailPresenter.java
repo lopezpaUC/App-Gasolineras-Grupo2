@@ -27,8 +27,9 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
 
         if (precioSumario <= 0.0) {
             precioSumarioStr = "-";
+        } else {
+            precioSumarioStr = String.format(Locale.FRANCE, "%.3f", precioSumario);
         }
-        precioSumarioStr = String.format(Locale.FRANCE, "%.3f", precioSumario);
 
         loadGasolineraDetails();
     }
