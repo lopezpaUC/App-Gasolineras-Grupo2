@@ -2,15 +2,18 @@ package es.unican.is.appgasolineras.activities.detail;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Locale;
 import java.util.Map;
 
 import es.unican.is.appgasolineras.R;
+import es.unican.is.appgasolineras.activities.main.MainView;
 import es.unican.is.appgasolineras.model.Gasolinera;
 
 public class GasolineraDetailView extends AppCompatActivity implements IGasolineraDetailContract.View {
@@ -68,7 +71,32 @@ public class GasolineraDetailView extends AppCompatActivity implements IGasoline
         tvHorarioDet.setText(info.get("schedule"));
 
         // Muestra el logotipo de la gasolinera
+        if (label == null) {
+            label = "generic";
+        }
         ivRotulo.setImageResource(loadLogoID(label));
+    }
+
+    @Override
+    public void showLoadError() {
+        String textTitle = getResources().getString(R.string.error);
+        String textMessage = getResources().getString(R.string.no_detail_info);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(textMessage);
+        builder.setTitle(textTitle);
+        builder.setIcon(android.R.drawable.ic_menu_info_details);
+        builder.setPositiveButton(getResources().getString(R.string.accept),
+                (dialog, id) -> presenter.onAcceptClicked());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    @Override
+    public void openMenuView() {
+        Intent intent = new Intent(this, MainView.class);
+        startActivity(intent);
     }
 
     private int loadLogoID(String label) {

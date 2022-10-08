@@ -21,8 +21,9 @@ public interface IGasolineraDetailContract {
          * Initialization method
          */
         void init();
-    }
 
+        void onAcceptClicked();
+    }
 
     /**
     * A View for the Detail Activity must implement this functionality
@@ -38,5 +39,12 @@ public interface IGasolineraDetailContract {
          * Show info of tha Gas Station.
          */
         void showInfo(Map<String, String> info);
+
+        /**
+         * Show an alert informing that there was an error while loading the gas station's info.
+         */
+        void showLoadError();
+
+        void openMenuView();
     }
 }

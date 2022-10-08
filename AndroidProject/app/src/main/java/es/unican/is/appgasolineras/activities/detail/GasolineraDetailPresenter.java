@@ -1,11 +1,8 @@
 package es.unican.is.appgasolineras.activities.detail;
 
-import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -14,8 +11,9 @@ import es.unican.is.appgasolineras.model.Gasolinera;
 
 public class GasolineraDetailPresenter implements IGasolineraDetailContract.Presenter {
 
+    private static final double ERROR_CONVERSION = -1.0;
     private final IGasolineraDetailContract.View view;
-    private Gasolinera gasolinera;
+    private final Gasolinera gasolinera;
     private String precioSumarioStr;
 
     public GasolineraDetailPresenter(IGasolineraDetailContract.View view, Gasolinera gasolinera) {
@@ -27,10 +25,10 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
     public void init() {
         double precioSumario = calculateSummaryPrice();
 
-        if (precioSumario == 0.0) {
+        if (precioSumario <= 0.0) {
             precioSumarioStr = "-";
         }
-        precioSumarioStr = String.format("%.3f", precioSumario);
+        precioSumarioStr = String.format(Locale.FRANCE, "%.3f", precioSumario);
 
         loadGasolineraDetails();
     }
@@ -38,9 +36,9 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
     private double calculateSummaryPrice() {
         String precioDieselStr = gasolinera.getDieselA();
         String precioGasolinaStr = gasolinera.getNormal95();
-        Double precioDiesel = 0.0;
-        Double precioGasolina = 0.0;
-        Double sumario;
+        double precioDiesel;
+        double precioGasolina;
+        double sumario;
 
         NumberFormat formato = NumberFormat.getInstance(Locale.FRANCE);
 
@@ -48,19 +46,19 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
             Number numberDiesel = formato.parse(precioDieselStr);
             precioDiesel = numberDiesel.doubleValue();
         } catch (Exception e) {
-            precioDiesel = 0.0;
+            precioDiesel = ERROR_CONVERSION;
         }
 
         try {
             Number numberGasolina = formato.parse(precioGasolinaStr);
             precioGasolina = numberGasolina.doubleValue();
         } catch (Exception e) {
-            precioGasolina = 0.0;
+            precioGasolina = ERROR_CONVERSION;
         }
 
-        if (precioDiesel == 0.0) {
+        if (precioDiesel <= 0.0) {
             sumario = precioGasolina;
-        } else if(precioGasolina == 0.0) {
+        } else if(precioGasolina <= 0.0) {
             sumario = precioDiesel;
         } else {
             sumario = (precioDiesel + precioGasolina * 2.0) / 3.0;
@@ -69,23 +67,40 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         return sumario;
     }
 
-    private void loadGasolineraDetails() {
-        Map<String, String> info = new HashMap<>();
-        info.put("summary", precioSumarioStr + " €/L");
-        info.put("label", checkValid(gasolinera.getRotulo()));
-        info.put("municipality", checkValid(gasolinera.getMunicipio()));
-        info.put("direction", checkValid(gasolinera.getDireccion()));
-        info.put("cp", checkValid(gasolinera.getCp()));
-        info.put("price95", checkValid(gasolinera.getNormal95()) + " €/L");
-        info.put("priceDieselA", checkValid(gasolinera.getDieselA()) + " €/L");
-        info.put("schedule", checkValid(gasolinera.getHorario()));
+    @Override
+    public void onAcceptClicked() {
+            view.openMenuView();
+    }
 
-        view.showInfo(info);
+    private void loadGasolineraDetails() {
+        if (gasolinera.toString().equals(gasolinera.getRotulo())) {
+            view.showLoadError();
+        } else {
+            Map<String, String> info = new HashMap<>();
+            info.put("summary", precioSumarioStr + " €/L");
+            info.put("label", checkValid(gasolinera.getRotulo()));
+            info.put("municipality", checkValid(gasolinera.getMunicipio()));
+            info.put("direction", checkValid(gasolinera.getDireccion()));
+            info.put("cp", checkValid(gasolinera.getCp()));
+            info.put("price95", checkValidPrice(gasolinera.getNormal95()) + " €/L");
+            info.put("priceDieselA", checkValidPrice(gasolinera.getDieselA()) + " €/L");
+            info.put("schedule", checkValid(gasolinera.getHorario()));
+
+            view.showInfo(info);
+        }
     }
 
     private String checkValid(String texto) {
         String correccion = texto;
         if (texto.equals("")) {
+            correccion = "-";
+        }
+        return correccion;
+    }
+
+    private String checkValidPrice(String texto) {
+        String correccion = texto;
+        if (texto.contains("-") || texto.equals("")) {
             correccion = "-";
         }
         return correccion;
