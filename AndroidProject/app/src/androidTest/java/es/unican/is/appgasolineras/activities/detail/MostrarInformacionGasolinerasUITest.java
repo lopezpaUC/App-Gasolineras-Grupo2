@@ -1,4 +1,4 @@
-package es.unican.is.appgasolineras.activities.main;
+package es.unican.is.appgasolineras.activities.detail;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -17,10 +17,13 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import es.unican.is.appgasolineras.R;
+import es.unican.is.appgasolineras.activities.main.MainView;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 public class MostrarInformacionGasolinerasUITest {
 
+    private MainView mainView = new MainView();
+    private GasolineraDetailView detailView = new GasolineraDetailView();
     @BeforeClass
     public static void setUp() {
         GasolinerasServiceConstants.setStaticURL();
@@ -48,8 +51,13 @@ public class MostrarInformacionGasolinerasUITest {
         onView(withId(R.id.tvDieselAPrecioDet)).check(matches(withText("1,999 €/L")));
         onView(withId(R.id.tvPrecioSumarioDet)).check(matches(withText("1,906 €/L")));
         onView(withId(R.id.tvHorarioDet)).check(matches(withText("L-D: 08:00-21:00")));
+    }
 
-
-
+    @Test
+    public void comprobarLogoGasolineraCorrectoTest() {
+        // TODO: acceder al elemento, no se puede hacer findViewById
+        int mainViewLogoId = 0;
+        onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(0).perform(click());
+        onView(withId(R.id.ivLogo)).check(matches(withId(mainViewLogoId)));
     }
 }
