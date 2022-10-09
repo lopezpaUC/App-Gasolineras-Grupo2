@@ -47,6 +47,15 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
     }
 
     /**
+     * Retorna el precio sumario de la gasolinera.
+     * @return Precio sumario de la gasolinera como cadena de caracteres.
+     */
+    @Override
+    public String getPrecioSumario() {
+        return precioSumarioStr;
+    }
+
+    /**
      * Calcula el precio sumario de la gasolinera.
      * @return Precio sumario.
      */
@@ -181,13 +190,5 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         }
 
         return correccion;
-    }
-
-    /**
-     * Retorna el precio sumario de la gasolinera.
-     * @return Precio sumario de la gasolinera como cadena de caracteres.
-     */
-    public String getPrecioSumario() {
-        return precioSumarioStr;
     }
 }
