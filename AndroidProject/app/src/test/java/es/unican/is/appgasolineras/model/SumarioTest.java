@@ -40,7 +40,7 @@ public class SumarioTest {
         gasolinera.setNormal95("-3,5");
         sut.init();
         precioSumario = sut.getPrecioSumario();
-        Assert.assertEquals("-2,667", precioSumario);
+        Assert.assertEquals("0,000", precioSumario);
 
         gasolinera.setDieselA("0");
         gasolinera.setNormal95("3.0");
