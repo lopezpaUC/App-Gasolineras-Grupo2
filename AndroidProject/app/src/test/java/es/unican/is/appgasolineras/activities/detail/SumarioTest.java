@@ -1,4 +1,4 @@
-package es.unican.is.appgasolineras.model;
+package es.unican.is.appgasolineras.activities.detail;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import es.unican.is.appgasolineras.activities.detail.GasolineraDetailPresenter;
 import es.unican.is.appgasolineras.activities.detail.IGasolineraDetailContract;
+import es.unican.is.appgasolineras.model.Gasolinera;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -40,13 +41,18 @@ public class SumarioTest {
         gasolinera.setNormal95("-3,5");
         sut.init();
         precioSumario = sut.getPrecioSumario();
-        Assert.assertEquals("0,000", precioSumario);
-
+        Assert.assertEquals("-", precioSumario);
         gasolinera.setDieselA("0");
         gasolinera.setNormal95("3.0");
         sut.init();
         precioSumario = sut.getPrecioSumario();
         Assert.assertEquals("3,000", precioSumario);
+
+        gasolinera.setDieselA("5.0");
+        gasolinera.setNormal95("0.0");
+        sut.init();
+        precioSumario = sut.getPrecioSumario();
+        Assert.assertEquals("5,000", precioSumario);
     }
 }
 

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">App Gasolineras</string>
     <string name="gasolina95label">Gasolina</string>
-    <string name="dieselAlabel">Diesel</string>
+    <string name="dieselAlabel">Diésel</string>
     <string name="refresh">Recargar</string>
     <string name="info">Info</string>
     <string name="loadCorrect">Se han cargado %d gasolineras</string>
@@ -9,4 +9,7 @@
     <string name="prices">Precios</string>
     <string name="schedule">Horario</string>
     <string name="sumPrice">Precio Sumario</string>
+    <string name="error">Error</string>
+    <string name="no_detail_info">Ha habido un error cargando la información en detalle de la gasolinera.</string>
+    <string name="accept">Aceptar</string>
 </resources>
