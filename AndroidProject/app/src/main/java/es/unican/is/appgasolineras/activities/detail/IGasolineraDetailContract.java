@@ -24,6 +24,11 @@ public interface IGasolineraDetailContract {
          * Debe retornar a la vista principal.
          */
         void onAcceptClicked();
+
+        /**
+         * Retorna el precio sumario de la gasolinera.
+         */
+        String getPrecioSumario();
     }
 
     /**
