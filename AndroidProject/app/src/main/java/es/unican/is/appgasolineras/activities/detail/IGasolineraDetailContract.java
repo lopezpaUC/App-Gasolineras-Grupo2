@@ -1,50 +1,54 @@
 package es.unican.is.appgasolineras.activities.detail;
 
-import android.content.Context;
-
-import java.util.List;
 import java.util.Map;
 
-import es.unican.is.appgasolineras.model.Gasolinera;
-
 /**
- * The Detail Activity is composed of a Presenter and View, which must expose the methods
- * defined in the following interfaces.
+ * La actividad Detalle esta compuesta por un presentador y una vista, que deben presentar
+ * los metodos definidos en las siguientes interfaces.
  */
+
 public interface IGasolineraDetailContract {
+
     /**
-     * A Presenter for the Detail Activity must implement this functionality
-     * These methods (excluding init), are meant to be used by the View.
+     * Un presentador para la actividad Detalle debe implementar esta funcionalidad.
      */
     interface Presenter {
         /**
-         * Initialization method
+         * Metodo de inicializacion.
          */
         void init();
 
+        /**
+         * Metodo de respuesta ante aceptar la alerta que indica que no se han podido cargar
+         * los detalles de una gasolinera.
+         * Debe retornar a la vista principal.
+         */
         void onAcceptClicked();
     }
 
     /**
-    * A View for the Detail Activity must implement this functionality
-    * These methods (excluding init), are meant to be used by the Presenter.
-    */
+     * Una vista para la actividad Detalle debe implementar esta funcionalidad.
+     */
     interface View {
         /**
-         * Initialization method
+         * Metodo de inicializacion.
          */
         void init();
 
         /**
-         * Show info of tha Gas Station.
+         * Muestra informacion detallada de una gasolinera especifica.
          */
         void showInfo(Map<String, String> info);
 
         /**
-         * Show an alert informing that there was an error while loading the gas station's info.
+         * Muestra una alerta informando de que ha habido un error intentando cargar la informacion
+         * especifica de una gasolinera.
          */
         void showLoadError();
 
-        void openMenuView();
+        /**
+         * Abre la vista principal.
+         */
+        void openMainView();
     }
 }

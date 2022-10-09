@@ -7,22 +7,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Locale;
 import java.util.Map;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.MainView;
-import es.unican.is.appgasolineras.model.Gasolinera;
 
-public class GasolineraDetailView extends AppCompatActivity implements IGasolineraDetailContract.View {
+/**
+ * Vista para la actividad relacionada con la muestra de información detallada de una gasolinera.
+ *
+ * @author Grupo 02-CarbuRed
+ * @version 1.0
+ */
+public class GasolineraDetailView extends AppCompatActivity
+        implements IGasolineraDetailContract.View {
 
     public static final String INTENT_GASOLINERA = "INTENT_GASOLINERA";
-    private static final int NO_ECONTRADO = 0;
+    private static final int NO_ECONTRADO = 0; // Logo no encontrado
 
-    private IGasolineraDetailContract.Presenter presenter;
+    private IGasolineraDetailContract.Presenter presenter; // Presenter de la vista detallada
 
+    // Elementos a actualizar de la vista
     private ImageView ivRotulo;
     private TextView tvRotulo;
     private TextView tvMunicipio;
@@ -35,17 +41,22 @@ public class GasolineraDetailView extends AppCompatActivity implements IGasoline
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Crea la vista
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gasolinera_detail_view);
 
+        // Crea el presenter
         presenter = new GasolineraDetailPresenter(this,
                 getIntent().getExtras().getParcelable(INTENT_GASOLINERA));
+
+        // Inicializa
         this.init();
         presenter.init();
     }
 
     @Override
     public void init() {
+        // Identifica los diferentes elementos a utilizar de la vista
         ivRotulo = findViewById(R.id.ivRotulo);
         tvRotulo = findViewById(R.id.tvRotulo);
         tvDireccion = findViewById(R.id.tvDireccion);
@@ -79,9 +90,11 @@ public class GasolineraDetailView extends AppCompatActivity implements IGasoline
 
     @Override
     public void showLoadError() {
+        // Define el contenido de la alerta
         String textTitle = getResources().getString(R.string.error);
         String textMessage = getResources().getString(R.string.no_detail_info);
 
+        // Determina como crear la alerta
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(textMessage);
         builder.setTitle(textTitle);
@@ -89,24 +102,37 @@ public class GasolineraDetailView extends AppCompatActivity implements IGasoline
         builder.setPositiveButton(getResources().getString(R.string.accept),
                 (dialog, id) -> presenter.onAcceptClicked());
 
+        // Muestra la alerta
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
     @Override
-    public void openMenuView() {
+    public void openMainView() {
         Intent intent = new Intent(this, MainView.class);
         startActivity(intent);
     }
 
+    /**
+     * Obtiene el identificiador del logo a cargar adecuado, en funcion del rotulo de la gasolinera
+     * indicado.
+     *
+     * @param label Rotulo de la gasolinera.
+     * @return Identificador del logo que se corresponde con la gasolinera indicada. Si no existe
+     * uno especifico, se retorna el ID de un logo generico.
+     */
     private int loadLogoID(String label) {
+        // Intenta obtener el ID de un logo especifico de la gasolinera
         int imageID = getResources().getIdentifier(label.toLowerCase(Locale.ROOT),
                 "drawable", getPackageName());
 
+        // Si la gasolinera no tiene un logo propio
         if (imageID == NO_ECONTRADO) {
+            // Obtiene el ID de un logo generico
             imageID = getResources().getIdentifier("generic", "drawable",
                     getPackageName());
         }
+
         return imageID;
     }
 }

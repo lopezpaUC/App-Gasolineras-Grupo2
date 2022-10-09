@@ -1,4 +1,4 @@
-package es.unican.is.appgasolineras.model;
+package es.unican.is.appgasolineras.activities.detail;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import es.unican.is.appgasolineras.activities.detail.GasolineraDetailPresenter;
 import es.unican.is.appgasolineras.activities.detail.IGasolineraDetailContract;
+import es.unican.is.appgasolineras.model.Gasolinera;
 
 
 @RunWith(MockitoJUnitRunner.class)
