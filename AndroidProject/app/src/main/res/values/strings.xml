@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">App Gasolineras</string>
     <string name="gasolina95label">Gasolina</string>
-    <string name="dieselAlabel">Diesel</string>
+    <string name="dieselAlabel">Diésel</string>
     <string name="refresh">Recargar</string>
     <string name="info">Info</string>
     <string name="loadCorrect">Se han cargado %d gasolineras</string>
