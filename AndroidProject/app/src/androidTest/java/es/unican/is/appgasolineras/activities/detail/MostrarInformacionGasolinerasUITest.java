@@ -9,28 +9,15 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.Matchers.anything;
 
-
-import android.view.View;
-
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.List;
-import java.util.Locale;
-
 import es.unican.is.appgasolineras.R;
-import es.unican.is.appgasolineras.activities.main.IMainContract;
 import es.unican.is.appgasolineras.activities.main.MainView;
-import es.unican.is.appgasolineras.model.Gasolinera;
-import es.unican.is.appgasolineras.repository.GasolinerasRepository;
-import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 public class MostrarInformacionGasolinerasUITest {
@@ -43,12 +30,6 @@ public class MostrarInformacionGasolinerasUITest {
     public static void setUp() {
         GasolinerasServiceConstants.setStaticURL();
     }
-
-    /**@Before
-    public void initialize() {
-        mainView = new MainView();
-        detailView = new GasolineraDetailView();
-    }*/
 
     @AfterClass
     public static void clean() {
@@ -67,12 +48,12 @@ public class MostrarInformacionGasolinerasUITest {
         onView(withId(R.id.tvPrecioSumarioDet)).check(matches(withText("1,906 €/L")));
         onView(withId(R.id.tvHorarioDet)).check(matches(withText("L-D: 08:00-21:00")));
     }
-
+    /**
     @Test
     public void comprobarLogoGasolineraCorrectoTest() {
-        /**
+
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(0).perform(click());
         String idLogoMV = onView(withId(R.id.tvRotulo)).toString().toLowerCase(Locale.ROOT);
-        onView(withId(R.id.ivLogo)).check(matches(withId(R.drawable.cepsa)));*/
-    }
+        onView(withId(R.id.ivLogo)).check(matches(withId(R.drawable.cepsa)));
+    }*/
 }
