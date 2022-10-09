@@ -33,6 +33,13 @@ public class Gasolinera implements Parcelable {
 
     public Gasolinera() {
         id = "";
+        rotulo = "";
+        cp = "";
+        direccion = "";
+        municipio = "";
+        horario = "";
+        dieselA = "";
+        normal95 = "";
     }
 
     @NonNull

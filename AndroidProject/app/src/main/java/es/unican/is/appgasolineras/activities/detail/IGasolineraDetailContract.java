@@ -1,89 +1,54 @@
 package es.unican.is.appgasolineras.activities.detail;
 
-import android.content.Context;
-
-import es.unican.is.appgasolineras.model.Gasolinera;
+import java.util.Map;
 
 /**
- * The Detail Activity is composed of a Presenter and View, which must expose the methods
- * defined in the following interfaces.
+ * La actividad Detalle esta compuesta por un presentador y una vista, que deben presentar
+ * los metodos definidos en las siguientes interfaces.
  */
+
 public interface IGasolineraDetailContract {
+
     /**
-     * A Presenter for the Detail Activity must implement this functionality
-     * These methods (excluding init), are meant to be used by the View.
+     * Un presentador para la actividad Detalle debe implementar esta funcionalidad.
      */
     interface Presenter {
         /**
-         * Initialization method
+         * Metodo de inicializacion.
          */
         void init();
+
+        /**
+         * Metodo de respuesta ante aceptar la alerta que indica que no se han podido cargar
+         * los detalles de una gasolinera.
+         * Debe retornar a la vista principal.
+         */
+        void onAcceptClicked();
     }
 
-
     /**
-    * A View for the Detail Activity must implement this functionality
-    * These methods (excluding init), are meant to be used by the Presenter.
-    */
+     * Una vista para la actividad Detalle debe implementar esta funcionalidad.
+     */
     interface View {
         /**
-         * Initialization method
+         * Metodo de inicializacion.
          */
         void init();
 
         /**
-         * Return Gas Station from the intent that triggered the activity
+         * Muestra informacion detallada de una gasolinera especifica.
          */
-        Gasolinera getSelectedGasolinera();
+        void showInfo(Map<String, String> info);
 
         /**
-         * Return context from the activity.
+         * Muestra una alerta informando de que ha habido un error intentando cargar la informacion
+         * especifica de una gasolinera.
          */
-        Context getContext();
+        void showLoadError();
 
         /**
-         * Show logo image of the Gas Station.
+         * Abre la vista principal.
          */
-        void showLogo(int imageID);
-
-        /**
-         * Show name of the Gas Station.
-         */
-        void showName(String rotulo);
-
-        /**
-         * Show direction of the Gas Station.
-         */
-        void showDirection(String direccion);
-
-        /**
-         * Show name of the Gas Station's municipality.
-         */
-        void showMunicipality(String municipio);
-
-        /**
-         * Show CP of the Gas Station's municipality.
-         */
-        void showCP(String cp);
-
-        /**
-         * Show Gasolina95's price.
-         */
-        void showPrice95(String precio);
-
-        /**
-         * Show DieselA's price.
-         */
-        void showPriceDieselA(String precio);
-
-        /**
-         * Show schedule of the Gas Station.
-         */
-        void showSchedule(String horario);
-
-        /**
-         * Show summary of the Gas Station.
-         */
-        void showSummary(String sumario);
+        void openMainView();
     }
 }
