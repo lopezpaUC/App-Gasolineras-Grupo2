@@ -73,6 +73,11 @@ public class MainPresenter implements IMainContract.Presenter {
     }
 
     @Override
+    public void onFilterClicked(){
+        view.openFilterDialog();
+    }
+
+    @Override
     public void onRefreshClicked() {
         init();
     }
