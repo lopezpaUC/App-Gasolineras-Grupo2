@@ -12,4 +12,9 @@
     <string name="error">Error</string>
     <string name="no_detail_info">Ha habido un error cargando la información en detalle de la gasolinera.</string>
     <string name="accept">Aceptar</string>
+    <string name="apply">Aplicar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="filter">Filtrar gasolineras</string>
+    <string name="combustible_types">Tipos de combustible</string>
+    <string name="brands">Marcas</string>
 </resources>
