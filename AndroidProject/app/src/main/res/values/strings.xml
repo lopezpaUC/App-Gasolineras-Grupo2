@@ -4,7 +4,8 @@
     <string name="dieselAlabel">Diésel</string>
     <string name="refresh">Recargar</string>
     <string name="info">Info</string>
-    <string name="loadCorrect">Se han cargado %d gasolineras</string>
+    <string name="loadCorrectOn">Se han cargado %d gasolineras actualizadas.</string>
+    <string name="loadCorrectOff">Se han cargado %d gasolineras. Desactualizadas con fecha %s.</string>
     <string name="loadError">Ha habido un error cargando las gasolineras</string>
     <string name="prices">Precios</string>
     <string name="schedule">Horario</string>

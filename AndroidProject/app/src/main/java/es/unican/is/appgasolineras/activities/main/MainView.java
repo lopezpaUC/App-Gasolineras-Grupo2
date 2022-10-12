@@ -14,9 +14,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 
 import es.unican.is.appgasolineras.R;
+import es.unican.is.appgasolineras.common.prefs.Prefs;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
@@ -106,9 +110,22 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     }
 
     @Override
-    public void showLoadCorrect(int gasolinerasCount) {
-        String text = getResources().getString(R.string.loadCorrect);
-        Toast.makeText(this, String.format(text, gasolinerasCount), Toast.LENGTH_SHORT).show();
+    public void showLoadCorrectOnline(int gasolinerasCount) {
+        String text = getResources().getString(R.string.loadCorrectOn);
+        Toast.makeText(this, String.format(text, gasolinerasCount),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showLoadCorrectOffline(int gasolinerasCount) {
+        String text = getResources().getString(R.string.loadCorrectOff);
+        Instant lastDownloaded = Prefs.from(this).getInstant("KEY_LAST_SAVED");
+        Date fecha = Date.from(lastDownloaded);
+        SimpleDateFormat formateador = new SimpleDateFormat("dd-MM-yyyy");
+        String fechaStr = formateador.format(fecha);
+
+        Toast.makeText(this, String.format(text, gasolinerasCount, fechaStr),
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override
