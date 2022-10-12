@@ -54,6 +54,12 @@ public class GasolinerasRepository implements IGasolinerasRepository {
         return gasolineras;
     }
 
+    @Override
+    public List<Gasolinera> getGasolinerasOffline() {
+        List<Gasolinera> gasolineras = loadFromDB();
+        return gasolineras;
+    }
+
     /**
      * Persist Gasolineras to local DB using Room
      * It also saves into the app preferences the time instant in which
@@ -73,6 +79,15 @@ public class GasolinerasRepository implements IGasolinerasRepository {
             // save the current time to the app preferences
             Prefs.from(context).putInstant(KEY_LAST_SAVED, Instant.now());
         }
+    }
+
+    /**
+     *
+     */
+    private List<Gasolinera> loadFromDB() {
+        final GasolineraDatabase db = GasolineraDatabase.getDB(context);
+        final GasolineraDao gasolinerasDao = db.gasolineraDao();
+        return gasolinerasDao.getAll();
     }
 
     /**

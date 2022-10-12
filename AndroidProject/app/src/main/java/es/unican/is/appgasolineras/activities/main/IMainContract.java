@@ -76,10 +76,17 @@ public interface IMainContract {
 
         /**
          * The View is requested to show an alert informing that the gas stations were loaded
-         * correctly
+         * correctly from online repository.
          * @param gasolinerasCount the number of gas stations that were loaded
          */
-        void showLoadCorrect(int gasolinerasCount);
+        void showLoadCorrectOnline(int gasolinerasCount);
+
+        /**
+         * The View is requested to show an alert informing that the gas stations were loaded
+         * correctly from app database.
+         * @param gasolinerasCount the number of gas stations that were loaded
+         */
+        void showLoadCorrectOffline(int gasolinerasCount);
 
         /**
          * The View is requested to show an alert informing that there was an error while
