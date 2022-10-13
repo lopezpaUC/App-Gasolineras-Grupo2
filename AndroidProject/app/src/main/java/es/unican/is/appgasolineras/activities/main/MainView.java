@@ -10,16 +10,22 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.common.prefs.Prefs;
@@ -30,7 +36,8 @@ import es.unican.is.appgasolineras.activities.detail.GasolineraDetailView;
 import es.unican.is.appgasolineras.activities.info.InfoView;
 
 public class MainView extends AppCompatActivity implements IMainContract.View {
-
+    private static final int DIESEL = 1;
+    private static final int GASOLINA = 2;
     private IMainContract.Presenter presenter;
 
     /*
@@ -161,23 +168,63 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         // Inicializar elementos
         final TextView tvCancelar = dialogFilter.findViewById(R.id.tvCancel);
         final TextView tvAplicar = dialogFilter.findViewById(R.id.tvApply);
-        final Spinner spinner = dialogFilter.findViewById(R.id.spnTipoCombustible);
+
+        // Inicializacion spinner tipo combustible
+        final Spinner spinnerCombustible = dialogFilter.findViewById(R.id.spnTipoCombustible);
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(dialogFilter.getContext(),
                 R.array.combustible_types_array, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(arrayAdapter);
+        spinnerCombustible.setAdapter(arrayAdapter);
+
+        // Inicializacion spinner tipo marca
+        /**
+        final Spinner spinnerCombustible = dialogFilter.findViewById(R.id.spnTipoCombustible);
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(dialogFilter.getContext(),
+                R.array.combustible_types_array, android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCombustible.setAdapter(arrayAdapter);*/
+
+        // Listener para aplicar
+        tvAplicar.setOnClickListener(view -> {
+            Set<Gasolinera> resultado = new HashSet<>();
+            Set<Gasolinera> resultadoCombustibles;
+
+            // Tipo combustible
+            switch (spinnerCombustible.getSelectedItemPosition()) {
+                case DIESEL:
+                    resultadoCombustibles = presenter.filterByCombustible(DIESEL);
+                case GASOLINA:
+                    resultadoCombustibles = presenter.filterByCombustible(GASOLINA);
+                    break;
+                default:
+                    resultadoCombustibles = new HashSet<>();
+            }
+
+            // Marca
+            /**switch (spinnerCombustible.getSelectedItemPosition()) {
+                case DIESEL:
+                    presenter.filterByCombustible(DIESEL);
+                case GASOLINA:
+                    presenter.filterByCombustible(GASOLINA);
+                    break;
+                default:
+            }*/
+
+            // Fusionar sets -> Pasarlo a presenter
+            // TODO
+
+            // TODO Cambiar cuando se tenga el filtrado de marcas, pasando el general
+            GasolinerasArrayAdapter adapter = new GasolinerasArrayAdapter(this, new ArrayList<>(resultadoCombustibles));
+            ListView list = findViewById(R.id.lvGasolineras);
+            list.setAdapter(adapter);
+            dialogFilter.dismiss();
+        });
 
         // Listener para cancelar
         tvCancelar.setOnClickListener(view -> {
             dialogFilter.dismiss();
         });
-
-        // Listener para aplicar
-        tvAplicar.setOnClickListener(view -> {
-            //TODO
-            dialogFilter.dismiss();
-        });
-
         dialogFilter.show();
     }
+
 }

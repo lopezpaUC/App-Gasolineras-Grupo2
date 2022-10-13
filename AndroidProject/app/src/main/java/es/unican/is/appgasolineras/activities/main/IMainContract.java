@@ -1,6 +1,7 @@
 package es.unican.is.appgasolineras.activities.main;
 
 import java.util.List;
+import java.util.Set;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
@@ -45,6 +46,12 @@ public interface IMainContract {
          * Filter button has been clicked
          */
         void onFilterClicked();
+
+        /**
+         * This method should be used by the View to filter the Gas Stations by the combustible
+         * offered.
+         */
+        Set<Gasolinera> filterByCombustible(int combustibleType);
     }
 
     /**

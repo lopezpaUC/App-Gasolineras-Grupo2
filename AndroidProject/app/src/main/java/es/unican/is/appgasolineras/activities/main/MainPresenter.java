@@ -2,8 +2,12 @@ package es.unican.is.appgasolineras.activities.main;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.zip.GZIPOutputStream;
 
 import es.unican.is.appgasolineras.common.Callback;
 import es.unican.is.appgasolineras.common.prefs.Prefs;
@@ -14,6 +18,8 @@ public class MainPresenter implements IMainContract.Presenter {
     // Constantes para indicar si las gasolineras se cargan de forma online u offline
     private static final int LOAD_OFFLINE = 1;
     private static final int LOAD_ONLINE = 0;
+    private static final int DIESEL = 1;
+    private static final int GASOLINA = 2;
 
     private final IMainContract.View view;
     private IGasolinerasRepository repository;
@@ -57,6 +63,7 @@ public class MainPresenter implements IMainContract.Presenter {
 
         if (data != null) {
             showGasInfo(data, LOAD_ONLINE);
+            shownGasolineras = data; // Pendiente de revisar
 
         } else {
             data = repository.getGasolinerasOffline();
@@ -65,6 +72,7 @@ public class MainPresenter implements IMainContract.Presenter {
                 view.showLoadError();
             } else {
                 showGasInfo(data, LOAD_OFFLINE);
+                shownGasolineras = data; // Pendiente de revisar
             }
 
         }
@@ -106,5 +114,42 @@ public class MainPresenter implements IMainContract.Presenter {
     @Override
     public void onRefreshClicked() {
         init();
+    }
+
+    public Set<Gasolinera> filterByCombustible(int combustibleType) {
+        Set<Gasolinera> resultadoFiltrado;
+
+        switch (combustibleType) {
+            case DIESEL:
+                resultadoFiltrado = filterByDiesel();
+                break;
+            case GASOLINA:
+                resultadoFiltrado = filterByGasolina();
+                break;
+            default:
+                resultadoFiltrado = new HashSet<>();
+                break;
+        }
+        return resultadoFiltrado;
+    }
+
+    private Set<Gasolinera> filterByDiesel() {
+        Set<Gasolinera> compatibles = new HashSet<>();
+        for (Gasolinera g:shownGasolineras) {
+            if ((g.getDieselA() != null) && (!g.getDieselA().equals(""))) {
+                compatibles.add(g);
+            }
+        }
+        return compatibles;
+    }
+
+    private Set<Gasolinera> filterByGasolina() {
+        Set<Gasolinera> compatibles = new HashSet<>();
+        for (Gasolinera g:shownGasolineras) {
+            if ((g.getNormal95() != null) && (!g.getNormal95().equals(""))) {
+                compatibles.add(g);
+            }
+        }
+        return compatibles;
     }
 }
