@@ -18,4 +18,10 @@
     <string name="filter">Filtrar gasolineras</string>
     <string name="combustible_types">Tipos de combustible</string>
     <string name="brands">Marcas</string>
+    <string name="all">Todos</string>
+    <string-array name="combustible_types_array">
+        <item>@string/all</item>
+        <item>@string/dieselAlabel</item>
+        <item>@string/gasolina95label</item>
+    </string-array>
 </resources>
