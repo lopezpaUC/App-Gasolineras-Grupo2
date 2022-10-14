@@ -39,6 +39,12 @@ public interface IMainContract {
          * Refresh button has been clicked
          */
         void onRefreshClicked();
+
+        /**
+         * This method should be used by the View to notify the Presenter that the
+         * Filter button has been clicked
+         */
+        void onFilterClicked();
     }
 
     /**
@@ -70,10 +76,17 @@ public interface IMainContract {
 
         /**
          * The View is requested to show an alert informing that the gas stations were loaded
-         * correctly
+         * correctly from online repository.
          * @param gasolinerasCount the number of gas stations that were loaded
          */
-        void showLoadCorrect(int gasolinerasCount);
+        void showLoadCorrectOnline(int gasolinerasCount);
+
+        /**
+         * The View is requested to show an alert informing that the gas stations were loaded
+         * correctly from app database.
+         * @param gasolinerasCount the number of gas stations that were loaded
+         */
+        void showLoadCorrectOffline(int gasolinerasCount);
 
         /**
          * The View is requested to show an alert informing that there was an error while
@@ -91,6 +104,11 @@ public interface IMainContract {
          * The View is requested to open the Info view
          */
         void openInfoView();
+
+        /**
+         * The View is requested to open the Filter dialog
+         */
+        void openFilterDialog();
     }
 
 }

@@ -3,17 +3,24 @@ package es.unican.is.appgasolineras.activities.main;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 
 import es.unican.is.appgasolineras.R;
+import es.unican.is.appgasolineras.common.prefs.Prefs;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
@@ -69,6 +76,9 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             case R.id.menuRefresh:
                 presenter.onRefreshClicked();
                 return true;
+            case R.id.menuFilter:
+                presenter.onFilterClicked();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -100,9 +110,22 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     }
 
     @Override
-    public void showLoadCorrect(int gasolinerasCount) {
-        String text = getResources().getString(R.string.loadCorrect);
-        Toast.makeText(this, String.format(text, gasolinerasCount), Toast.LENGTH_SHORT).show();
+    public void showLoadCorrectOnline(int gasolinerasCount) {
+        String text = getResources().getString(R.string.loadCorrectOn);
+        Toast.makeText(this, String.format(text, gasolinerasCount),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showLoadCorrectOffline(int gasolinerasCount) {
+        String text = getResources().getString(R.string.loadCorrectOff);
+        Instant lastDownloaded = Prefs.from(this).getInstant("KEY_LAST_SAVED");
+        Date fecha = Date.from(lastDownloaded);
+        SimpleDateFormat formateador = new SimpleDateFormat("dd-MM-yyyy");
+        String fechaStr = formateador.format(fecha);
+
+        Toast.makeText(this, String.format(text, gasolinerasCount, fechaStr),
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -122,5 +145,32 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     public void openInfoView() {
         Intent intent = new Intent(this, InfoView.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void openFilterDialog() {
+        final Dialog dialogFilter = new Dialog(MainView.this);
+
+        // Deshabilitar titulo (ya asignado en layout)
+        dialogFilter.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        dialogFilter.setContentView(R.layout.activity_main_filter);
+
+        // Inicializar elementos
+        final TextView tvCancelar = dialogFilter.findViewById(R.id.tvCancel);
+        final TextView tvAplicar = dialogFilter.findViewById(R.id.tvApply);
+
+        // Listener para cancelar
+        tvCancelar.setOnClickListener(view -> {
+            dialogFilter.dismiss();
+        });
+
+        // Listener para aplicar
+        tvAplicar.setOnClickListener(view -> {
+            //TODO
+            dialogFilter.dismiss();
+        });
+
+        dialogFilter.show();
     }
 }
