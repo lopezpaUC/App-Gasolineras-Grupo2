@@ -36,6 +36,7 @@ import es.unican.is.appgasolineras.activities.detail.GasolineraDetailView;
 import es.unican.is.appgasolineras.activities.info.InfoView;
 
 public class MainView extends AppCompatActivity implements IMainContract.View {
+    private static final int ALL_COMB = 0;
     private static final int DIESEL = 1;
     private static final int GASOLINA = 2;
     private IMainContract.Presenter presenter;
@@ -177,44 +178,23 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         spinnerCombustible.setAdapter(arrayAdapter);
 
         // Inicializacion spinner tipo marca
-        /**
-        final Spinner spinnerCombustible = dialogFilter.findViewById(R.id.spnTipoCombustible);
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(dialogFilter.getContext(),
-                R.array.combustible_types_array, android.R.layout.simple_spinner_item);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCombustible.setAdapter(arrayAdapter);*/
+        //TODO
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
-            Set<Gasolinera> resultado = new HashSet<>();
-            Set<Gasolinera> resultadoCombustibles;
-
             // Tipo combustible
             switch (spinnerCombustible.getSelectedItemPosition()) {
-                case DIESEL:
-                    resultadoCombustibles = presenter.filterByCombustible(DIESEL);
-                case GASOLINA:
-                    resultadoCombustibles = presenter.filterByCombustible(GASOLINA);
-                    break;
-                default:
-                    resultadoCombustibles = new HashSet<>();
-            }
-
-            // Marca
-            /**switch (spinnerCombustible.getSelectedItemPosition()) {
                 case DIESEL:
                     presenter.filterByCombustible(DIESEL);
                 case GASOLINA:
                     presenter.filterByCombustible(GASOLINA);
                     break;
                 default:
-            }*/
+                    presenter.filterByCombustible(ALL_COMB);
+                    break;
+            }
 
-            // Fusionar sets -> Pasarlo a presenter
-            // TODO
-
-            // TODO Cambiar cuando se tenga el filtrado de marcas, pasando el general
-            GasolinerasArrayAdapter adapter = new GasolinerasArrayAdapter(this, new ArrayList<>(resultadoCombustibles));
+            GasolinerasArrayAdapter adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
             ListView list = findViewById(R.id.lvGasolineras);
             list.setAdapter(adapter);
             dialogFilter.dismiss();

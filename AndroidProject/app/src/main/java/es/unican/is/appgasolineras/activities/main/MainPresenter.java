@@ -1,16 +1,11 @@
 package es.unican.is.appgasolineras.activities.main;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.zip.GZIPOutputStream;
 
 import es.unican.is.appgasolineras.common.Callback;
-import es.unican.is.appgasolineras.common.prefs.Prefs;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 
@@ -116,8 +111,9 @@ public class MainPresenter implements IMainContract.Presenter {
         init();
     }
 
-    public Set<Gasolinera> filterByCombustible(int combustibleType) {
+    public void filterByCombustible(int combustibleType) {
         Set<Gasolinera> resultadoFiltrado;
+        Set<Gasolinera> shownOldGasolineras = new HashSet<>(repository.getGasolineras());
 
         switch (combustibleType) {
             case DIESEL:
@@ -127,10 +123,13 @@ public class MainPresenter implements IMainContract.Presenter {
                 resultadoFiltrado = filterByGasolina();
                 break;
             default:
-                resultadoFiltrado = new HashSet<>();
+                resultadoFiltrado = new HashSet<>(repository.getGasolineras());
                 break;
         }
-        return resultadoFiltrado;
+        shownOldGasolineras.containsAll(resultadoFiltrado);
+        List<Gasolinera> shownNewGasolineras = new ArrayList<>(shownOldGasolineras);
+        shownGasolineras = shownNewGasolineras;
+        showGasInfo(shownGasolineras, 0);
     }
 
     private Set<Gasolinera> filterByDiesel() {
@@ -151,5 +150,9 @@ public class MainPresenter implements IMainContract.Presenter {
             }
         }
         return compatibles;
+    }
+
+    public List<Gasolinera> getShownGasolineras() {
+        return this.shownGasolineras;
     }
 }

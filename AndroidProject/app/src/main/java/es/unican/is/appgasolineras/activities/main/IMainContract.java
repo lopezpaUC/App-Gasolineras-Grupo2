@@ -51,7 +51,9 @@ public interface IMainContract {
          * This method should be used by the View to filter the Gas Stations by the combustible
          * offered.
          */
-        Set<Gasolinera> filterByCombustible(int combustibleType);
+        void filterByCombustible(int combustibleType);
+
+        List<Gasolinera> getShownGasolineras();
     }
 
     /**
