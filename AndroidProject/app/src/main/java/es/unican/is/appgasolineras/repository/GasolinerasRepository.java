@@ -22,8 +22,11 @@ import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 public class GasolinerasRepository implements IGasolinerasRepository {
 
     private static final String KEY_LAST_SAVED = "KEY_LAST_SAVED";
+    private static final int LOAD_OFFLINE = 1;
+    private static final int LOAD_ONLINE = 0;
 
     private final Context context;
+    private int loadingMethod;
 
     public GasolinerasRepository(final Context context) {
         this.context = context;
@@ -49,15 +52,27 @@ public class GasolinerasRepository implements IGasolinerasRepository {
     @Override
     public List<Gasolinera> getGasolineras() {
         GasolinerasResponse response = GasolinerasService.getGasolineras();
-        List<Gasolinera> gasolineras = response != null ? response.getStations() : null;
-        persistToDB(gasolineras);
+        List<Gasolinera> gasolineras;
+
+        if (response != null) {
+            gasolineras = response.getStations();
+            persistToDB(gasolineras);
+            loadingMethod = LOAD_ONLINE;
+        } else {
+            GasolineraDatabase db = GasolineraDatabase.getDB(context);
+            GasolineraDao gasolinerasDao = db.gasolineraDao();
+            gasolineras = gasolinerasDao.getAll();
+            loadingMethod = LOAD_OFFLINE;
+            //gasolineras = null;
+        }
+
+        //persistToDB(gasolineras);
         return gasolineras;
     }
 
     @Override
-    public List<Gasolinera> getGasolinerasOffline() {
-        List<Gasolinera> gasolineras = loadFromDB();
-        return gasolineras;
+    public int getLoadingMethod() {
+        return loadingMethod;
     }
 
     /**
