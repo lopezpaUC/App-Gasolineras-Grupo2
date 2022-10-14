@@ -1,5 +1,7 @@
 package es.unican.is.appgasolineras.activities.main;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,7 +13,6 @@ import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 
 public class MainPresenter implements IMainContract.Presenter {
     // Constantes para indicar si las gasolineras se cargan de forma online u offline
-    private static final int LOAD_OFFLINE = 1;
     private static final int LOAD_ONLINE = 0;
     private static final int DIESEL = 1;
     private static final int GASOLINA = 2;
@@ -20,6 +21,7 @@ public class MainPresenter implements IMainContract.Presenter {
     private IGasolinerasRepository repository;
 
     private List<Gasolinera> shownGasolineras;
+    private int loadMethod = 0;
 
     public MainPresenter(IMainContract.View view) {
         this.view = view;
@@ -36,13 +38,19 @@ public class MainPresenter implements IMainContract.Presenter {
         }
     }
 
+
     private void doAsyncInit() {
         repository.requestGasolineras(new Callback<List<Gasolinera>>() {
             @Override
             public void onSuccess(List<Gasolinera> data) {
+                loadMethod = repository.getLoadingMethod();
                 view.showGasolineras(data);
                 shownGasolineras = data;
-                view.showLoadCorrectOnline(data.size());
+                if (loadMethod == LOAD_ONLINE) {
+                    view.showLoadCorrectOnline(data.size());
+                } else {
+                    view.showLoadCorrectOffline(data.size());
+                }
             }
 
             @Override
@@ -55,37 +63,19 @@ public class MainPresenter implements IMainContract.Presenter {
 
     private void doSyncInit() {
         List<Gasolinera> data = repository.getGasolineras();
-
-        if (data != null) {
-            showGasInfo(data, LOAD_ONLINE);
-            shownGasolineras = data; // Pendiente de revisar
-
-        } else {
-            data = repository.getGasolinerasOffline();
-            if (data.isEmpty()) {
-                shownGasolineras = null;
-                view.showLoadError();
+        if (!data.isEmpty()) {
+            loadMethod = repository.getLoadingMethod();
+            view.showGasolineras(data);
+            shownGasolineras = data;
+            if (loadMethod == LOAD_ONLINE) {
+                view.showLoadCorrectOnline(data.size());
             } else {
-                showGasInfo(data, LOAD_OFFLINE);
-                shownGasolineras = data; // Pendiente de revisar
+                view.showLoadCorrectOffline(data.size());
             }
-
+        } else {
+            shownGasolineras = null;
+            view.showLoadError();
         }
-    }
-
-    /**
-     * Ordena a la vista mostrar la información de las gasolineras.
-     * @param data Lista de gasolineras a mostrar.
-     * @param loadMethod Método usado para cargar gasolineras, lo que determina si los datos
-     *                   son o no recientes.
-     */
-    private void showGasInfo(List<Gasolinera> data, int loadMethod) {
-        view.showGasolineras(data);
-        shownGasolineras = data;
-        if (loadMethod == LOAD_OFFLINE) {
-            view.showLoadCorrectOffline(data.size());
-        }
-        view.showLoadCorrectOnline(data.size());
     }
 
     @Override
@@ -111,10 +101,27 @@ public class MainPresenter implements IMainContract.Presenter {
         init();
     }
 
-    public void filterByCombustible(int combustibleType) {
+    public void filter(int combustibleType, List<String> brands) {
+        shownGasolineras = repository.getGasolineras();
+        filterByCombustible(combustibleType);
+        //TODO filerByMarcas
+        if (!shownGasolineras.isEmpty()) {
+            view.showGasolineras(shownGasolineras);
+            if (loadMethod == LOAD_ONLINE) {
+                view.showLoadCorrectOnline(shownGasolineras.size());
+            } else {
+            view.showLoadCorrectOffline(shownGasolineras.size());
+            }
+        } else {
+            view.showLoadError();
+            shownGasolineras = null;
+        }
+
+    }
+
+    private void filterByCombustible(int combustibleType) {
         Set<Gasolinera> resultadoFiltrado;
         Set<Gasolinera> shownOldGasolineras = new HashSet<>(repository.getGasolineras());
-
         switch (combustibleType) {
             case DIESEL:
                 resultadoFiltrado = filterByDiesel();
@@ -126,10 +133,13 @@ public class MainPresenter implements IMainContract.Presenter {
                 resultadoFiltrado = new HashSet<>(repository.getGasolineras());
                 break;
         }
-        shownOldGasolineras.containsAll(resultadoFiltrado);
-        List<Gasolinera> shownNewGasolineras = new ArrayList<>(shownOldGasolineras);
-        shownGasolineras = shownNewGasolineras;
-        showGasInfo(shownGasolineras, 0);
+        shownOldGasolineras.retainAll(resultadoFiltrado);
+        Log.d("DEBUG", String.format("%s",resultadoFiltrado));
+        if (shownOldGasolineras.isEmpty()) {
+            shownGasolineras = new ArrayList<>();
+        } else {
+            shownGasolineras = new ArrayList<>(shownOldGasolineras);
+        }
     }
 
     private Set<Gasolinera> filterByDiesel() {

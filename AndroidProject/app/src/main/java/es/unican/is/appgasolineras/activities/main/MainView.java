@@ -10,22 +10,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.material.navigation.NavigationView;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.common.prefs.Prefs;
@@ -182,17 +175,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
-            // Tipo combustible
-            switch (spinnerCombustible.getSelectedItemPosition()) {
-                case DIESEL:
-                    presenter.filterByCombustible(DIESEL);
-                case GASOLINA:
-                    presenter.filterByCombustible(GASOLINA);
-                    break;
-                default:
-                    presenter.filterByCombustible(ALL_COMB);
-                    break;
-            }
+            presenter.filter(spinnerCombustible.getSelectedItemPosition(), null);
 
             GasolinerasArrayAdapter adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
             ListView list = findViewById(R.id.lvGasolineras);

@@ -47,13 +47,9 @@ public interface IMainContract {
          */
         void onFilterClicked();
 
-        /**
-         * This method should be used by the View to filter the Gas Stations by the combustible
-         * offered.
-         */
-        void filterByCombustible(int combustibleType);
-
         List<Gasolinera> getShownGasolineras();
+
+        void filter(int combustibleType, List<String> brands);
     }
 
     /**
@@ -90,11 +86,6 @@ public interface IMainContract {
          */
         void showLoadCorrectOnline(int gasolinerasCount);
 
-        /**
-         * The View is requested to show an alert informing that the gas stations were loaded
-         * correctly from app database.
-         * @param gasolinerasCount the number of gas stations that were loaded
-         */
         void showLoadCorrectOffline(int gasolinerasCount);
 
         /**
@@ -118,6 +109,7 @@ public interface IMainContract {
          * The View is requested to open the Filter dialog
          */
         void openFilterDialog();
+
     }
 
 }

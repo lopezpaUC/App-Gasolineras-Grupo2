@@ -28,9 +28,8 @@ public interface IGasolinerasRepository {
     List<Gasolinera> getGasolineras();
 
     /**
-     * Request gas stations loaded in DB.
-     * @return the list of gas stations.
+     * Request how the gas stations were loaded.
      */
-    List<Gasolinera> getGasolinerasOffline();
+    int getLoadingMethod();
 
 }
