@@ -19,9 +19,29 @@
     <string name="combustible_types">Tipos de combustible</string>
     <string name="brands">Marcas</string>
     <string name="all">Todos</string>
+    <string name="galp">Galp</string>
+    <string name="cepsa">Cepsa</string>
+    <string name="carrefour">Carrefour</string>
+    <string name="campsa">Campsa</string>
+    <string name="avia">Avia</string>
+    <string name="petronor">Petronor</string>
+    <string name="repsol">Repsol</string>
+    <string name="shell">Shell</string>
+
+
     <string-array name="combustible_types_array">
         <item>@string/all</item>
         <item>@string/dieselAlabel</item>
         <item>@string/gasolina95label</item>
+    </string-array>
+    <string-array name="brands_types_array">
+        <item>@string/avia</item>
+        <item>@string/campsa</item>
+        <item>@string/carrefour</item>
+        <item>@string/cepsa</item>
+        <item>@string/galp</item>
+        <item>@string/petronor</item>
+        <item>@string/repsol</item>
+        <item>@string/shell</item>
     </string-array>
 </resources>

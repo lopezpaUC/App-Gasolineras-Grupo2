@@ -16,6 +16,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.time.Instant;
 import java.util.List;
@@ -183,11 +185,41 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             dialogFilter.dismiss();
         });
 
+        //final Spinner spinnerMulti = dialogFilter.findViewById(R.id.spnMarca);
+        //ArrayAdapter<CharSequence> arrayAdapterMulti = ArrayAdapter.createFromResource(dialogFilter.getContext(),
+        //        R.array.brands_types_array, android.R.layout.simple_spinner_item);
+        //arrayAdapterMulti.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //spinnerMulti.setAdapter(arrayAdapterMulti);
+
+        final String[] select_qualification = {
+                "Marcas", "Avia", "Campsa", "Carrefour", "Cepsa", "Galp",
+                "Petronor", "Repsol", "Shell"};
+
+
+        final Spinner spinnerMulti = dialogFilter.findViewById(R.id.spnMarca);
+
+        ArrayList<StateVO> listVOs = new ArrayList<>();
+
+        for (int i = 0; i < select_qualification.length; i++) {
+            StateVO stateVO = new StateVO();
+            stateVO.setTitle(select_qualification[i]);
+            stateVO.setSelected(false);
+            listVOs.add(stateVO);
+        }
+        MyAdapter myAdapter = new MyAdapter(this, 0,
+                listVOs);
+        spinnerMulti.setAdapter(myAdapter);
+
+
+
+
+
         // Listener para cancelar
         tvCancelar.setOnClickListener(view -> {
             dialogFilter.dismiss();
         });
         dialogFilter.show();
     }
+
 
 }
