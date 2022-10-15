@@ -1,6 +1,7 @@
 package es.unican.is.appgasolineras.activities.main;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +19,17 @@ import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.model.Gasolinera;
 
 public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
+    private String precioDestacar;
 
     public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects) {
         super(context, 0, objects);
+        precioDestacar = null;
+    }
+
+    public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects,
+                                   String precioDestacar) {
+        super(context, 0, objects);
+        this.precioDestacar = precioDestacar;
     }
 
     @NonNull
@@ -88,6 +97,11 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
 
         TextView tv = convertView.findViewById(R.id.tv95);
         tv.setText(gasolinera.getNormal95());
+
+        if (precioDestacar != null && precioDestacar.equals(getContext().getResources().getString(R.string.gasolina95label))) {
+            tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.BOLD);
+            tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
+        }
     }
 
     private void prizeDiesel(Gasolinera gasolinera, View convertView){
@@ -97,5 +111,10 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
 
         TextView tv = convertView.findViewById(R.id.tvDieselA);
         tv.setText(gasolinera.getDieselA());
+
+        if (precioDestacar != null && precioDestacar.equals(getContext().getResources().getString(R.string.dieselAlabel))) {
+            tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.BOLD);
+            tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
+        }
     }
 }

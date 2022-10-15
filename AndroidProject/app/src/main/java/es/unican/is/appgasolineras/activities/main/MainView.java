@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.time.Instant;
 import java.util.List;
@@ -31,9 +30,7 @@ import es.unican.is.appgasolineras.activities.detail.GasolineraDetailView;
 import es.unican.is.appgasolineras.activities.info.InfoView;
 
 public class MainView extends AppCompatActivity implements IMainContract.View {
-    private static final int ALL_COMB = 0;
-    private static final int DIESEL = 1;
-    private static final int GASOLINA = 2;
+
     private IMainContract.Presenter presenter;
 
     /*
@@ -177,9 +174,25 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
-            presenter.filter(spinnerCombustible.getSelectedItemPosition(), null);
+            int itemPositionComb = spinnerCombustible.getSelectedItemPosition();
+            CombustibleType combustibleSeleccionado = CombustibleType.getCombTypeFromInt(itemPositionComb);
+            presenter.filter(itemPositionComb, null);
+            GasolinerasArrayAdapter adapter;
 
-            GasolinerasArrayAdapter adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
+            switch (combustibleSeleccionado) {
+                case ALL_COMB:
+                    adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
+                    break;
+                case DIESEL:
+                    adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
+                            getResources().getString(R.string.dieselAlabel));
+                    break;
+                default:
+                    adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
+                            getResources().getString(R.string.gasolina95label));
+                    break;
+            }
+
             ListView list = findViewById(R.id.lvGasolineras);
             list.setAdapter(adapter);
             dialogFilter.dismiss();
@@ -209,10 +222,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         MyAdapter myAdapter = new MyAdapter(this, 0,
                 listVOs);
         spinnerMulti.setAdapter(myAdapter);
-
-
-
-
 
         // Listener para cancelar
         tvCancelar.setOnClickListener(view -> {
