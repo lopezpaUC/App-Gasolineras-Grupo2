@@ -78,7 +78,19 @@ public class MyAdapter extends ArrayAdapter<StateVO> {
                 }
             }
         });
+
         return convertView;
+    }
+
+    public ArrayList<String> sumChecked(){
+        ArrayList<String> checked = new ArrayList<String>();
+        for (StateVO l : listState){
+            if(l.isSelected()){
+                checked.add(l.getTitle());
+            }
+        }
+        System.out.println("*" + checked);
+        return checked;
     }
 
     private class ViewHolder {

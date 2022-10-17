@@ -32,7 +32,9 @@ import es.unican.is.appgasolineras.activities.detail.GasolineraDetailView;
 import es.unican.is.appgasolineras.activities.info.InfoView;
 
 public class MainView extends AppCompatActivity implements IMainContract.View {
-
+    private static final int ALL_COMB = 0;
+    private static final int DIESEL = 1;
+    private static final int GASOLINA = 2;
     private IMainContract.Presenter presenter;
 
     /*
@@ -178,6 +180,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         final Spinner spinnerCombustible = dialogFilter.findViewById(R.id.spnTipoCombustible);
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(dialogFilter.getContext(),
                 R.array.combustible_types_array, android.R.layout.simple_spinner_item);
+
         arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         spinnerCombustible.setAdapter(arrayAdapter);
         SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
@@ -185,8 +188,28 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         int savedCombValue = filterPref.getInt(getString(R.string.saved_comb_type_filter), 0);
         spinnerCombustible.setSelection(savedCombValue);
 
+
         // Inicializacion spinner tipo marca
-        //TODO
+        final String[] select_qualification = {
+                "Marcas", "Avia", "Campsa", "Carrefour", "Cepsa", "Galp",
+                "Petronor", "Repsol", "Shell"};
+
+
+        final Spinner spinnerMulti = dialogFilter.findViewById(R.id.spnMarca);
+
+        ArrayList<StateVO> listVOs = new ArrayList<>();
+
+        for (int i = 0; i < select_qualification.length; i++) {
+            StateVO stateVO = new StateVO();
+            stateVO.setTitle(select_qualification[i]);
+            stateVO.setSelected(false);
+            listVOs.add(stateVO);
+        }
+        MyAdapter myAdapter = new MyAdapter(this, 0,
+                listVOs);
+
+
+        spinnerMulti.setAdapter(myAdapter);
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
@@ -223,30 +246,23 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             dialogFilter.dismiss();
         });
 
-        //final Spinner spinnerMulti = dialogFilter.findViewById(R.id.spnMarca);
-        //ArrayAdapter<CharSequence> arrayAdapterMulti = ArrayAdapter.createFromResource(dialogFilter.getContext(),
-        //        R.array.brands_types_array, android.R.layout.simple_spinner_item);
-        //arrayAdapterMulti.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //spinnerMulti.setAdapter(arrayAdapterMulti);
-
-        final String[] select_qualification = {
-                "Marcas", "Avia", "Campsa", "Carrefour", "Cepsa", "Galp",
-                "Petronor", "Repsol", "Shell"};
 
 
-        final Spinner spinnerMulti = dialogFilter.findViewById(R.id.spnMarca);
 
-        ArrayList<StateVO> listVOs = new ArrayList<>();
 
-        for (int i = 0; i < select_qualification.length; i++) {
-            StateVO stateVO = new StateVO();
-            stateVO.setTitle(select_qualification[i]);
-            stateVO.setSelected(false);
-            listVOs.add(stateVO);
-        }
-        MyAdapter myAdapter = new MyAdapter(this, 0,
-                listVOs);
-        spinnerMulti.setAdapter(myAdapter);
+
+        // Listener para aplicar
+        tvAplicar.setOnClickListener(view -> {
+            presenter.filter(spinnerCombustible.getSelectedItemPosition(),myAdapter.sumChecked());
+
+            GasolinerasArrayAdapter adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
+            ListView list = findViewById(R.id.lvGasolineras);
+            System.out.println(list + "*");
+            list.setAdapter(adapter);
+            dialogFilter.dismiss();
+        });
+
+
 
         // Listener para cancelar
         tvCancelar.setOnClickListener(view -> {
