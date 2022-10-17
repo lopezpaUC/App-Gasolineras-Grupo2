@@ -21,7 +21,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.common.prefs.Prefs;
@@ -36,6 +38,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     private static final int DIESEL = 1;
     private static final int GASOLINA = 2;
     private IMainContract.Presenter presenter;
+    private Set<String> recordar = new HashSet<>();
 
     /*
     Activity lifecycle methods
@@ -202,7 +205,18 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         for (int i = 0; i < select_qualification.length; i++) {
             StateVO stateVO = new StateVO();
             stateVO.setTitle(select_qualification[i]);
-            stateVO.setSelected(false);
+            if (!recordar.isEmpty()){
+                System.out.println("* entry");
+                for (String s:recordar) {
+                    if (s.equals(select_qualification[i])){
+                        stateVO.setSelected(true);
+                    }
+                }
+
+            }else {
+                stateVO.setSelected(false);
+            }
+
             listVOs.add(stateVO);
         }
         MyAdapter myAdapter = new MyAdapter(this, 0,
@@ -215,7 +229,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         tvAplicar.setOnClickListener(view -> {
             int itemPositionComb = spinnerCombustible.getSelectedItemPosition();
             CombustibleType combustibleSeleccionado = CombustibleType.getCombTypeFromInt(itemPositionComb);
-            presenter.filter(itemPositionComb, null);
+            presenter.filter(itemPositionComb, myAdapter.sumChecked());
             GasolinerasArrayAdapter adapter;
 
             switch (combustibleSeleccionado) {
@@ -241,8 +255,11 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             editor.apply();
 
             // Guardar el filtro de marcas seleccionado
-            // TODO
-
+            //SharedPreferences.Editor editorMarca = filterPref.edit();
+            //editorMarca.putStringSet(getString(R.string.saved_marca_type_filter), (Set<String>) myAdapter.sumChecked());
+            //editorMarca.apply();
+            recordar = (Set<String>) myAdapter.sumChecked();
+            System.out.println(recordar + "*");
             dialogFilter.dismiss();
         });
 
@@ -257,7 +274,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
             GasolinerasArrayAdapter adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
             ListView list = findViewById(R.id.lvGasolineras);
-            System.out.println(list + "*");
             list.setAdapter(adapter);
             dialogFilter.dismiss();
         });
