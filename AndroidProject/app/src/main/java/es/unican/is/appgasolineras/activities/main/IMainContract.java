@@ -47,6 +47,7 @@ public interface IMainContract {
          */
         void onFilterClicked();
 
+
         /**
          * Obtiene la lista de gasolineras que debe mostrar la vista.
          * @return lista de gasolineras que debe mostrar la vista.

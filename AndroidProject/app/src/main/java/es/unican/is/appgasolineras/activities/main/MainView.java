@@ -32,7 +32,9 @@ import es.unican.is.appgasolineras.activities.detail.GasolineraDetailView;
 import es.unican.is.appgasolineras.activities.info.InfoView;
 
 public class MainView extends AppCompatActivity implements IMainContract.View {
-
+    private static final int ALL_COMB = 0;
+    private static final int DIESEL = 1;
+    private static final int GASOLINA = 2;
     private IMainContract.Presenter presenter;
 
     /*
@@ -178,26 +180,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         initializeSpinnerCombType(spinnerCombustible, dialogFilter);
 
         // Inicializacion spinner tipo marca
-        //TODO
-
-        // Listener para aplicar
-        tvAplicar.setOnClickListener(view -> {
-            // Actualizar lista por filtro de tipo de combustible
-            int itemPositionComb = spinnerCombustible.getSelectedItemPosition();
-            updateListByGasType(itemPositionComb);
-
-            // Guardar el filtro de combustible seleccionado
-            saveIntPrefFilter(getString(R.string.saved_comb_type_filter), itemPositionComb);
-
-            // Actualizar lista por filtro de marcas
-            // TODO
-
-            // Guardar el filtro de combustible seleccionado
-            // TODO
-
-            dialogFilter.dismiss();
-        });
-
         final String[] select_qualification = {
                 "Marcas", "Avia", "Campsa", "Carrefour", "Cepsa", "Galp",
                 "Petronor", "Repsol", "Shell"};
@@ -215,7 +197,21 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         }
         MyAdapter myAdapter = new MyAdapter(this, 0,
                 listVOs);
+
+
         spinnerMulti.setAdapter(myAdapter);
+
+        // Listener para aplicar
+        tvAplicar.setOnClickListener(view -> {
+            // Actualizar lista
+            int itemPositionComb = spinnerCombustible.getSelectedItemPosition();
+            updateListByGasType(itemPositionComb, myAdapter.sumChecked());
+
+            // Guardar el filtro
+            saveIntPrefFilter(getString(R.string.saved_comb_type_filter), itemPositionComb);
+
+            dialogFilter.dismiss();
+        });
 
         // Listener para cancelar
         tvCancelar.setOnClickListener(view -> {
@@ -251,13 +247,13 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
      *
      * @param itemPositionComb Posicion marcada en el filtro por tipo de combustible.
      */
-    private void updateListByGasType(int itemPositionComb) {
+    private void updateListByGasType(int itemPositionComb, ArrayList<String> sumChecked) {
         // Convierte la posicion a un tipo de combustible, para mayor claridad
         CombustibleType combustibleSeleccionado = CombustibleType.getCombTypeFromInt(
                 itemPositionComb);
 
         // Solicita al presenter que realice el filtrado y actualice las gasolineras a mostrar
-        presenter.filter(combustibleSeleccionado, null);
+        presenter.filter(combustibleSeleccionado, sumChecked);
 
         // Prepara ArrayAdapter para la lista a mostrar
         GasolinerasArrayAdapter adapter;
