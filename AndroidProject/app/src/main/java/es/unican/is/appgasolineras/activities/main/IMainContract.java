@@ -59,8 +59,7 @@ public interface IMainContract {
          * @param combustibleType Tipo de combustible.
          * @param brands Mara o listado de marcas.
          */
-
-        void filter(int combustibleType, List<String> brands);
+        void filter(CombustibleType combustibleType, List<String> brands);
     }
 
     /**

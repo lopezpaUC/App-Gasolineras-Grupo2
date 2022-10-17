@@ -6,6 +6,12 @@ package es.unican.is.appgasolineras.activities.main;
 public enum CombustibleType {
     ALL_COMB, DIESEL, GASOLINA;
 
+    /**
+     * Permite la conversion de un entero a un tipo de combustible.
+     *
+     * @param type Entero que representa un tipo de combustible.
+     * @return Tipo de combustible.
+     */
     public static CombustibleType getCombTypeFromInt(int type) {
         CombustibleType typeEnum;
         switch (type) {
@@ -15,11 +21,11 @@ public enum CombustibleType {
             case 2:
                 typeEnum = GASOLINA;
                 break;
-            default:
+            default: // Cualquier otro valor, representa todos los combustibles en conjunto
                 typeEnum = ALL_COMB;
                 break;
-
         }
+
         return typeEnum;
     }
 }
