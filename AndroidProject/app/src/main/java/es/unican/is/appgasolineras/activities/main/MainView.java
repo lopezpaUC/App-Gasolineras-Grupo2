@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.time.Instant;
 import java.util.List;
@@ -53,6 +54,11 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         presenter = new MainPresenter(this);
         presenter.init();
         this.init();
+        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = filterPref.edit();
+        editor.putInt(getString(R.string.saved_comb_type_filter), 0);
+        editor.apply();
     }
 
     /**
@@ -80,6 +86,11 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
                 return true;
             case R.id.menuRefresh:
                 presenter.onRefreshClicked();
+                SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                        Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = filterPref.edit();
+                editor.putInt(getString(R.string.saved_comb_type_filter), 0);
+                editor.apply();
                 return true;
             case R.id.menuFilter:
                 presenter.onFilterClicked();
@@ -169,8 +180,14 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         final Spinner spinnerCombustible = dialogFilter.findViewById(R.id.spnTipoCombustible);
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(dialogFilter.getContext(),
                 R.array.combustible_types_array, android.R.layout.simple_spinner_item);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         spinnerCombustible.setAdapter(arrayAdapter);
+        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                Context.MODE_PRIVATE);
+        int savedCombValue = filterPref.getInt(getString(R.string.saved_comb_type_filter), 0);
+        spinnerCombustible.setSelection(savedCombValue);
+
 
         // Inicializacion spinner tipo marca
         final String[] select_qualification = {
@@ -196,6 +213,46 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
+            int itemPositionComb = spinnerCombustible.getSelectedItemPosition();
+            CombustibleType combustibleSeleccionado = CombustibleType.getCombTypeFromInt(itemPositionComb);
+            presenter.filter(itemPositionComb, null);
+            GasolinerasArrayAdapter adapter;
+
+            switch (combustibleSeleccionado) {
+                case ALL_COMB:
+                    adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
+                    break;
+                case DIESEL:
+                    adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
+                            getResources().getString(R.string.dieselAlabel));
+                    break;
+                default:
+                    adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
+                            getResources().getString(R.string.gasolina95label));
+                    break;
+            }
+
+            ListView list = findViewById(R.id.lvGasolineras);
+            list.setAdapter(adapter);
+
+            // Guardar el filtro de combustible seleccionado
+            SharedPreferences.Editor editor = filterPref.edit();
+            editor.putInt(getString(R.string.saved_comb_type_filter), itemPositionComb);
+            editor.apply();
+
+            // Guardar el filtro de marcas seleccionado
+            // TODO
+
+            dialogFilter.dismiss();
+        });
+
+
+
+
+
+
+        // Listener para aplicar
+        tvAplicar.setOnClickListener(view -> {
             presenter.filter(spinnerCombustible.getSelectedItemPosition(),myAdapter.sumChecked());
 
             GasolinerasArrayAdapter adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
@@ -204,6 +261,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             list.setAdapter(adapter);
             dialogFilter.dismiss();
         });
+
 
 
         // Listener para cancelar

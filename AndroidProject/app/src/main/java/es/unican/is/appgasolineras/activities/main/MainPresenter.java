@@ -21,7 +21,8 @@ public class MainPresenter implements IMainContract.Presenter {
     private IGasolinerasRepository repository;
 
     private List<Gasolinera> shownGasolineras;
-    private int loadMethod = 0;
+    private int loadMethod = LOAD_ONLINE;
+
 
     public MainPresenter(IMainContract.View view) {
         this.view = view;
@@ -38,6 +39,10 @@ public class MainPresenter implements IMainContract.Presenter {
         }
     }
 
+
+    /**
+     * Muestra contenido antes de haber intentado recibir el actualizado.
+     */
 
     private void doAsyncInit() {
         repository.requestGasolineras(new Callback<List<Gasolinera>>() {
@@ -61,18 +66,28 @@ public class MainPresenter implements IMainContract.Presenter {
         });
     }
 
+    /**
+     * Muestra contenido despues de intentar haber recibido el actualizado.
+     */
     private void doSyncInit() {
         List<Gasolinera> data = repository.getGasolineras();
-        if (!data.isEmpty()) {
+
+
+        if (!data.isEmpty()) { // Si se obtiene una lista con gasolineras
+            // Obtiene si se ha cargado de BD o repositorio online.
             loadMethod = repository.getLoadingMethod();
+            // Muestra gasolineras
             view.showGasolineras(data);
             shownGasolineras = data;
-            if (loadMethod == LOAD_ONLINE) {
+
+            if (loadMethod == LOAD_ONLINE) { // Si se obtienen de repositorio online
+                // Muestra que estan actualizadas y el numero
                 view.showLoadCorrectOnline(data.size());
-            } else {
+            } else { // Si se obtienen de BD
+                // Muestra la fecha de ultima actualizacion y el numero
                 view.showLoadCorrectOffline(data.size());
             }
-        } else {
+        } else { // Si no se obtienen gasolineras
             shownGasolineras = null;
             view.showLoadError();
         }
@@ -104,7 +119,9 @@ public class MainPresenter implements IMainContract.Presenter {
     public void filter(int combustibleType, List<String> brands) {
         shownGasolineras = repository.getGasolineras();
         filterByCombustible(combustibleType);
+
         filterByMarca(brands);
+
         if (!shownGasolineras.isEmpty()) {
             view.showGasolineras(shownGasolineras);
             if (loadMethod == LOAD_ONLINE) {
@@ -118,6 +135,7 @@ public class MainPresenter implements IMainContract.Presenter {
         }
 
     }
+
 
     public void filterByMarca(List<String> marcas) {
         Set<Gasolinera> resultadoFiltrado = new HashSet<>();
@@ -153,9 +171,11 @@ public class MainPresenter implements IMainContract.Presenter {
 
 
     private void filterByCombustible(int combustibleType) {
+        CombustibleType combustibleFiltrar = CombustibleType.getCombTypeFromInt(combustibleType);
         Set<Gasolinera> resultadoFiltrado;
         Set<Gasolinera> shownOldGasolineras = new HashSet<>(repository.getGasolineras());
-        switch (combustibleType) {
+        switch (combustibleFiltrar) {
+
             case DIESEL:
                 resultadoFiltrado = filterByDiesel();
                 break;

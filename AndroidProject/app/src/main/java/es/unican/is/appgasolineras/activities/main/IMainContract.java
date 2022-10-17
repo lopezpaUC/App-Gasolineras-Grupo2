@@ -47,7 +47,18 @@ public interface IMainContract {
          */
         void onFilterClicked();
 
+
+        /**
+         * Obtiene la lista de gasolineras que debe mostrar la vista.
+         * @return lista de gasolineras que debe mostrar la vista.
+         */
         List<Gasolinera> getShownGasolineras();
+
+        /**
+         * Filtra gasolineras a mostrar en funcion de los parametros especificados.
+         * @param combustibleType Tipo de combustible.
+         * @param brands Mara o listado de marcas.
+         */
 
         void filter(int combustibleType, List<String> brands);
     }

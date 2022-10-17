@@ -100,11 +100,13 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:contentDescription="@string/all"
-        android:gravity="right"
+        android:gravity="center_vertical"
         android:minHeight="48dp"
         app:layout_constraintBottom_toBottomOf="@+id/tvTipoCombTitle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvTipoCombTitle" />
+        app:layout_constraintTop_toTopOf="@+id/tvTipoCombTitle"
+        android:checkMark="?android:attr/listChoiceIndicatorSingle"
+        android:textSize="16sp"/>
 
     <LinearLayout
         android:id="@+id/linearLayout"
