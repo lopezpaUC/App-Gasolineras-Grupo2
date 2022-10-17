@@ -15,7 +15,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +31,9 @@ import es.unican.is.appgasolineras.activities.detail.GasolineraDetailView;
 import es.unican.is.appgasolineras.activities.info.InfoView;
 
 public class MainView extends AppCompatActivity implements IMainContract.View {
-
+    private static final int ALL_COMB = 0;
+    private static final int DIESEL = 1;
+    private static final int GASOLINA = 2;
     private IMainContract.Presenter presenter;
 
     /*
@@ -163,18 +164,15 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         // Inicializar elementos
         final TextView tvCancelar = dialogFilter.findViewById(R.id.tvCancel);
         final TextView tvAplicar = dialogFilter.findViewById(R.id.tvApply);
-        final Spinner spinner = dialogFilter.findViewById(R.id.spnTipoCombustible);
+
+        // Inicializacion spinner tipo combustible
+        final Spinner spinnerCombustible = dialogFilter.findViewById(R.id.spnTipoCombustible);
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(dialogFilter.getContext(),
                 R.array.combustible_types_array, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(arrayAdapter);
+        spinnerCombustible.setAdapter(arrayAdapter);
 
-        //final Spinner spinnerMulti = dialogFilter.findViewById(R.id.spnMarca);
-        //ArrayAdapter<CharSequence> arrayAdapterMulti = ArrayAdapter.createFromResource(dialogFilter.getContext(),
-        //        R.array.brands_types_array, android.R.layout.simple_spinner_item);
-        //arrayAdapterMulti.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //spinnerMulti.setAdapter(arrayAdapterMulti);
-
+        // Inicializacion spinner tipo marca
         final String[] select_qualification = {
                 "Marcas", "Avia", "Campsa", "Carrefour", "Cepsa", "Galp",
                 "Petronor", "Repsol", "Shell"};
@@ -192,27 +190,28 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         }
         MyAdapter myAdapter = new MyAdapter(this, 0,
                 listVOs);
+
+
         spinnerMulti.setAdapter(myAdapter);
 
+        // Listener para aplicar
+        tvAplicar.setOnClickListener(view -> {
+            presenter.filter(spinnerCombustible.getSelectedItemPosition(),myAdapter.sumChecked());
 
-
+            GasolinerasArrayAdapter adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
+            ListView list = findViewById(R.id.lvGasolineras);
+            System.out.println(list + "*");
+            list.setAdapter(adapter);
+            dialogFilter.dismiss();
+        });
 
 
         // Listener para cancelar
         tvCancelar.setOnClickListener(view -> {
             dialogFilter.dismiss();
         });
-
-        // Listener para aplicar
-        tvAplicar.setOnClickListener(view -> {
-            //TODO
-            dialogFilter.dismiss();
-        });
-
         dialogFilter.show();
     }
-
-
 
 
 }

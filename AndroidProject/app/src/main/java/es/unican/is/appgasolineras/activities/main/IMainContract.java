@@ -1,6 +1,7 @@
 package es.unican.is.appgasolineras.activities.main;
 
 import java.util.List;
+import java.util.Set;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
@@ -45,6 +46,10 @@ public interface IMainContract {
          * Filter button has been clicked
          */
         void onFilterClicked();
+
+        List<Gasolinera> getShownGasolineras();
+
+        void filter(int combustibleType, List<String> brands);
     }
 
     /**
@@ -81,11 +86,6 @@ public interface IMainContract {
          */
         void showLoadCorrectOnline(int gasolinerasCount);
 
-        /**
-         * The View is requested to show an alert informing that the gas stations were loaded
-         * correctly from app database.
-         * @param gasolinerasCount the number of gas stations that were loaded
-         */
         void showLoadCorrectOffline(int gasolinerasCount);
 
         /**
@@ -109,6 +109,7 @@ public interface IMainContract {
          * The View is requested to open the Filter dialog
          */
         void openFilterDialog();
+
     }
 
 }
