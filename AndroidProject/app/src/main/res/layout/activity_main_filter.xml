@@ -139,4 +139,15 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tvSelectedBrands"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/spnMarca"
+        app:layout_constraintEnd_toStartOf="@+id/spnMarca"
+        app:layout_constraintHorizontal_bias="0.727"
+        app:layout_constraintStart_toEndOf="@+id/tvMarcaTitle"
+        app:layout_constraintTop_toTopOf="@+id/spnMarca"
+        tools:text="brands" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

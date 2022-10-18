@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.time.Instant;
+import java.util.LinkedList;
 import java.util.List;
 
 import es.unican.is.appgasolineras.R;
@@ -35,6 +36,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     private static final int DIESEL = 1;
     private static final int GASOLINA = 2;
     private IMainContract.Presenter presenter;
+    private List<String> checkedBrandBoxes;
 
     /*
     Activity lifecycle methods
@@ -52,6 +54,8 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         presenter = new MainPresenter(this);
         presenter.init();
+
+        checkedBrandBoxes = new LinkedList<>();
         this.init();
     }
 
@@ -164,6 +168,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         // Inicializar elementos
         final TextView tvCancelar = dialogFilter.findViewById(R.id.tvCancel);
         final TextView tvAplicar = dialogFilter.findViewById(R.id.tvApply);
+        TextView tvSelectedBrands = findViewById(R.id.tvSelectedBrands);
 
         // Inicializacion spinner tipo combustible
         final Spinner spinnerCombustible = dialogFilter.findViewById(R.id.spnTipoCombustible);
@@ -186,8 +191,23 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             StateVO stateVO = new StateVO();
             stateVO.setTitle(select_qualification[i]);
             stateVO.setSelected(false);
+
+            // Ticks again previously ticked brands
+            for (String brand : checkedBrandBoxes) {
+                if (brand.equals(select_qualification[i])) {
+                    stateVO.setSelected(true);
+                    break; // Ends if found
+                } // if
+            } // for brand
             listVOs.add(stateVO);
-        }
+        } // for ix
+
+        /*if (checkedBrandBoxes.size() > 1) {
+            tvSelectedBrands.setText("Varias marcas");
+        } else if (checkedBrandBoxes.size() > 0) {
+            tvSelectedBrands.setText(checkedBrandBoxes.get(0).toString());
+        }*/ //FIXME: crashes
+
         MyAdapter myAdapter = new MyAdapter(this, 0,
                 listVOs);
 
@@ -196,12 +216,13 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
-            presenter.filter(spinnerCombustible.getSelectedItemPosition(),myAdapter.sumChecked());
+            checkedBrandBoxes = myAdapter.sumChecked();
+            presenter.filter(spinnerCombustible.getSelectedItemPosition(), checkedBrandBoxes);
 
             GasolinerasArrayAdapter adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
             ListView list = findViewById(R.id.lvGasolineras);
-            System.out.println(list + "*");
             list.setAdapter(adapter);
+
             dialogFilter.dismiss();
         });
 

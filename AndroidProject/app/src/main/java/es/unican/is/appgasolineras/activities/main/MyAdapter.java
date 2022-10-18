@@ -89,7 +89,6 @@ public class MyAdapter extends ArrayAdapter<StateVO> {
                 checked.add(l.getTitle());
             }
         }
-        System.out.println("*" + checked);
         return checked;
     }
 
