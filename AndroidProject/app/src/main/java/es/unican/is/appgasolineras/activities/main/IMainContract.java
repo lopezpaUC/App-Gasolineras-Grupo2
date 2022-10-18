@@ -1,6 +1,7 @@
 package es.unican.is.appgasolineras.activities.main;
 
 import java.util.List;
+import java.util.Set;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
@@ -39,6 +40,26 @@ public interface IMainContract {
          * Refresh button has been clicked
          */
         void onRefreshClicked();
+
+        /**
+         * This method should be used by the View to notify the Presenter that the
+         * Filter button has been clicked
+         */
+        void onFilterClicked();
+
+
+        /**
+         * Obtiene la lista de gasolineras que debe mostrar la vista.
+         * @return lista de gasolineras que debe mostrar la vista.
+         */
+        List<Gasolinera> getShownGasolineras();
+
+        /**
+         * Filtra gasolineras a mostrar en funcion de los parametros especificados.
+         * @param combustibleType Tipo de combustible.
+         * @param brands Mara o listado de marcas.
+         */
+        void filter(CombustibleType combustibleType, List<String> brands);
     }
 
     /**
@@ -70,10 +91,12 @@ public interface IMainContract {
 
         /**
          * The View is requested to show an alert informing that the gas stations were loaded
-         * correctly
+         * correctly from online repository.
          * @param gasolinerasCount the number of gas stations that were loaded
          */
-        void showLoadCorrect(int gasolinerasCount);
+        void showLoadCorrectOnline(int gasolinerasCount);
+
+        void showLoadCorrectOffline(int gasolinerasCount);
 
         /**
          * The View is requested to show an alert informing that there was an error while
@@ -91,6 +114,12 @@ public interface IMainContract {
          * The View is requested to open the Info view
          */
         void openInfoView();
+
+        /**
+         * The View is requested to open the Filter dialog
+         */
+        void openFilterDialog();
+
     }
 
 }

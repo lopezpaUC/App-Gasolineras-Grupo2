@@ -159,4 +159,14 @@ public class Gasolinera implements Parcelable {
         return rotulo + cp + direccion + municipio + horario + dieselA
                 + normal95;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return ((Gasolinera)o).id.equals(this.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id.hashCode();
+    }
 }
