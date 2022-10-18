@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -175,8 +174,10 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     @Override
     public void openFilterDialog() {
 
+
         final Dialog dialogFilter = new Dialog(MainView.this);
         final TextView[] tvSelectedBrands = new TextView[1];
+
 
 
         // Deshabilitar titulo (ya asignado en layout)
@@ -243,6 +244,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
+
             // Guardar en la variable global las marcas seleccionadas
             checkedBrandBoxes = myAdapter.sumChecked();
 
@@ -254,6 +256,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             // Guardar el filtro
             saveIntPrefFilter(getString(R.string.saved_comb_type_filter), itemPositionComb);
 
+
             dialogFilter.dismiss();
         });
 
@@ -263,7 +266,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         tvCancelar.setOnClickListener(view -> {
             dialogFilter.dismiss();
         });
-
 
         // Mostrar ventana de filtro
         dialogFilter.show();
