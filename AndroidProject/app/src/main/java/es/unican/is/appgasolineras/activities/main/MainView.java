@@ -214,11 +214,13 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             listVOs.add(stateVO);
         } // for ix
 
-        /*if (checkedBrandBoxes.size() > 1) {
+
+        if (checkedBrandBoxes.size() > 1) {
             tvSelectedBrands.setText("Varias marcas");
         } else if (checkedBrandBoxes.size() > 0) {
             tvSelectedBrands.setText(checkedBrandBoxes.get(0).toString());
-        }*/ //FIXME: crashes
+        }
+
 
         MyAdapter myAdapter = new MyAdapter(this, 0,
                 listVOs);
@@ -233,7 +235,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             int itemPositionComb = spinnerCombustible.getSelectedItemPosition();
 
             CombustibleType combustibleSeleccionado = CombustibleType.getCombTypeFromInt(itemPositionComb);
-            presenter.filter(combustibleSeleccionado, myAdapter.sumChecked());
+            //presenter.filter(combustibleSeleccionado, myAdapter.sumChecked());
             GasolinerasArrayAdapter adapter;
 
             switch (combustibleSeleccionado) {
