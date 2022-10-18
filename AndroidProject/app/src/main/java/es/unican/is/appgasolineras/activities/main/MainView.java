@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.time.Instant;
+import java.util.LinkedList;
 import java.util.List;
 
 import es.unican.is.appgasolineras.R;
@@ -36,6 +37,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     private static final int DIESEL = 1;
     private static final int GASOLINA = 2;
     private IMainContract.Presenter presenter;
+    private List<String> checkedBrandBoxes;
 
     /*
     Activity lifecycle methods
@@ -53,6 +55,8 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         presenter = new MainPresenter(this);
         presenter.init();
+
+        checkedBrandBoxes = new LinkedList<>();
         this.init();
         SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
                 Context.MODE_PRIVATE);
@@ -165,7 +169,8 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     @Override
     public void openFilterDialog() {
-        Dialog dialogFilter = new Dialog(MainView.this);
+        final Dialog dialogFilter = new Dialog(MainView.this);
+        TextView tvSelectedBrands;
 
         // Deshabilitar titulo (ya asignado en layout)
         dialogFilter.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -189,17 +194,34 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         ArrayList<StateVO> listVOs = new ArrayList<>();
 
+        StateVO stateVO;
+
         for (int i = 0; i < select_qualification.length; i++) {
-            StateVO stateVO = new StateVO();
+            stateVO = new StateVO();
             stateVO.setTitle(select_qualification[i]);
             stateVO.setSelected(false);
+
+            // Ticks again previously ticked brands
+            for (String brand : checkedBrandBoxes) {
+                if (brand.equals(select_qualification[i])) {
+                    stateVO.setSelected(true);
+                    break; // Ends if found
+                } // if
+            } // for brand
             listVOs.add(stateVO);
-        }
-        MyAdapter myAdapter = new MyAdapter(this, 0,
-                listVOs);
-
-
+        } // for i
+        MyAdapter myAdapter = new MyAdapter(this, 0, listVOs);
         spinnerMulti.setAdapter(myAdapter);
+
+        // Displays text according to the number of selected brands
+        tvSelectedBrands = dialogFilter.findViewById(R.id.tvSelectedBrands);
+        String txtSelected = "";
+        if (myAdapter.sumChecked().size() > 1) {
+            txtSelected = "Varias marcas";
+        } else if (myAdapter.sumChecked().size() > 0) {
+            txtSelected = myAdapter.sumChecked().get(0);
+        }
+        tvSelectedBrands.setText(txtSelected);
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
@@ -210,6 +232,15 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             // Guardar el filtro
             saveIntPrefFilter(getString(R.string.saved_comb_type_filter), itemPositionComb);
 
+            checkedBrandBoxes = myAdapter.sumChecked();
+            presenter.filter(CombustibleType.getCombTypeFromInt(
+                    spinnerCombustible.getSelectedItemPosition()), checkedBrandBoxes);
+
+            GasolinerasArrayAdapter adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
+            ListView list = findViewById(R.id.lvGasolineras);
+            list.setAdapter(adapter);
+
+
             dialogFilter.dismiss();
         });
 
@@ -217,7 +248,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         tvCancelar.setOnClickListener(view -> {
             dialogFilter.dismiss();
         });
-
         // Mostrar ventana de filtro
         dialogFilter.show();
     }
