@@ -146,7 +146,7 @@ public class MainPresenter implements IMainContract.Presenter {
         shownGasolineras = repository.getGasolineras();
         filterByCombustible(combustibleType);
 
-        filterByMarca(brands);
+        filterByBrand(brands);
 
         if (!shownGasolineras.isEmpty()) { // Si hay gasolineras a mostrar despues de filtrado
             view.showGasolineras(shownGasolineras);
@@ -164,6 +164,7 @@ public class MainPresenter implements IMainContract.Presenter {
         }
 
     }
+
 
     /**
      * Filtra por tipo de combustible.
@@ -196,7 +197,8 @@ public class MainPresenter implements IMainContract.Presenter {
      * Filtra por la marca o las marcas seleccionadas.
      * @param marcas Lista de marca o marcas seleccionadas.
      */
-    public void filterByMarca(List<String> marcas) {
+    public void filterByBrand(List<String> marcas) {
+
         Set<Gasolinera> resultadoFiltrado = new HashSet<>();
         Set<Gasolinera> shownOldGasolineras = new HashSet<>(repository.getGasolineras());
 
@@ -204,7 +206,7 @@ public class MainPresenter implements IMainContract.Presenter {
             resultadoFiltrado.addAll(repository.getGasolineras());
         }else{
                 for (int i = 0; i < marcas.size(); i++) {
-                    resultadoFiltrado.addAll(filterByMarcas(marcas.get(i).toString()));
+                    resultadoFiltrado.addAll(filterByBrands(marcas.get(i).toString()));
                 }
         }
         shownOldGasolineras.retainAll(resultadoFiltrado);
@@ -216,12 +218,14 @@ public class MainPresenter implements IMainContract.Presenter {
         }
     }
 
+
     /**
      * Genera una lista que contenga aquellas gasolineras con la marca que se introduce como parametro.
      * @param marca Marca por la que se desea filtrar.
      * @return lista de gasolineras de las marcas seleccionadas.
      */
-    private Set<Gasolinera> filterByMarcas(String marca) {
+    private Set<Gasolinera> filterByBrands(String marca) {
+
         Set<Gasolinera> compatibles = new HashSet<>();
         for (Gasolinera g:shownGasolineras) {
             if (g.getRotulo().equals(marca.toUpperCase())) {
