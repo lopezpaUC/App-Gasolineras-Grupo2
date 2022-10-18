@@ -168,29 +168,19 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     @Override
     public void openFilterDialog() {
-        final Dialog dialogFilter = new Dialog(MainView.this);
+        Dialog dialogFilter = new Dialog(MainView.this);
 
         // Deshabilitar titulo (ya asignado en layout)
         dialogFilter.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         dialogFilter.setContentView(R.layout.activity_main_filter);
 
         // Inicializar elementos
-        final TextView tvCancelar = dialogFilter.findViewById(R.id.tvCancel);
-        final TextView tvAplicar = dialogFilter.findViewById(R.id.tvApply);
+        TextView tvCancelar = dialogFilter.findViewById(R.id.tvCancel);
+        TextView tvAplicar = dialogFilter.findViewById(R.id.tvApply);
 
         // Inicializacion spinner tipo combustible
-        final Spinner spinnerCombustible = dialogFilter.findViewById(R.id.spnTipoCombustible);
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(dialogFilter.getContext(),
-                R.array.combustible_types_array, android.R.layout.simple_spinner_item);
-
-        arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
-        spinnerCombustible.setAdapter(arrayAdapter);
-        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
-                Context.MODE_PRIVATE);
-        int savedCombValue = filterPref.getInt(getString(R.string.saved_comb_type_filter), 0);
-        spinnerCombustible.setSelection(savedCombValue);
-
+        Spinner spinnerCombustible = dialogFilter.findViewById(R.id.spnTipoCombustible);
+        initializeSpinnerCombType(spinnerCombustible, dialogFilter);
 
         // Inicializacion spinner tipo marca
         final String[] select_qualification = {
@@ -227,9 +217,11 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
+            // Actualizar lista
             int itemPositionComb = spinnerCombustible.getSelectedItemPosition();
+
             CombustibleType combustibleSeleccionado = CombustibleType.getCombTypeFromInt(itemPositionComb);
-            presenter.filter(itemPositionComb, myAdapter.sumChecked());
+            presenter.filter(combustibleSeleccionado, myAdapter.sumChecked());
             GasolinerasArrayAdapter adapter;
 
             switch (combustibleSeleccionado) {
@@ -249,15 +241,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             ListView list = findViewById(R.id.lvGasolineras);
             list.setAdapter(adapter);
 
-            // Guardar el filtro de combustible seleccionado
-            SharedPreferences.Editor editor = filterPref.edit();
-            editor.putInt(getString(R.string.saved_comb_type_filter), itemPositionComb);
-            editor.apply();
 
-            // Guardar el filtro de marcas seleccionado
-            //SharedPreferences.Editor editorMarca = filterPref.edit();
-            //editorMarca.putStringSet(getString(R.string.saved_marca_type_filter), (Set<String>) myAdapter.sumChecked());
-            //editorMarca.apply();
             recordar = (Set<String>) myAdapter.sumChecked();
             System.out.println(recordar + "*");
             dialogFilter.dismiss();
@@ -270,13 +254,16 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
-            presenter.filter(spinnerCombustible.getSelectedItemPosition(),myAdapter.sumChecked());
+            // Actualizar lista
+            int itemPositionComb = spinnerCombustible.getSelectedItemPosition();
+            updateListByGasType(itemPositionComb, myAdapter.sumChecked());
 
-            GasolinerasArrayAdapter adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
-            ListView list = findViewById(R.id.lvGasolineras);
-            list.setAdapter(adapter);
+            // Guardar el filtro
+            saveIntPrefFilter(getString(R.string.saved_comb_type_filter), itemPositionComb);
+
             dialogFilter.dismiss();
         });
+
 
 
 
@@ -284,8 +271,79 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         tvCancelar.setOnClickListener(view -> {
             dialogFilter.dismiss();
         });
+
+        // Mostrar ventana de filtro
         dialogFilter.show();
     }
 
+    /**
+     * Inicializa el spinner del filtro por tipo de combustible.
+     * @param spinnerCombustible Spinner con las opciones de tipos de combustibles.
+     * @param dialogFilter Dialogo que contiene los elementos del filtro.
+     */
+    private void initializeSpinnerCombType(Spinner spinnerCombustible, Dialog dialogFilter) {
+        // ArrayAdapter con los tipos de combustibles
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(
+                dialogFilter.getContext(), R.array.combustible_types_array,
+                android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        spinnerCombustible.setAdapter(arrayAdapter);
 
+        // Recupera la seleccion previa a cerrar la ventana
+        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                Context.MODE_PRIVATE);
+        int savedCombValue = filterPref.getInt(getString(R.string.saved_comb_type_filter), 0);
+        spinnerCombustible.setSelection(savedCombValue);
+    }
+
+    /**
+     * Actualiza la lista de gasolineras en función  del tipo de combustible.
+     *
+     * @param itemPositionComb Posicion marcada en el filtro por tipo de combustible.
+     */
+    private void updateListByGasType(int itemPositionComb, ArrayList<String> sumChecked) {
+        // Convierte la posicion a un tipo de combustible, para mayor claridad
+        CombustibleType combustibleSeleccionado = CombustibleType.getCombTypeFromInt(
+                itemPositionComb);
+
+        // Solicita al presenter que realice el filtrado y actualice las gasolineras a mostrar
+        presenter.filter(combustibleSeleccionado, sumChecked);
+
+        // Prepara ArrayAdapter para la lista a mostrar
+        GasolinerasArrayAdapter adapter;
+        switch (combustibleSeleccionado) {
+            case GASOLINA:
+                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
+                        getResources().getString(R.string.gasolina95label));
+                break;
+            case DIESEL:
+                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
+                        getResources().getString(R.string.dieselAlabel));
+                break;
+            default:
+                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
+                break;
+        }
+
+        // Actualiza la lista
+        ListView list = findViewById(R.id.lvGasolineras);
+        list.setAdapter(adapter);
+    }
+
+    /**
+     * Guarda un entero relacionado con los filtros.
+     *
+     * @param key Clave para realizar la persistencia.
+     * @param value Valor entero a guardar.
+     */
+    private void saveIntPrefFilter(String key, int value) {
+        // Obtiene Preference de los filtros
+        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                Context.MODE_PRIVATE);
+
+        // Guarda el valor
+        SharedPreferences.Editor editor = filterPref.edit();
+        editor.putInt(key, value);
+        editor.apply();
+    }
 }
