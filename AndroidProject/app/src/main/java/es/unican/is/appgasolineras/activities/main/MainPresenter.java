@@ -104,7 +104,7 @@ public class MainPresenter implements IMainContract.Presenter {
     public void filter(int combustibleType, List<String> brands) {
         shownGasolineras = repository.getGasolineras();
         filterByCombustible(combustibleType);
-        filterByMarca(brands);
+        filterByBrand(brands);
         if (!shownGasolineras.isEmpty()) {
             view.showGasolineras(shownGasolineras);
             if (loadMethod == LOAD_ONLINE) {
@@ -119,7 +119,7 @@ public class MainPresenter implements IMainContract.Presenter {
 
     }
 
-    public void filterByMarca(List<String> marcas) {
+    public void filterByBrand(List<String> marcas) {
         Set<Gasolinera> resultadoFiltrado = new HashSet<>();
         Set<Gasolinera> shownOldGasolineras = new HashSet<>(repository.getGasolineras());
 
@@ -127,7 +127,7 @@ public class MainPresenter implements IMainContract.Presenter {
             resultadoFiltrado.addAll(repository.getGasolineras());
         }else{
                 for (int i = 0; i < marcas.size(); i++) {
-                    resultadoFiltrado.addAll(filterByMarcas(marcas.get(i).toString()));
+                    resultadoFiltrado.addAll(filterByBrands(marcas.get(i).toString()));
                 }
 
         }
@@ -141,7 +141,7 @@ public class MainPresenter implements IMainContract.Presenter {
         }
     }
 
-    private Set<Gasolinera> filterByMarcas(String marca) {
+    private Set<Gasolinera> filterByBrands(String marca) {
         Set<Gasolinera> compatibles = new HashSet<>();
         for (Gasolinera g:shownGasolineras) {
             if (g.getRotulo().equals(marca.toUpperCase())) {
