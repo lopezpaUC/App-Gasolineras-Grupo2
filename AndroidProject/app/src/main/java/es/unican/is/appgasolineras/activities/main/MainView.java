@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.time.Instant;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -38,7 +38,8 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     private static final int DIESEL = 1;
     private static final int GASOLINA = 2;
     private IMainContract.Presenter presenter;
-    private Set<String> recordar = new HashSet<>();
+    private List<String> checkedBrandBoxes;
+
 
     /*
     Activity lifecycle methods
@@ -56,6 +57,8 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         presenter = new MainPresenter(this);
         presenter.init();
+
+        checkedBrandBoxes = new LinkedList<>();
         this.init();
         SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
                 Context.MODE_PRIVATE);
@@ -175,8 +178,11 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         dialogFilter.setContentView(R.layout.activity_main_filter);
 
         // Inicializar elementos
-        TextView tvCancelar = dialogFilter.findViewById(R.id.tvCancel);
-        TextView tvAplicar = dialogFilter.findViewById(R.id.tvApply);
+
+        final TextView tvCancelar = dialogFilter.findViewById(R.id.tvCancel);
+        final TextView tvAplicar = dialogFilter.findViewById(R.id.tvApply);
+        TextView tvSelectedBrands = findViewById(R.id.tvSelectedBrands);
+
 
         // Inicializacion spinner tipo combustible
         Spinner spinnerCombustible = dialogFilter.findViewById(R.id.spnTipoCombustible);
@@ -195,20 +201,25 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         for (int i = 0; i < select_qualification.length; i++) {
             StateVO stateVO = new StateVO();
             stateVO.setTitle(select_qualification[i]);
-            if (!recordar.isEmpty()){
-                System.out.println("* entry");
-                for (String s:recordar) {
-                    if (s.equals(select_qualification[i])){
-                        stateVO.setSelected(true);
-                    }
-                }
 
-            }else {
-                stateVO.setSelected(false);
-            }
+            stateVO.setSelected(false);
 
+            // Ticks again previously ticked brands
+            for (String brand : checkedBrandBoxes) {
+                if (brand.equals(select_qualification[i])) {
+                    stateVO.setSelected(true);
+                    break; // Ends if found
+                } // if
+            } // for brand
             listVOs.add(stateVO);
-        }
+        } // for ix
+
+        /*if (checkedBrandBoxes.size() > 1) {
+            tvSelectedBrands.setText("Varias marcas");
+        } else if (checkedBrandBoxes.size() > 0) {
+            tvSelectedBrands.setText(checkedBrandBoxes.get(0).toString());
+        }*/ //FIXME: crashes
+
         MyAdapter myAdapter = new MyAdapter(this, 0,
                 listVOs);
 
@@ -217,6 +228,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
+
             // Actualizar lista
             int itemPositionComb = spinnerCombustible.getSelectedItemPosition();
 
@@ -238,12 +250,13 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
                     break;
             }
 
+            checkedBrandBoxes = myAdapter.sumChecked();
+            presenter.filter(combustibleSeleccionado, checkedBrandBoxes);
+
+
             ListView list = findViewById(R.id.lvGasolineras);
             list.setAdapter(adapter);
 
-
-            recordar = (Set<String>) myAdapter.sumChecked();
-            System.out.println(recordar + "*");
             dialogFilter.dismiss();
         });
 
