@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -159,6 +160,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     @Override
     public void openFilterDialog() {
         final Dialog dialogFilter = new Dialog(MainView.this);
+        TextView tvSelectedBrands;
 
         // Deshabilitar titulo (ya asignado en layout)
         dialogFilter.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -168,7 +170,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         // Inicializar elementos
         final TextView tvCancelar = dialogFilter.findViewById(R.id.tvCancel);
         final TextView tvAplicar = dialogFilter.findViewById(R.id.tvApply);
-        TextView tvSelectedBrands = findViewById(R.id.tvSelectedBrands);
 
         // Inicializacion spinner tipo combustible
         final Spinner spinnerCombustible = dialogFilter.findViewById(R.id.spnTipoCombustible);
@@ -187,8 +188,10 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         ArrayList<StateVO> listVOs = new ArrayList<>();
 
+        StateVO stateVO;
+
         for (int i = 0; i < select_qualification.length; i++) {
-            StateVO stateVO = new StateVO();
+            stateVO = new StateVO();
             stateVO.setTitle(select_qualification[i]);
             stateVO.setSelected(false);
 
@@ -200,19 +203,19 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
                 } // if
             } // for brand
             listVOs.add(stateVO);
-        } // for ix
-
-        /*if (checkedBrandBoxes.size() > 1) {
-            tvSelectedBrands.setText("Varias marcas");
-        } else if (checkedBrandBoxes.size() > 0) {
-            tvSelectedBrands.setText(checkedBrandBoxes.get(0).toString());
-        }*/ //FIXME: crashes
-
-        MyAdapter myAdapter = new MyAdapter(this, 0,
-                listVOs);
-
-
+        } // for i
+        MyAdapter myAdapter = new MyAdapter(this, 0, listVOs);
         spinnerMulti.setAdapter(myAdapter);
+
+        // Displays text according to the number of selected brands
+        tvSelectedBrands = dialogFilter.findViewById(R.id.tvSelectedBrands);
+        String txtSelected = "";
+        if (myAdapter.sumChecked().size() > 1) {
+            txtSelected = "Varias marcas";
+        } else if (myAdapter.sumChecked().size() > 0) {
+            txtSelected = myAdapter.sumChecked().get(0);
+        }
+        tvSelectedBrands.setText(txtSelected);
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
@@ -226,13 +229,11 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             dialogFilter.dismiss();
         });
 
-
         // Listener para cancelar
         tvCancelar.setOnClickListener(view -> {
             dialogFilter.dismiss();
         });
+
         dialogFilter.show();
     }
-
-
 }
