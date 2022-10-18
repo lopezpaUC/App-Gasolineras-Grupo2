@@ -1,5 +1,6 @@
 package es.unican.is.appgasolineras.activities.main;
 
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ public class MyAdapter extends ArrayAdapter<StateVO> {
     private MyAdapter myAdapter;
     private boolean isFromView = false;
 
+    //Constructor del nuevo adapter
     public MyAdapter(Context context, int resource, List<StateVO> objects) {
         super(context, resource, objects);
         this.mContext = context;
@@ -38,6 +40,14 @@ public class MyAdapter extends ArrayAdapter<StateVO> {
         return getCustomView(position, convertView, parent);
     }
 
+
+    /**
+     * Crear la vista con los checkboxs y las marcas.
+     * @param convertView convertir la vista en la vista completa.
+     * @param position posicion en la lista.
+     * @param parent view group padre.
+     * @return la vista completa.
+     */
     public View getCustomView(final int position, View convertView,ViewGroup parent) {
 
         final ViewHolder holder;
@@ -71,6 +81,7 @@ public class MyAdapter extends ArrayAdapter<StateVO> {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
                 int getPosition = (Integer) buttonView.getTag();
 
                 if (!isFromView) {
@@ -82,6 +93,14 @@ public class MyAdapter extends ArrayAdapter<StateVO> {
         return convertView;
     }
 
+
+
+
+    /**
+     * Comprueba que marcas estan seleccionadas en la lista.
+     *
+     * @return checked Array con las marcas seleccionadas
+     */
     public ArrayList<String> sumChecked(){
         ArrayList<String> checked = new ArrayList<String>();
         for (StateVO l : listState){
@@ -89,10 +108,11 @@ public class MyAdapter extends ArrayAdapter<StateVO> {
                 checked.add(l.getTitle());
             }
         }
-        System.out.println("*" + checked);
         return checked;
     }
 
+
+    //Clase para cada marca
     private class ViewHolder {
         private TextView mTextView;
         private CheckBox mCheckBox;

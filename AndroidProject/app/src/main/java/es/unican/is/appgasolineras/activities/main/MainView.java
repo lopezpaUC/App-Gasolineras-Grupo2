@@ -11,7 +11,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -21,7 +24,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.time.Instant;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.common.prefs.Prefs;
@@ -36,6 +41,8 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     private static final int DIESEL = 1;
     private static final int GASOLINA = 2;
     private IMainContract.Presenter presenter;
+    private List<String> checkedBrandBoxes;
+
 
     /*
     Activity lifecycle methods
@@ -53,6 +60,8 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         presenter = new MainPresenter(this);
         presenter.init();
+
+        checkedBrandBoxes = new LinkedList<>();
         this.init();
         SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
                 Context.MODE_PRIVATE);
@@ -165,15 +174,20 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     @Override
     public void openFilterDialog() {
-        Dialog dialogFilter = new Dialog(MainView.this);
+
+        final Dialog dialogFilter = new Dialog(MainView.this);
+        final TextView[] tvSelectedBrands = new TextView[1];
+
 
         // Deshabilitar titulo (ya asignado en layout)
         dialogFilter.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogFilter.setContentView(R.layout.activity_main_filter);
 
         // Inicializar elementos
-        TextView tvCancelar = dialogFilter.findViewById(R.id.tvCancel);
-        TextView tvAplicar = dialogFilter.findViewById(R.id.tvApply);
+
+        final TextView tvCancelar = dialogFilter.findViewById(R.id.tvCancel);
+        final TextView tvAplicar = dialogFilter.findViewById(R.id.tvApply);
+
 
         // Inicializacion spinner tipo combustible
         Spinner spinnerCombustible = dialogFilter.findViewById(R.id.spnTipoCombustible);
@@ -185,27 +199,57 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
                 "Petronor", "Repsol", "Shell"};
 
 
+        // Crear el spinner de seleccion multiple
         final Spinner spinnerMulti = dialogFilter.findViewById(R.id.spnMarca);
 
+        // Array con las marcas
         ArrayList<StateVO> listVOs = new ArrayList<>();
+        // Marca
+        StateVO stateVO;
 
+        // Bucle para crear y añadir las marcas al array de marcas
         for (int i = 0; i < select_qualification.length; i++) {
-            StateVO stateVO = new StateVO();
+            stateVO = new StateVO();
             stateVO.setTitle(select_qualification[i]);
             stateVO.setSelected(false);
+
+            // Si la marca esta en la lista de selccionados, deja su checkbox seleccionada
+            for (String brand : checkedBrandBoxes) {
+                if (brand.equals(select_qualification[i])) {
+                    stateVO.setSelected(true);
+                    break;
+                }
+            }
             listVOs.add(stateVO);
+
         }
-        MyAdapter myAdapter = new MyAdapter(this, 0,
-                listVOs);
 
-
+        // Crear y asignar el adapter modificado para el spinner de selccion multiple
+        MyAdapter myAdapter = new MyAdapter(this, 0, listVOs);
         spinnerMulti.setAdapter(myAdapter);
+
+
+        // Mostrar la marca seleccionada o "Varias marcas" en caso de ser mas
+        tvSelectedBrands[0] = dialogFilter.findViewById(R.id.tvSelectedBrands);
+        String txtSelected = "";
+        if (myAdapter.sumChecked().size() > 1) {
+            txtSelected = "Varias marcas";
+        } else if (myAdapter.sumChecked().size() > 0) {
+            txtSelected = myAdapter.sumChecked().get(0);
+        }
+        tvSelectedBrands[0].setText(txtSelected);
+
+
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
+            // Guardar en la variable global las marcas seleccionadas
+            checkedBrandBoxes = myAdapter.sumChecked();
+
             // Actualizar lista
             int itemPositionComb = spinnerCombustible.getSelectedItemPosition();
-            updateListByGasType(itemPositionComb, myAdapter.sumChecked());
+            updateListByGasType(itemPositionComb,checkedBrandBoxes);
+
 
             // Guardar el filtro
             saveIntPrefFilter(getString(R.string.saved_comb_type_filter), itemPositionComb);
@@ -213,10 +257,13 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             dialogFilter.dismiss();
         });
 
+
+
         // Listener para cancelar
         tvCancelar.setOnClickListener(view -> {
             dialogFilter.dismiss();
         });
+
 
         // Mostrar ventana de filtro
         dialogFilter.show();
@@ -247,7 +294,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
      *
      * @param itemPositionComb Posicion marcada en el filtro por tipo de combustible.
      */
-    private void updateListByGasType(int itemPositionComb, ArrayList<String> sumChecked) {
+    private void updateListByGasType(int itemPositionComb, List<String> sumChecked) {
         // Convierte la posicion a un tipo de combustible, para mayor claridad
         CombustibleType combustibleSeleccionado = CombustibleType.getCombTypeFromInt(
                 itemPositionComb);
@@ -292,4 +339,5 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         editor.putInt(key, value);
         editor.apply();
     }
+
 }

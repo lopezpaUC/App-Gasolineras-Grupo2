@@ -47,4 +47,5 @@
 
     <string name="preference_filter_file_key_">AppFilterPreference</string>
     <string name="saved_comb_type_filter">TipoCombustible</string>
+    <string name="saved_marca_type_filter">TipoMarca</string>
 </resources>
