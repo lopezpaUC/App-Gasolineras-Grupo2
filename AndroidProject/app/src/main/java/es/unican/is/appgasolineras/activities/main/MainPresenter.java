@@ -192,6 +192,10 @@ public class MainPresenter implements IMainContract.Presenter {
         }
     }
 
+    /**
+     * Filtra por la marca o las marcas seleccionadas.
+     * @param marcas Lista de marca o marcas seleccionadas.
+     */
     public void filterByMarca(List<String> marcas) {
         Set<Gasolinera> resultadoFiltrado = new HashSet<>();
         Set<Gasolinera> shownOldGasolineras = new HashSet<>(repository.getGasolineras());
@@ -212,6 +216,11 @@ public class MainPresenter implements IMainContract.Presenter {
         }
     }
 
+    /**
+     * Genera una lista que contenga aquellas gasolineras con la marca que se introduce como parametro.
+     * @param marca Marca por la que se desea filtrar.
+     * @return lista de gasolineras de las marcas seleccionadas.
+     */
     private Set<Gasolinera> filterByMarcas(String marca) {
         Set<Gasolinera> compatibles = new HashSet<>();
         for (Gasolinera g:shownGasolineras) {
