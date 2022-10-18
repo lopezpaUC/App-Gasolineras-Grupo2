@@ -28,12 +28,12 @@
     <string name="repsol">Repsol</string>
     <string name="shell">Shell</string>
 
-
     <string-array name="combustible_types_array">
         <item>@string/all</item>
         <item>@string/dieselAlabel</item>
         <item>@string/gasolina95label</item>
     </string-array>
+
     <string-array name="brands_types_array">
         <item>@string/avia</item>
         <item>@string/campsa</item>
@@ -44,4 +44,8 @@
         <item>@string/repsol</item>
         <item>@string/shell</item>
     </string-array>
+
+    <string name="preference_filter_file_key_">AppFilterPreference</string>
+    <string name="saved_comb_type_filter">TipoCombustible</string>
+    <string name="saved_marca_type_filter">TipoMarca</string>
 </resources>

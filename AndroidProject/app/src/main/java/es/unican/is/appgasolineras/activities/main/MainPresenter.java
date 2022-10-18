@@ -17,27 +17,44 @@ public class MainPresenter implements IMainContract.Presenter {
     private static final int DIESEL = 1;
     private static final int GASOLINA = 2;
 
+    // Vista principal
     private final IMainContract.View view;
+
+    // Repositorio de gasolineras
     private IGasolinerasRepository repository;
 
+    // Lista de gasolineras a mostrar
     private List<Gasolinera> shownGasolineras;
-    private int loadMethod = 0;
 
+    // Metodo utilizado para la carga de gasolineras
+    private int loadMethod;
+
+    /**
+     * Constructor del presenter de la vista principal.
+     *
+     * @param view Vista principal
+     */
     public MainPresenter(IMainContract.View view) {
+
         this.view = view;
+        loadMethod = LOAD_ONLINE; // Por defecto, se cargan de repositorio online
     }
 
     @Override
     public void init() {
-        if (repository == null) {
+        if (repository == null) { // Si no consta repositorio asignado
             repository = view.getGasolineraRepository();
         }
 
-        if (repository != null) {
+        if (repository != null) { // Si ya consta un repositorio
             doSyncInit();
         }
     }
 
+
+    /**
+     * Muestra contenido antes de haber intentado recibir el actualizado de internet.
+     */
 
     private void doAsyncInit() {
         repository.requestGasolineras(new Callback<List<Gasolinera>>() {
@@ -61,21 +78,37 @@ public class MainPresenter implements IMainContract.Presenter {
         });
     }
 
+    /**
+     * Muestra contenido despues de intentar haber recibido el actualizado de internet.
+     */
     private void doSyncInit() {
         List<Gasolinera> data = repository.getGasolineras();
-        if (!data.isEmpty()) {
+
+
+        if (!data.isEmpty()) { // Si se obtiene una lista con gasolineras
+            // Obtiene si se ha cargado de BD o repositorio online.
             loadMethod = repository.getLoadingMethod();
+
+            // Muestra gasolineras
             view.showGasolineras(data);
             shownGasolineras = data;
-            if (loadMethod == LOAD_ONLINE) {
+
+            if (loadMethod == LOAD_ONLINE) { // Si se obtienen de repositorio online
+                // Muestra que estan actualizadas y el numero
                 view.showLoadCorrectOnline(data.size());
-            } else {
+            } else { // Si se obtienen de BD
+                // Muestra la fecha de ultima actualizacion y el numero
                 view.showLoadCorrectOffline(data.size());
             }
-        } else {
+        } else { // Si no se obtienen gasolineras
             shownGasolineras = null;
             view.showLoadError();
         }
+    }
+
+    @Override
+    public List<Gasolinera> getShownGasolineras() {
+        return this.shownGasolineras;
     }
 
     @Override
@@ -101,25 +134,71 @@ public class MainPresenter implements IMainContract.Presenter {
         init();
     }
 
-    public void filter(int combustibleType, List<String> brands) {
+    /**
+     * Filtra la lista de gasolineras en funcion de unas marcas seleccionadas y/o un tipo
+     * determinado de combustible.
+     *
+     * @param combustibleType Tipo de combustible.
+     * @param brands Mara o listado de marcas.
+     */
+    @Override
+    public void filter(CombustibleType combustibleType, List<String> brands) {
         shownGasolineras = repository.getGasolineras();
         filterByCombustible(combustibleType);
+
         filterByBrand(brands);
-        if (!shownGasolineras.isEmpty()) {
+
+        if (!shownGasolineras.isEmpty()) { // Si hay gasolineras a mostrar despues de filtrado
             view.showGasolineras(shownGasolineras);
+
+            // Muestra la informacion de las gasolineras obtenidas
             if (loadMethod == LOAD_ONLINE) {
                 view.showLoadCorrectOnline(shownGasolineras.size());
             } else {
             view.showLoadCorrectOffline(shownGasolineras.size());
             }
-        } else {
+
+        } else { // Si no hay gasolineras a mostrar despues de filtrado
             view.showLoadError();
             shownGasolineras = null;
         }
 
     }
 
+
+    /**
+     * Filtra por tipo de combustible.
+     * @param combustibleType Tipo de combustible a utilizar para filtrar
+     */
+    private void filterByCombustible(CombustibleType combustibleType) {
+        List<Gasolinera> resultadoFiltrado;
+
+        // Determina que gasolineras mostrar
+        switch (combustibleType) {
+            case DIESEL: // Mostrar gasolineras con diesel
+                resultadoFiltrado = filterByDiesel();
+                break;
+            case GASOLINA: // Mostrar gasolineras con gasolina
+                resultadoFiltrado = filterByGasolina();
+                break;
+            default: // Mostrar todas
+                resultadoFiltrado = repository.getGasolineras();
+                break;
+        }
+        Log.d("DEBUG", String.format("%s",resultadoFiltrado));
+        if (resultadoFiltrado.isEmpty()) {
+            shownGasolineras = new ArrayList<>();
+        } else {
+            shownGasolineras = new ArrayList<>(resultadoFiltrado);
+        }
+    }
+
+    /**
+     * Filtra por la marca o las marcas seleccionadas.
+     * @param marcas Lista de marca o marcas seleccionadas.
+     */
     public void filterByBrand(List<String> marcas) {
+
         Set<Gasolinera> resultadoFiltrado = new HashSet<>();
         Set<Gasolinera> shownOldGasolineras = new HashSet<>(repository.getGasolineras());
 
@@ -129,9 +208,7 @@ public class MainPresenter implements IMainContract.Presenter {
                 for (int i = 0; i < marcas.size(); i++) {
                     resultadoFiltrado.addAll(filterByBrands(marcas.get(i).toString()));
                 }
-
         }
-
         shownOldGasolineras.retainAll(resultadoFiltrado);
         Log.d("DEBUG", String.format("%s",resultadoFiltrado));
         if (shownOldGasolineras.isEmpty()) {
@@ -141,7 +218,14 @@ public class MainPresenter implements IMainContract.Presenter {
         }
     }
 
+
+    /**
+     * Genera una lista que contenga aquellas gasolineras con la marca que se introduce como parametro.
+     * @param marca Marca por la que se desea filtrar.
+     * @return lista de gasolineras de las marcas seleccionadas.
+     */
     private Set<Gasolinera> filterByBrands(String marca) {
+
         Set<Gasolinera> compatibles = new HashSet<>();
         for (Gasolinera g:shownGasolineras) {
             if (g.getRotulo().equals(marca.toUpperCase())) {
@@ -151,32 +235,13 @@ public class MainPresenter implements IMainContract.Presenter {
         return compatibles;
     }
 
-
-    private void filterByCombustible(int combustibleType) {
-        Set<Gasolinera> resultadoFiltrado;
-        Set<Gasolinera> shownOldGasolineras = new HashSet<>(repository.getGasolineras());
-        switch (combustibleType) {
-            case DIESEL:
-                resultadoFiltrado = filterByDiesel();
-                break;
-            case GASOLINA:
-                resultadoFiltrado = filterByGasolina();
-                break;
-            default:
-                resultadoFiltrado = new HashSet<>(repository.getGasolineras());
-                break;
-        }
-        shownOldGasolineras.retainAll(resultadoFiltrado);
-        Log.d("DEBUG", String.format("%s",resultadoFiltrado));
-        if (shownOldGasolineras.isEmpty()) {
-            shownGasolineras = new ArrayList<>();
-        } else {
-            shownGasolineras = new ArrayList<>(shownOldGasolineras);
-        }
-    }
-
-    private Set<Gasolinera> filterByDiesel() {
-        Set<Gasolinera> compatibles = new HashSet<>();
+    /**
+     * Genera una lista que contenga aquellas gasolineras de la lista que actualmente se muestran
+     * y que ofrecen diesel.
+     * @return lista de gasolineras que ofrecen diesel.
+     */
+    private List<Gasolinera> filterByDiesel() {
+        List<Gasolinera> compatibles = new ArrayList<>();
         for (Gasolinera g:shownGasolineras) {
             if ((g.getDieselA() != null) && (!g.getDieselA().equals(""))) {
                 compatibles.add(g);
@@ -185,17 +250,18 @@ public class MainPresenter implements IMainContract.Presenter {
         return compatibles;
     }
 
-    private Set<Gasolinera> filterByGasolina() {
-        Set<Gasolinera> compatibles = new HashSet<>();
+    /**
+     * Genera una lista que contenga aquellas gasolineras de la lista que actualmente se muestran
+     * y que ofrecen gasolina.
+     * @return lista de gasolineras que ofrecen gasolina.
+     */
+    private List<Gasolinera> filterByGasolina() {
+        List<Gasolinera> compatibles = new ArrayList<>();
         for (Gasolinera g:shownGasolineras) {
             if ((g.getNormal95() != null) && (!g.getNormal95().equals(""))) {
                 compatibles.add(g);
             }
         }
         return compatibles;
-    }
-
-    public List<Gasolinera> getShownGasolineras() {
-        return this.shownGasolineras;
     }
 }

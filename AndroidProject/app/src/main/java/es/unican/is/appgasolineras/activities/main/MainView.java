@@ -4,11 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,11 +22,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.common.prefs.Prefs;
@@ -38,6 +42,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     private static final int GASOLINA = 2;
     private IMainContract.Presenter presenter;
     private List<String> checkedBrandBoxes;
+
 
     /*
     Activity lifecycle methods
@@ -58,6 +63,11 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         checkedBrandBoxes = new LinkedList<>();
         this.init();
+        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = filterPref.edit();
+        editor.putInt(getString(R.string.saved_comb_type_filter), 0);
+        editor.apply();
     }
 
     /**
@@ -85,6 +95,11 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
                 return true;
             case R.id.menuRefresh:
                 presenter.onRefreshClicked();
+                SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                        Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = filterPref.edit();
+                editor.putInt(getString(R.string.saved_comb_type_filter), 0);
+                editor.apply();
                 return true;
             case R.id.menuFilter:
                 presenter.onFilterClicked();
@@ -159,24 +174,24 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     @Override
     public void openFilterDialog() {
+
         final Dialog dialogFilter = new Dialog(MainView.this);
-        TextView tvSelectedBrands;
+        final TextView[] tvSelectedBrands = new TextView[1];
+
 
         // Deshabilitar titulo (ya asignado en layout)
         dialogFilter.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         dialogFilter.setContentView(R.layout.activity_main_filter);
 
         // Inicializar elementos
+
         final TextView tvCancelar = dialogFilter.findViewById(R.id.tvCancel);
         final TextView tvAplicar = dialogFilter.findViewById(R.id.tvApply);
 
+
         // Inicializacion spinner tipo combustible
-        final Spinner spinnerCombustible = dialogFilter.findViewById(R.id.spnTipoCombustible);
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(dialogFilter.getContext(),
-                R.array.combustible_types_array, android.R.layout.simple_spinner_item);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCombustible.setAdapter(arrayAdapter);
+        Spinner spinnerCombustible = dialogFilter.findViewById(R.id.spnTipoCombustible);
+        initializeSpinnerCombType(spinnerCombustible, dialogFilter);
 
         // Inicializacion spinner tipo marca
         final String[] select_qualification = {
@@ -184,56 +199,145 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
                 "Petronor", "Repsol", "Shell"};
 
 
+        // Crear el spinner de seleccion multiple
         final Spinner spinnerMulti = dialogFilter.findViewById(R.id.spnMarca);
 
+        // Array con las marcas
         ArrayList<StateVO> listVOs = new ArrayList<>();
-
+        // Marca
         StateVO stateVO;
 
+        // Bucle para crear y añadir las marcas al array de marcas
         for (int i = 0; i < select_qualification.length; i++) {
             stateVO = new StateVO();
             stateVO.setTitle(select_qualification[i]);
             stateVO.setSelected(false);
 
-            // Ticks again previously ticked brands
+            // Si la marca esta en la lista de selccionados, deja su checkbox seleccionada
             for (String brand : checkedBrandBoxes) {
                 if (brand.equals(select_qualification[i])) {
                     stateVO.setSelected(true);
-                    break; // Ends if found
-                } // if
-            } // for brand
+                    break;
+                }
+            }
             listVOs.add(stateVO);
-        } // for i
+
+        }
+
+        // Crear y asignar el adapter modificado para el spinner de selccion multiple
         MyAdapter myAdapter = new MyAdapter(this, 0, listVOs);
         spinnerMulti.setAdapter(myAdapter);
 
-        // Displays text according to the number of selected brands
-        tvSelectedBrands = dialogFilter.findViewById(R.id.tvSelectedBrands);
+
+        // Mostrar la marca seleccionada o "Varias marcas" en caso de ser mas
+        tvSelectedBrands[0] = dialogFilter.findViewById(R.id.tvSelectedBrands);
         String txtSelected = "";
         if (myAdapter.sumChecked().size() > 1) {
             txtSelected = "Varias marcas";
         } else if (myAdapter.sumChecked().size() > 0) {
             txtSelected = myAdapter.sumChecked().get(0);
         }
-        tvSelectedBrands.setText(txtSelected);
+        tvSelectedBrands[0].setText(txtSelected);
+
+
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
+            // Guardar en la variable global las marcas seleccionadas
             checkedBrandBoxes = myAdapter.sumChecked();
-            presenter.filter(spinnerCombustible.getSelectedItemPosition(), checkedBrandBoxes);
 
-            GasolinerasArrayAdapter adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
-            ListView list = findViewById(R.id.lvGasolineras);
-            list.setAdapter(adapter);
+            // Actualizar lista
+            int itemPositionComb = spinnerCombustible.getSelectedItemPosition();
+            updateListByGasType(itemPositionComb,checkedBrandBoxes);
+
+
+            // Guardar el filtro
+            saveIntPrefFilter(getString(R.string.saved_comb_type_filter), itemPositionComb);
 
             dialogFilter.dismiss();
         });
+
+
 
         // Listener para cancelar
         tvCancelar.setOnClickListener(view -> {
             dialogFilter.dismiss();
         });
 
+
+        // Mostrar ventana de filtro
         dialogFilter.show();
     }
+
+    /**
+     * Inicializa el spinner del filtro por tipo de combustible.
+     * @param spinnerCombustible Spinner con las opciones de tipos de combustibles.
+     * @param dialogFilter Dialogo que contiene los elementos del filtro.
+     */
+    private void initializeSpinnerCombType(Spinner spinnerCombustible, Dialog dialogFilter) {
+        // ArrayAdapter con los tipos de combustibles
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(
+                dialogFilter.getContext(), R.array.combustible_types_array,
+                android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        spinnerCombustible.setAdapter(arrayAdapter);
+
+        // Recupera la seleccion previa a cerrar la ventana
+        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                Context.MODE_PRIVATE);
+        int savedCombValue = filterPref.getInt(getString(R.string.saved_comb_type_filter), 0);
+        spinnerCombustible.setSelection(savedCombValue);
+    }
+
+    /**
+     * Actualiza la lista de gasolineras en función  del tipo de combustible.
+     *
+     * @param itemPositionComb Posicion marcada en el filtro por tipo de combustible.
+     */
+    private void updateListByGasType(int itemPositionComb, List<String> sumChecked) {
+        // Convierte la posicion a un tipo de combustible, para mayor claridad
+        CombustibleType combustibleSeleccionado = CombustibleType.getCombTypeFromInt(
+                itemPositionComb);
+
+        // Solicita al presenter que realice el filtrado y actualice las gasolineras a mostrar
+        presenter.filter(combustibleSeleccionado, sumChecked);
+
+        // Prepara ArrayAdapter para la lista a mostrar
+        GasolinerasArrayAdapter adapter;
+        switch (combustibleSeleccionado) {
+            case GASOLINA:
+                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
+                        getResources().getString(R.string.gasolina95label));
+                break;
+            case DIESEL:
+                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
+                        getResources().getString(R.string.dieselAlabel));
+                break;
+            default:
+                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
+                break;
+        }
+
+        // Actualiza la lista
+        ListView list = findViewById(R.id.lvGasolineras);
+        list.setAdapter(adapter);
+    }
+
+    /**
+     * Guarda un entero relacionado con los filtros.
+     *
+     * @param key Clave para realizar la persistencia.
+     * @param value Valor entero a guardar.
+     */
+    private void saveIntPrefFilter(String key, int value) {
+        // Obtiene Preference de los filtros
+        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                Context.MODE_PRIVATE);
+
+        // Guarda el valor
+        SharedPreferences.Editor editor = filterPref.edit();
+        editor.putInt(key, value);
+        editor.apply();
+    }
+
 }
