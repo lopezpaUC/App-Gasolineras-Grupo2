@@ -5,9 +5,13 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.Rule;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.MockitoRule;
+import org.mockito.quality.Strictness;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,14 +40,15 @@ public class MainPresenterTest extends TestCase {
     @Mock
     IGasolinerasRepository mockFuelStationRepository;
 
-    @Before
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule().silent();
+
     public void inicializa(){
         MockitoAnnotations.openMocks(this);
         sut = new MainPresenter(mockMainPresenter);
-        sut.init();
 
         fuelStation1.setId("111");
-        fuelStation1.setRotulo("CEMPSA");
+        fuelStation1.setRotulo("Cepsa");
         fuelStation1.setCp("11111");
         fuelStation1.setHorario("323232");
         fuelStation1.setDireccion("AABBCC");
@@ -52,7 +57,7 @@ public class MainPresenterTest extends TestCase {
         fuelStation1.setNormal95("2.0");
 
         fuelStation2.setId("222");
-        fuelStation2.setRotulo("CEMPSA");
+        fuelStation2.setRotulo("Cepsa");
         fuelStation2.setCp("11111");
         fuelStation2.setHorario("323232");
         fuelStation2.setDireccion("AABBCC");
@@ -61,7 +66,7 @@ public class MainPresenterTest extends TestCase {
         fuelStation2.setNormal95("2.0");
 
         fuelStation3.setId("333");
-        fuelStation3.setRotulo("REPSOL");
+        fuelStation3.setRotulo("Repsol");
         fuelStation3.setCp("11111");
         fuelStation3.setHorario("323232");
         fuelStation3.setDireccion("AABBCC");
@@ -70,7 +75,7 @@ public class MainPresenterTest extends TestCase {
         fuelStation3.setNormal95("2.0");
 
         fuelStation4.setId("444");
-        fuelStation4.setRotulo("REPSOL");
+        fuelStation4.setRotulo("Repsol");
         fuelStation4.setCp("11111");
         fuelStation4.setHorario("323232");
         fuelStation4.setDireccion("AABBCC");
