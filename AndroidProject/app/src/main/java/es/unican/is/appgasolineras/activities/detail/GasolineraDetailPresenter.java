@@ -150,7 +150,7 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         String precioTxt = "-";
 
         if (precio > 0.0) { // Si el precio es valido
-            precioTxt = String.format(Locale.FRANCE, "%.3f", precio);
+            precioTxt = String.format(Locale.FRANCE, "%.2f", precio);
         }
 
         return precioTxt;
@@ -187,6 +187,10 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
 
         if (texto.contains("-") || texto.equals("")) { // Si es negativo o no contiene informacion
             correccion = "-";
+        } else { // Prepara el string para que solo muestre dos decimales
+            StringBuffer sb = new StringBuffer(correccion);
+            sb.deleteCharAt(sb.length()-1);
+            correccion = sb.toString();
         }
 
         return correccion;
