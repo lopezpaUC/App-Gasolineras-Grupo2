@@ -29,6 +29,7 @@
     <string name="repsol">Repsol</string>
     <string name="shell">Shell</string>
     <string name="varias">Varias</string>
+    <string name="loadErrorEmpty">No hay gasolineras compatibles.</string>
 
     <string-array name="combustible_types_array">
         <item>@string/all</item>

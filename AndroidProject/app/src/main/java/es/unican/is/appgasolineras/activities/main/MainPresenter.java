@@ -148,7 +148,7 @@ public class MainPresenter implements IMainContract.Presenter {
             }
 
         } else { // Si no hay gasolineras a mostrar despues de filtrado
-            view.showLoadError();
+            view.showLoadEmpty();
             shownGasolineras = null;
         }
     }
