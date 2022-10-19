@@ -105,6 +105,12 @@ public interface IMainContract {
         void showLoadError();
 
         /**
+         * The View is requested to show an alert informing that there are not compatible gas
+         * stations after filtering.
+         */
+        void showLoadEmpty();
+
+        /**
          * The View is requested to open a Details view on the given gas station
          * @param gasolinera the gas station
          */

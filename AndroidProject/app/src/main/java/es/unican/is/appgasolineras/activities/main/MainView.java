@@ -33,6 +33,9 @@ import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.activities.detail.GasolineraDetailView;
 import es.unican.is.appgasolineras.activities.info.InfoView;
 
+/**
+ * Vista principal abierta al iniciar la aplicacion.
+ */
 public class MainView extends AppCompatActivity implements IMainContract.View {
     private IMainContract.Presenter presenter;
     private List<String> checkedBrandBoxes;
@@ -44,7 +47,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     /**
      * This method is automatically called when the activity is created
      * It fills the activity with the widgets (buttons, lists, etc.)
-     * @param savedInstanceState
+     * @param savedInstanceState Bundle que permite restaurar estado previo.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +68,8 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     /**
      * Create a menu in this activity (three dot menu on the top left)
-     * @param menu
-     * @return
+     * @param menu Menu de la actividad principal.
+     * @return true
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -77,8 +80,8 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     /**
      * This is the listener to the three-dot menu on the top left
-     * @param item
-     * @return
+     * @param item Item seleccionado del menu.
+     * @return true
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -88,6 +91,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
                 return true;
             case R.id.menuRefresh:
                 presenter.onRefreshClicked();
+                checkedBrandBoxes = new LinkedList<>();
                 SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
                         Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = filterPref.edit();
@@ -148,6 +152,12 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     @Override
     public void showLoadError() {
+        String text = getResources().getString(R.string.loadError);
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showLoadEmpty() {
         String text = getResources().getString(R.string.loadError);
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
