@@ -162,6 +162,14 @@ public class Gasolinera implements Parcelable {
 
     @Override
     public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+
+        if (this.getClass() != o.getClass()) {
+            return false;
+        }
+
         return ((Gasolinera)o).id.equals(this.id);
     }
 

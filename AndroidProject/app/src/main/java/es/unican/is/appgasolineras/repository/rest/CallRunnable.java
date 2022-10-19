@@ -3,7 +3,6 @@ package es.unican.is.appgasolineras.repository.rest;
 import android.util.Log;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import retrofit2.Call;
 import retrofit2.Response;

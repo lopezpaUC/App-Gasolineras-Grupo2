@@ -1,8 +1,5 @@
 package es.unican.is.appgasolineras.activities.main;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -18,20 +15,23 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
-import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 
 import es.unican.is.appgasolineras.R;
+import es.unican.is.appgasolineras.activities.detail.GasolineraDetailView;
+import es.unican.is.appgasolineras.activities.info.InfoView;
 import es.unican.is.appgasolineras.common.prefs.Prefs;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
-import es.unican.is.appgasolineras.activities.detail.GasolineraDetailView;
-import es.unican.is.appgasolineras.activities.info.InfoView;
 
 /**
  * Vista principal abierta al iniciar la aplicacion.
@@ -114,9 +114,9 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     public void init() {
         // init UI listeners
         ListView lvGasolineras = findViewById(R.id.lvGasolineras);
-        lvGasolineras.setOnItemClickListener((parent, view, position, id) -> {
-            presenter.onGasolineraClicked(position);
-        });
+        lvGasolineras.setOnItemClickListener((parent, view, position, id) ->
+            presenter.onGasolineraClicked(position));
+        ;
     }
 
     @Override
@@ -158,8 +158,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     @Override
     public void showLoadEmpty() {
-        String text = getResources().getString(R.string.loadError);
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+        showLoadError();
     }
 
     @Override
@@ -212,9 +211,9 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         });
 
         // Listener para cancelar
-        tvCancelar.setOnClickListener(view -> {
-            dialogFilter.dismiss();
-        });
+        tvCancelar.setOnClickListener(view ->
+            dialogFilter.dismiss()
+        );
 
         // Mostrar ventana de filtro
         dialogFilter.show();

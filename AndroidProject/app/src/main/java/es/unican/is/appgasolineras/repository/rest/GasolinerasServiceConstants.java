@@ -2,6 +2,8 @@ package es.unican.is.appgasolineras.repository.rest;
 
 public class GasolinerasServiceConstants {
 
+    private GasolinerasServiceConstants() {}
+
     private static final String MINECO_API_URL =
             "https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/";
 

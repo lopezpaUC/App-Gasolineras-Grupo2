@@ -6,10 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.when;
-
-import es.unican.is.appgasolineras.activities.detail.GasolineraDetailPresenter;
-import es.unican.is.appgasolineras.activities.detail.IGasolineraDetailContract;
 import es.unican.is.appgasolineras.model.Gasolinera;
 
 
