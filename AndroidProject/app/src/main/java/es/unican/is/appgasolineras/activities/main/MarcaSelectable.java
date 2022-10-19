@@ -1,6 +1,6 @@
 package es.unican.is.appgasolineras.activities.main;
 
-public class StateVO {
+public class MarcaSelectable {
 
     private String title;
     private boolean selected;
