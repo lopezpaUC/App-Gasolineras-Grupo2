@@ -5,13 +5,9 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.Rule;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.junit.MockitoRule;
-import org.mockito.quality.Strictness;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -26,26 +22,28 @@ import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 
 public class MainPresenterTest extends TestCase {
 
-    private MainPresenter sut;
     private List<String> brandsList = new ArrayList<>();
+    private List<String> wrongBrandList = new ArrayList<>();
     private List<Gasolinera> fuelStationsList = new ArrayList<>();
+    private List<Gasolinera> fuelStationsCepsa = new ArrayList<>();
 
     private Gasolinera fuelStation1 = new Gasolinera();
     private Gasolinera fuelStation2 = new Gasolinera();
     private Gasolinera fuelStation3 = new Gasolinera();
     private Gasolinera fuelStation4 = new Gasolinera();
 
+    private MainPresenter sut;
     @Mock
-    IMainContract.View mockMainPresenter;
+    IMainContract.View mockMainView;
     @Mock
     IGasolinerasRepository mockFuelStationRepository;
 
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule().silent();
-
+    @Before
     public void inicializa(){
         MockitoAnnotations.openMocks(this);
-        sut = new MainPresenter(mockMainPresenter);
+        sut = new MainPresenter(mockMainView);
+
+        when(mockMainView.getGasolineraRepository()).thenReturn(mockFuelStationRepository);
 
         fuelStation1.setId("111");
         fuelStation1.setRotulo("Cepsa");
@@ -88,15 +86,32 @@ public class MainPresenterTest extends TestCase {
         fuelStationsList.add(fuelStation3);
         fuelStationsList.add(fuelStation4);
 
+        fuelStationsCepsa.add(fuelStation1);
+        fuelStationsCepsa.add(fuelStation2);
+
+        sut.init();
+
         when(mockFuelStationRepository.getGasolineras()).thenReturn(fuelStationsList);
 
-        brandsList.add("CEMPSA");
+        brandsList.add("Cepsa");
+        brandsList.add("Repsol");
+        wrongBrandList.add("Repsolito");
     }
 
     @Test
     public void testFilterByBrand() {
-        // sut.filterByBrand();
-        /* Debería retornar la lista ?? */
+        // Caso valido: lista con una marca existente
+        sut.filterByBrand(brandsList.subList(0, 1));
+        assertEquals(sut.getShownGasolineras(), (fuelStationsCepsa));
+
+        // Caso válido: lista con mas de una marca existente
+        // sut.filterByBrand(brandsList);
+
+        // Caso valido: lista vacia
+        // sut.filterByBrand(brandsList.subList(0, 0));
+
+        // Caso no valido: lista con una marca no existente
+        // sut.filterByBrand(wrongBrandList);
     }
 
 }
