@@ -19,6 +19,7 @@
     <string name="combustible_types">Tipos de combustible</string>
     <string name="brands">Marcas</string>
     <string name="all">Todos</string>
+    <string name="all_fem">Todas</string>
     <string name="galp">Galp</string>
     <string name="cepsa">Cepsa</string>
     <string name="carrefour">Carrefour</string>
@@ -27,6 +28,7 @@
     <string name="petronor">Petronor</string>
     <string name="repsol">Repsol</string>
     <string name="shell">Shell</string>
+    <string name="varias">Varias</string>
 
     <string-array name="combustible_types_array">
         <item>@string/all</item>

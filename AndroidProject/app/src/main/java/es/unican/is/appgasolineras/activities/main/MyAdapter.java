@@ -111,7 +111,6 @@ public class MyAdapter extends ArrayAdapter<StateVO> {
         return checked;
     }
 
-
     //Clase para cada marca
     private class ViewHolder {
         private TextView mTextView;
