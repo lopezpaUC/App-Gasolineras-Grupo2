@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -193,13 +194,13 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         // Inicializacion spinner marcas
         Spinner spinnerMarcas = dialogFilter.findViewById(R.id.spnMarca);
-        MyAdapter myAdapter = initializeSpinnerMarcas(spinnerMarcas, dialogFilter);
+        AdapterMarcas adapterMarcas = initializeSpinnerMarcas(spinnerMarcas, dialogFilter);
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
 
             // Guardar en el atributo las marcas seleccionadas
-            checkedBrandBoxes = myAdapter.sumChecked();
+            checkedBrandBoxes = adapterMarcas.sumChecked();
 
             // Actualizar lista
             int itemPositionComb = spinnerCombustible.getSelectedItemPosition();
@@ -246,49 +247,47 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
      * @param spinnerMarcas Spinner con las opciones de marcas.
      * @param dialogFilter Dialogo que contiene los elementos del filtro.
      */
-    private MyAdapter initializeSpinnerMarcas(Spinner spinnerMarcas, Dialog dialogFilter) {
-        // Recoge el conjunto de marcas
-        String[] select_qualification = {"Marcas", "Avia", "Campsa", "Carrefour", "Cepsa", "Galp",
-                "Petronor", "Repsol", "Shell"};
-
+    private AdapterMarcas initializeSpinnerMarcas(Spinner spinnerMarcas, Dialog dialogFilter) {
         // Array con las marcas
-        ArrayList<StateVO> listVOs = new ArrayList<>();
+        ArrayList<MarcaSelectable> listVOs = new ArrayList<>();
 
         // Marca
-        StateVO stateVO;
+        MarcaSelectable marcaSelectable;
 
         // Bucle para crear y añadir las marcas al array de marcas
-        for (int i = 0; i < select_qualification.length; i++) {
-            stateVO = new StateVO();
-            stateVO.setTitle(select_qualification[i]);
-            stateVO.setSelected(false);
+        String[] marcas = getResources().getStringArray(R.array.brands_types_array);
+
+        for (String s:marcas) {
+            marcaSelectable = new MarcaSelectable();
+            marcaSelectable.setTitle(s);
+            marcaSelectable.setSelected(false);
 
             // Si la marca esta en la lista de selccionados, deja su checkbox seleccionada
             for (String brand : checkedBrandBoxes) {
-                if (brand.equals(select_qualification[i])) {
-                    stateVO.setSelected(true);
+                if (brand.equals(s)) {
+                    marcaSelectable.setSelected(true);
                     break;
                 }
             }
-            listVOs.add(stateVO);
+            listVOs.add(marcaSelectable);
         }
 
         // Crear y asignar el adapter modificado para el spinner de selccion multiple
-        MyAdapter myAdapter = new MyAdapter(this, 0, listVOs);
-        spinnerMarcas.setAdapter(myAdapter);
+        AdapterMarcas adapterMarcas = new AdapterMarcas(this, R.array.brands_types_array, listVOs);
+        spinnerMarcas.setAdapter(adapterMarcas);
 
         // Mostrar la marca seleccionada o "Varias marcas" en caso de ser mas
         TextView[] tvSelectedBrands = new TextView[1];
         tvSelectedBrands[0] = dialogFilter.findViewById(R.id.tvSelectedBrands);
         String txtSelected = getResources().getString(R.string.all_fem);
-        if (myAdapter.sumChecked().size() > 1) {
+        if (adapterMarcas.sumChecked().size() > 1) {
             txtSelected = getResources().getString(R.string.varias);
-        } else if (myAdapter.sumChecked().size() > 0) {
-            txtSelected = myAdapter.sumChecked().get(0);
+        } else if (adapterMarcas.sumChecked().size() > 0) {
+            txtSelected = adapterMarcas.sumChecked().get(0);
         }
         tvSelectedBrands[0].setText(txtSelected);
 
-        return myAdapter;
+        return adapterMarcas;
     }
 
     /**
