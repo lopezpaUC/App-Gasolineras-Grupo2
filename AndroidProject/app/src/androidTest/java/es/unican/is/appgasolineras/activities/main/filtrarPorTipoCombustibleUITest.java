@@ -42,14 +42,18 @@ public class filtrarPorTipoCombustibleUITest {
     @Test
     public void filtrarPorTipoCombustibleTest() {
 
+
+        onView(withId(R.id.menuFilter)).perform(click());
+        onView(withId(R.id.spnTipoCombustible)).perform(click());
+        //onView(allOf(withText("Diésel"))).perform(click());
         try {
-            Thread.sleep(10000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        onView(withId(R.id.menuFilter)).perform(click());
-        onView(withId(R.id.spnTipoCombustible)).perform(click());
-        onView(withText("Diésel")).perform(click());
+        onView(withId(R.id.tvApply)).perform(click());
+
+
 
     }
 }
