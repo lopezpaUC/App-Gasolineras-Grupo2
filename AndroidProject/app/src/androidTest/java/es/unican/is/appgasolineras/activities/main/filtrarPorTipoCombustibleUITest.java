@@ -1,12 +1,16 @@
-package es.unican.is.appgasolineras.activities.detail;
+package es.unican.is.appgasolineras.activities.main;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.instanceOf;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
@@ -27,7 +31,7 @@ public class filtrarPorTipoCombustibleUITest {
 
     @BeforeClass
     public static void setUp() {
-        GasolinerasServiceConstants.setStaticURL();
+        GasolinerasServiceConstants.setStaticURL2();
     }
 
     @AfterClass
@@ -38,8 +42,14 @@ public class filtrarPorTipoCombustibleUITest {
     @Test
     public void filtrarPorTipoCombustibleTest() {
 
-        onData(anything()).inAdapterView(withId(R.id.menuFilter)).perform(click());
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        onView(withId(R.id.menuFilter)).perform(click());
         onView(withId(R.id.spnTipoCombustible)).perform(click());
+        onView(withText("Diésel")).perform(click());
 
     }
 }
