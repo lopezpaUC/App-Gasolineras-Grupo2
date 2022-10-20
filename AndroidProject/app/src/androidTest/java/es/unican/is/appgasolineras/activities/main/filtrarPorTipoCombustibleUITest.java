@@ -68,15 +68,20 @@ public class filtrarPorTipoCombustibleUITest {
         gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
         gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
 
-        gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(2);
-        gas.onChildView(withId(R.id.tvName)).check(matches(withText("REPSOL")));
+        /*gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(2);
+        gas.onChildView(withId(R.id.tvName)).check(matches(withText("E.S. CARBURANTES DE ARNUERO S.L.")));
         gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
         gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
 
         gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(3);
-        gas.onChildView(withId(R.id.tvName)).check(matches(withText("CAMPSA")));
+        gas.onChildView(withId(R.id.tvName)).check(matches(withText("COBO")));
         gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
         gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
+
+        gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(3);
+        gas.onChildView(withId(R.id.tvName)).check(matches(withText("REPSOL")));
+        gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
+        gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));*/
 
 
 
