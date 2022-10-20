@@ -1,11 +1,16 @@
 package es.unican.is.appgasolineras.utils;
 
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.w3c.dom.Text;
+
+import java.lang.reflect.Type;
 
 public class Matchers {
 
@@ -25,6 +30,22 @@ public class Matchers {
                 description.appendText ("ListView should not be empty");
             }
         };
+    }
+
+    public static Matcher<View> withBoldStyle(final int resourceId) {
+        return new TypeSafeMatcher<View>() {
+            @Override
+            protected boolean matchesSafely(View view) {
+                TextView textView = (TextView) view.findViewById(resourceId);
+                return (textView.getTypeface().getStyle() == Typeface.BOLD);
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("has Bold Text with resource");
+            }
+        };
+
     }
 
 }
