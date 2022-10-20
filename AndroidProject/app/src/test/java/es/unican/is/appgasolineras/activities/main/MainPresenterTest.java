@@ -93,17 +93,23 @@ public class MainPresenterTest extends TestCase {
 
     @Test
     public void testFilterByCombustible() {
+
+        // Filtrar por diésel
         sut.filterByCombustible(CombustibleType.DIESEL);
         assertEquals("111", sut.getShownGasolineras().get(0).getId());
         assertEquals("333", sut.getShownGasolineras().get(1).getId());
         assertTrue(2 == sut.getShownGasolineras().size());
 
+
+        // Filtrar por gasolina
         sut.init();
         sut.filterByCombustible(CombustibleType.GASOLINA);
         assertEquals("111", sut.getShownGasolineras().get(0).getId());
         assertEquals("222", sut.getShownGasolineras().get(1).getId());
         assertTrue(2 == sut.getShownGasolineras().size());
 
+
+        // Filtrar por todos
         sut.init();
         sut.filterByCombustible(CombustibleType.ALL_COMB);
         assertEquals("111", sut.getShownGasolineras().get(0).getId());
@@ -112,6 +118,7 @@ public class MainPresenterTest extends TestCase {
         assertEquals("444", sut.getShownGasolineras().get(3).getId());
         assertTrue(4 == sut.getShownGasolineras().size());
 
+        // Lista de gasolineras vacía
         fuelStationsList.clear();
         when(mockFuelStationRepository.getGasolineras()).thenReturn(fuelStationsList);
         sut.init();
