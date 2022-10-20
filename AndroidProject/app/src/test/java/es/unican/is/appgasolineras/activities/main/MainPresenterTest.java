@@ -41,7 +41,6 @@ public class MainPresenterTest extends TestCase {
 
     @Before
     public void inicializa(){
-
         // Inicializamos nuevas gasolineras
         fuelStation1.setId("111");
         fuelStation1.setRotulo("CEPSA");
@@ -122,5 +121,4 @@ public class MainPresenterTest extends TestCase {
         sut.filter(CombustibleType.ALL_COMB, wrongBrandList);
         assertNull(sut.getShownGasolineras());
     }
-
 }

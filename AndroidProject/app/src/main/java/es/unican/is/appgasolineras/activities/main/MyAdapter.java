@@ -60,6 +60,7 @@ public class MyAdapter extends ArrayAdapter<StateVO> {
             holder.mCheckBox = (CheckBox) convertView
                     .findViewById(R.id.checkbox);
             convertView.setTag(holder);
+            convertView.setId(R.id.tv95);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
