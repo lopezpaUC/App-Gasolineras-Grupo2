@@ -25,7 +25,6 @@ public class MainPresenterTest extends TestCase {
     private List<String> brandsList = new ArrayList<>();
     private List<String> wrongBrandList = new ArrayList<>();
     private List<Gasolinera> fuelStationsList = new ArrayList<>();
-    private List<Gasolinera> fuelStationsCepsa = new ArrayList<>();
 
     private Gasolinera fuelStation1 = new Gasolinera();
     private Gasolinera fuelStation2 = new Gasolinera();
@@ -40,7 +39,6 @@ public class MainPresenterTest extends TestCase {
 
     @Before
     public void inicializa(){
-
         fuelStation1.setId("111");
         fuelStation1.setRotulo("Cepsa");
         fuelStation1.setCp("11111");
@@ -100,10 +98,13 @@ public class MainPresenterTest extends TestCase {
         assertEquals("333", sut.getShownGasolineras().get(1).getId());
         assertTrue(2 == sut.getShownGasolineras().size());
 
+        sut.init();
         sut.filterByCombustible(CombustibleType.GASOLINA);
         assertEquals("111", sut.getShownGasolineras().get(0).getId());
-        assertTrue(1 == sut.getShownGasolineras().size());
+        assertEquals("222", sut.getShownGasolineras().get(1).getId());
+        assertTrue(2 == sut.getShownGasolineras().size());
 
+        sut.init();
         sut.filterByCombustible(CombustibleType.ALL_COMB);
         assertEquals("111", sut.getShownGasolineras().get(0).getId());
         assertEquals("222", sut.getShownGasolineras().get(1).getId());
@@ -111,15 +112,16 @@ public class MainPresenterTest extends TestCase {
         assertEquals("444", sut.getShownGasolineras().get(3).getId());
         assertTrue(4 == sut.getShownGasolineras().size());
 
+        fuelStationsList.clear();
+        when(mockFuelStationRepository.getGasolineras()).thenReturn(fuelStationsList);
         sut.init();
-        sut.filterByCombustible(CombustibleType.GASOLINA);
-        assertEquals("111", sut.getShownGasolineras().get(0).getId());
-        assertEquals("222", sut.getShownGasolineras().get(1).getId());
-        assertTrue(2 == sut.getShownGasolineras().size());
+        sut.filterByCombustible(CombustibleType.ALL_COMB);
+        assertTrue(sut.getShownGasolineras().isEmpty());
 
-        sut.filterByCombustible(CombustibleType.DIESEL);
-        assertEquals("111", sut.getShownGasolineras().get(0).getId());
-        assertTrue(1 == sut.getShownGasolineras().size());
+
+
+
+
 
 
 

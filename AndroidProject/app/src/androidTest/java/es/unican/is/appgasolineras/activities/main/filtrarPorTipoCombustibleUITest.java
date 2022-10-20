@@ -3,7 +3,10 @@ package es.unican.is.appgasolineras.activities.main;
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
+import static androidx.test.espresso.matcher.RootMatchers.isTouchable;
 import static androidx.test.espresso.matcher.ViewMatchers.hasTextColor;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
@@ -12,8 +15,10 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 
 import android.icu.text.UFormat;
+import android.text.Html;
 
 import androidx.test.espresso.DataInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -49,16 +54,29 @@ public class filtrarPorTipoCombustibleUITest {
 
         onView(withId(R.id.menuFilter)).perform(click());
         onView(withId(R.id.spnTipoCombustible)).perform(click());
-        //onView(allOf(withText("Diésel"))).perform(click());
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        onView(withId(R.id.tvApply)).perform(click());
-        DataInteraction firstGas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(1);
-        firstGas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
-        firstGas.onChildView(withId(R.id.tv95Label)).check(matches(hasTextColor()));
+        onView(withText("Diésel")).inRoot(isPlatformPopup()).perform(click());
+        onView(withId(R.id.tvApply)).inRoot(isTouchable()).perform(click());
+        DataInteraction gas;
+
+        gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(0);
+        gas.onChildView(withId(R.id.tvName)).check(matches(withText("CEPSA")));
+        gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
+        gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
+
+        gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(1);
+        gas.onChildView(withId(R.id.tvName)).check(matches(withText("PETRONOR")));
+        gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
+        gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
+
+        gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(2);
+        gas.onChildView(withId(R.id.tvName)).check(matches(withText("REPSOL")));
+        gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
+        gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
+
+        gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(3);
+        gas.onChildView(withId(R.id.tvName)).check(matches(withText("CAMPSA")));
+        gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
+        gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
 
 
 
