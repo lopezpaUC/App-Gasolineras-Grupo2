@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -23,11 +22,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.time.Instant;
-import java.util.LinkedList;
 import java.util.List;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.common.prefs.Prefs;
+import es.unican.is.appgasolineras.common.utils.MultipleSpinner;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
@@ -57,8 +56,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         presenter = new MainPresenter(this);
         presenter.init();
-
-        checkedBrandBoxes = new LinkedList<>();
+        checkedBrandBoxes = new ArrayList<>();
         this.init();
         SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
                 Context.MODE_PRIVATE);
@@ -92,7 +90,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
                 return true;
             case R.id.menuRefresh:
                 presenter.onRefreshClicked();
-                checkedBrandBoxes = new LinkedList<>();
                 SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
                         Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = filterPref.edit();
@@ -193,18 +190,18 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         initializeSpinnerCombType(spinnerCombustible, dialogFilter);
 
         // Inicializacion spinner marcas
-        Spinner spinnerMarcas = dialogFilter.findViewById(R.id.spnMarca);
-        AdapterMarcas adapterMarcas = initializeSpinnerMarcas(spinnerMarcas, dialogFilter);
+        MultipleSpinner spinnerMarcas = dialogFilter.findViewById(R.id.spnMarca);
+        initializeSpinnerMarcas(spinnerMarcas, dialogFilter);
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
 
             // Guardar en el atributo las marcas seleccionadas
-            checkedBrandBoxes = adapterMarcas.sumChecked();
+            checkedBrandBoxes = spinnerMarcas.getSelectedStrings();
 
             // Actualizar lista
             int itemPositionComb = spinnerCombustible.getSelectedItemPosition();
-            updateList(itemPositionComb,checkedBrandBoxes);
+            updateList(itemPositionComb, checkedBrandBoxes);
 
             // Guardar el filtro por tipo de combustible
             saveIntPrefFilter(getString(R.string.saved_comb_type_filter), itemPositionComb);
@@ -247,47 +244,11 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
      * @param spinnerMarcas Spinner con las opciones de marcas.
      * @param dialogFilter Dialogo que contiene los elementos del filtro.
      */
-    private AdapterMarcas initializeSpinnerMarcas(Spinner spinnerMarcas, Dialog dialogFilter) {
-        // Array con las marcas
-        ArrayList<MarcaSelectable> listVOs = new ArrayList<>();
-
-        // Marca
-        MarcaSelectable marcaSelectable;
-
+    private void initializeSpinnerMarcas(MultipleSpinner spinnerMarcas, Dialog dialogFilter) {
         // Bucle para crear y añadir las marcas al array de marcas
         String[] marcas = getResources().getStringArray(R.array.brands_types_array);
-
-        for (String s:marcas) {
-            marcaSelectable = new MarcaSelectable();
-            marcaSelectable.setTitle(s);
-            marcaSelectable.setSelected(false);
-
-            // Si la marca esta en la lista de selccionados, deja su checkbox seleccionada
-            for (String brand : checkedBrandBoxes) {
-                if (brand.equals(s)) {
-                    marcaSelectable.setSelected(true);
-                    break;
-                }
-            }
-            listVOs.add(marcaSelectable);
-        }
-
-        // Crear y asignar el adapter modificado para el spinner de selccion multiple
-        AdapterMarcas adapterMarcas = new AdapterMarcas(this, R.array.brands_types_array, listVOs);
-        spinnerMarcas.setAdapter(adapterMarcas);
-
-        // Mostrar la marca seleccionada o "Varias marcas" en caso de ser mas
-        TextView[] tvSelectedBrands = new TextView[1];
-        tvSelectedBrands[0] = dialogFilter.findViewById(R.id.tvSelectedBrands);
-        String txtSelected = getResources().getString(R.string.all_fem);
-        if (adapterMarcas.sumChecked().size() > 1) {
-            txtSelected = getResources().getString(R.string.varias);
-        } else if (adapterMarcas.sumChecked().size() > 0) {
-            txtSelected = adapterMarcas.sumChecked().get(0);
-        }
-        tvSelectedBrands[0].setText(txtSelected);
-
-        return adapterMarcas;
+        spinnerMarcas.setElementos(marcas, getResources().getString(R.string.varias), "-");
+        spinnerMarcas.setSelectedStrings(checkedBrandBoxes);
     }
 
     /**
@@ -295,13 +256,13 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
      *
      * @param itemPositionComb Posicion marcada en el filtro por tipo de combustible.
      */
-    private void updateList(int itemPositionComb, List<String> sumChecked) {
+    private void updateList(int itemPositionComb, List<String> seleccionadas) {
         // Convierte la posicion a un tipo de combustible, para mayor claridad
         CombustibleType combustibleSeleccionado = CombustibleType.getCombTypeFromInt(
                 itemPositionComb);
 
         // Solicita al presenter que realice el filtrado y actualice las gasolineras a mostrar
-        presenter.filter(combustibleSeleccionado, sumChecked);
+        presenter.filter(combustibleSeleccionado, seleccionadas);
 
         // Prepara ArrayAdapter para la lista a mostrar
         GasolinerasArrayAdapter adapter;

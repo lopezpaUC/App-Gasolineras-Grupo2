@@ -63,20 +63,20 @@ public class FiltrarPorMarcaUITest {
     public void testFiltrarPorMarca() {
         // Caso valido: filtro unico
         /* Pulsamos en el filtro, y acontinuación en el spinner. Después deberíamos pulsar en la checkbox correspondiente
-        a Cepsa. A continuación, debería haber un botón para poder cerrar el spinner. Por último, le damos a aplizar cambios.
+        a Cepsa. A continuación, debería haber un botón para poder cerrar el spinner. Por último, le damos a aplizar cambios.*/
         onView(withId(R.id.menuFilter)).perform(click());
         onView(withId(R.id.spnMarca)).perform(click());
-        onData(anything()).inAdapterView(withId(R.id.spnMarca)).atPosition(3).onChildView(withId(R.id.checkbox)).inRoot(isPlatformPopup()).perform(click());
-        onData(anything()).inAdapterView(withId(R.id.spnMarca)).atPosition(Posición del botón cerrar).onChildView(withId(R.id.btnClose)).inRoot(isPlatformPopup()).perform(click());
-        onView(withId(R.id.tvApply)).perform(click());*/
+        onData(anything()).inAdapterView(withId(R.id.spnMarca)).onChildView(withText("Carrefour")).inRoot(isPlatformPopup()).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.spnMarca)).onChildView(withId(android.R.string.ok)).inRoot(isPlatformPopup()).perform(click());
+        onView(withId(R.id.tvApply)).perform(click());
 
-        /* Comprobamos los datos de una gasolinera, los cuáles deberían ser los esperados.
+        /* Comprobamos los datos de una gasolinera, los cuáles deberían ser los esperados.*/
         DataInteraction gasolinera = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(0);
         gasolinera.onChildView(withId(R.id.tvName)).check(matches(withText("CEPSA")));
         gasolinera.onChildView(withId(R.id.tvAddress)).check(matches(withText("CARRETERA 6316 KM. 10,5")));
         gasolinera.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
         gasolinera.onChildView(withId(R.id.tv95)).check(matches(withText("1,859")));
         gasolinera.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
-        gasolinera.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));*/
+        gasolinera.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));
     }
 }
