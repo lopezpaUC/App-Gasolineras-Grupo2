@@ -62,10 +62,7 @@ public class GasolinerasService {
             // Restore interrupted state...
             Thread.currentThread().interrupt();
         }
-
-        // if there was some problem, response is null
-        GasolinerasResponse response = runnable.response;
-        return response;
+        return runnable.response;
     }
 
 }

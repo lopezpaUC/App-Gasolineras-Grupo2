@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -117,7 +116,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         ListView lvGasolineras = findViewById(R.id.lvGasolineras);
         lvGasolineras.setOnItemClickListener((parent, view, position, id) ->
             presenter.onGasolineraClicked(position));
-        ;
     }
 
     @Override
@@ -281,7 +279,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         String txtSelected = getResources().getString(R.string.all_fem);
         if (adapterMarcas.sumChecked().size() > 1) {
             txtSelected = getResources().getString(R.string.varias);
-        } else if (adapterMarcas.sumChecked().size() > 0) {
+        } else if (!adapterMarcas.sumChecked().isEmpty()) {
             txtSelected = adapterMarcas.sumChecked().get(0);
         }
         tvSelectedBrands[0].setText(txtSelected);

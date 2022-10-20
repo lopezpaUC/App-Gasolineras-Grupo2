@@ -188,7 +188,7 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         if (texto.contains("-") || texto.equals("")) { // Si es negativo o no contiene informacion
             correccion = "-";
         } else { // Prepara el string para que solo muestre dos decimales
-            StringBuffer sb = new StringBuffer(correccion);
+            StringBuilder sb = new StringBuilder(correccion);
             sb.deleteCharAt(sb.length()-1);
             correccion = sb.toString();
         }
