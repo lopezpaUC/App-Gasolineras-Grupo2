@@ -4,43 +4,23 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
-import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.anything;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static es.unican.is.appgasolineras.utils.Matchers.hasElements;
-import static es.unican.is.appgasolineras.utils.Matchers.withBoldStyle;
-
-import android.view.View;
 
 import androidx.test.espresso.DataInteraction;
-import androidx.test.espresso.ViewAssertion;
-import androidx.test.espresso.action.ViewActions;
-import androidx.test.espresso.matcher.CursorMatchers;
+import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
-import es.unican.is.appgasolineras.utils.Matchers;
 
 @RunWith(AndroidJUnit4.class)
 
@@ -65,9 +45,9 @@ public class FiltrarPorMarcaUITest {
         /* Pulsamos en el filtro, y acontinuación en el spinner. Después deberíamos pulsar en la checkbox correspondiente
         a Cepsa. A continuación, debería haber un botón para poder cerrar el spinner. Por último, le damos a aplizar cambios.*/
         onView(withId(R.id.menuFilter)).perform(click());
-        onView(withId(R.id.spnMarca)).perform(click());
-        onData(anything()).inAdapterView(withId(R.id.spnMarca)).onChildView(withText("Carrefour")).inRoot(isPlatformPopup()).perform(click());
-        onData(anything()).inAdapterView(withId(R.id.spnMarca)).onChildView(withId(android.R.string.ok)).inRoot(isPlatformPopup()).perform(click());
+        onView((withId(R.id.spnMarca))).perform(click());
+        onView(withText("Cepsa")).inRoot(RootMatchers.isDialog()).perform(click());
+        onView(withText("OK")).inRoot(RootMatchers.isDialog()).perform(click());
         onView(withId(R.id.tvApply)).perform(click());
 
         /* Comprobamos los datos de una gasolinera, los cuáles deberían ser los esperados.*/

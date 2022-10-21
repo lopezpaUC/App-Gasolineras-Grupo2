@@ -56,8 +56,11 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         presenter = new MainPresenter(this);
         presenter.init();
+
         checkedBrandBoxes = new ArrayList<>();
+
         this.init();
+
         SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = filterPref.edit();
@@ -95,6 +98,8 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
                 SharedPreferences.Editor editor = filterPref.edit();
                 editor.putInt(getString(R.string.saved_comb_type_filter), 0);
                 editor.apply();
+
+                checkedBrandBoxes = new ArrayList<>();
                 return true;
             case R.id.menuFilter:
                 presenter.onFilterClicked();
@@ -112,9 +117,8 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     public void init() {
         // init UI listeners
         ListView lvGasolineras = findViewById(R.id.lvGasolineras);
-        lvGasolineras.setOnItemClickListener((parent, view, position, id) -> {
-            presenter.onGasolineraClicked(position);
-        });
+        lvGasolineras.setOnItemClickListener((parent, view, position, id)
+                -> presenter.onGasolineraClicked(position));
     }
 
     @Override
@@ -156,7 +160,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     @Override
     public void showLoadEmpty() {
-        String text = getResources().getString(R.string.loadError);
+        String text = getResources().getString(R.string.loadErrorEmpty);
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
@@ -191,7 +195,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         // Inicializacion spinner marcas
         MultipleSpinner spinnerMarcas = dialogFilter.findViewById(R.id.spnMarca);
-        initializeSpinnerMarcas(spinnerMarcas, dialogFilter);
+        initializeSpinnerMarcas(spinnerMarcas);
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
@@ -210,9 +214,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         });
 
         // Listener para cancelar
-        tvCancelar.setOnClickListener(view -> {
-            dialogFilter.dismiss();
-        });
+        tvCancelar.setOnClickListener(view -> dialogFilter.dismiss());
 
         // Mostrar ventana de filtro
         dialogFilter.show();
@@ -242,9 +244,8 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     /**
      * Inicializa el spinner del filtro por marcas.
      * @param spinnerMarcas Spinner con las opciones de marcas.
-     * @param dialogFilter Dialogo que contiene los elementos del filtro.
      */
-    private void initializeSpinnerMarcas(MultipleSpinner spinnerMarcas, Dialog dialogFilter) {
+    private void initializeSpinnerMarcas(MultipleSpinner spinnerMarcas) {
         // Bucle para crear y añadir las marcas al array de marcas
         String[] marcas = getResources().getStringArray(R.array.brands_types_array);
         spinnerMarcas.setElementos(marcas, getResources().getString(R.string.varias), "-");
@@ -255,14 +256,15 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
      * Actualiza la lista de gasolineras en función  del tipo de combustible.
      *
      * @param itemPositionComb Posicion marcada en el filtro por tipo de combustible.
+     * @param marcasSeleccionadas Gasolineras marcadas para ser mostradas en el filtro por marcas.
      */
-    private void updateList(int itemPositionComb, List<String> seleccionadas) {
+    private void updateList(int itemPositionComb, List<String> marcasSeleccionadas) {
         // Convierte la posicion a un tipo de combustible, para mayor claridad
         CombustibleType combustibleSeleccionado = CombustibleType.getCombTypeFromInt(
                 itemPositionComb);
 
         // Solicita al presenter que realice el filtrado y actualice las gasolineras a mostrar
-        presenter.filter(combustibleSeleccionado, seleccionadas);
+        presenter.filter(combustibleSeleccionado, marcasSeleccionadas);
 
         // Prepara ArrayAdapter para la lista a mostrar
         GasolinerasArrayAdapter adapter;

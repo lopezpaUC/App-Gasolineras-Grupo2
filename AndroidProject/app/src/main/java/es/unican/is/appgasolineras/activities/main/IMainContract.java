@@ -1,7 +1,6 @@
 package es.unican.is.appgasolineras.activities.main;
 
 import java.util.List;
-import java.util.Set;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
@@ -96,6 +95,11 @@ public interface IMainContract {
          */
         void showLoadCorrectOnline(int gasolinerasCount);
 
+        /**
+         * The View is requested to show an alert informing that the gas stations were loaded
+         * correctly from DB.
+         * @param gasolinerasCount the number of gas stations that were loaded
+         */
         void showLoadCorrectOffline(int gasolinerasCount);
 
         /**

@@ -4,13 +4,13 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.RootMatchers.isTouchable;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
 
 import androidx.test.espresso.DataInteraction;
+import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import org.junit.AfterClass;
@@ -41,7 +41,7 @@ public class FiltrarPorTipoCombustibleUITest {
     public void testFiltrarPorTipoCombustible() {
         onView(withId(R.id.menuFilter)).perform(click());
         onView(withId(R.id.spnTipoCombustible)).perform(click());
-        onView(withText("Diésel")).inRoot(isPlatformPopup()).perform(click());
+        onView(withText("Diésel")).inRoot(RootMatchers.isDialog()).perform(click());
         onView(withId(R.id.tvApply)).inRoot(isTouchable()).perform(click());
         DataInteraction gas;
 

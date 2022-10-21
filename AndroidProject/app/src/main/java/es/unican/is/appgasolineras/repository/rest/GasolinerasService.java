@@ -52,7 +52,6 @@ public class GasolinerasService {
     public static GasolinerasResponse getGasolineras() {
         final Call<GasolinerasResponse> call = getAPI().gasolineras(IDCCAAs.CANTABRIA.id);
 
-        List<Gasolinera> gasolineras;
         ExecutorService executor = Executors.newFixedThreadPool(1);
         CallRunnable<GasolinerasResponse> runnable = new CallRunnable<>(call);
         executor.execute(runnable);
@@ -67,8 +66,7 @@ public class GasolinerasService {
         }
 
         // if there was some problem, response is null
-        GasolinerasResponse response = runnable.response;
-        return response;
+        return runnable.response;
     }
 
 }

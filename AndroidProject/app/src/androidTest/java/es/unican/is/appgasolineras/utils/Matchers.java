@@ -8,9 +8,6 @@ import android.widget.TextView;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Type;
 
 public class Matchers {
 
