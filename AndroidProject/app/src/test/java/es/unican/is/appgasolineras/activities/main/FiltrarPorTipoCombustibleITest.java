@@ -1,8 +1,6 @@
 package es.unican.is.appgasolineras.activities.main;
 
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import android.content.Context;
