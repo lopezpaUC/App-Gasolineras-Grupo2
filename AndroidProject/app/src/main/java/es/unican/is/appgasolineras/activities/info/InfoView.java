@@ -1,9 +1,11 @@
 package es.unican.is.appgasolineras.activities.info;
 
-import androidx.appcompat.app.AppCompatActivity;
-import es.unican.is.appgasolineras.R;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import es.unican.is.appgasolineras.R;
 
 public class InfoView extends AppCompatActivity {
 
