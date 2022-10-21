@@ -42,6 +42,19 @@ public class Gasolinera implements Parcelable {
         normal95 = "";
     }
 
+    public Gasolinera(String id, String rotulo, String cp, String direccion,
+                      String municipio, String horario, String dieselA,
+                      String normal95) {
+        this.id = id;
+        this.rotulo = rotulo;
+        this.cp = cp;
+        this.direccion = direccion;
+        this.municipio = municipio;
+        this.horario = horario;
+        this.dieselA = dieselA;
+        this.normal95 = normal95;
+    }
+
     @NonNull
     public String getId() {
         return id;
@@ -164,13 +177,11 @@ public class Gasolinera implements Parcelable {
     public boolean equals(Object o) {
         if (o == null) {
             return false;
-        }
-
-        if (this.getClass() != o.getClass()) {
+        } else if (o.getClass() != this.getClass()) {
             return false;
+        } else {
+            return ((Gasolinera) o).id.equals(this.id);
         }
-
-        return ((Gasolinera)o).id.equals(this.id);
     }
 
     @Override

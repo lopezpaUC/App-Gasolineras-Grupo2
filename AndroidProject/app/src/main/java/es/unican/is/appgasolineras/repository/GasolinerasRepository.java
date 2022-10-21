@@ -63,10 +63,8 @@ public class GasolinerasRepository implements IGasolinerasRepository {
             GasolineraDao gasolinerasDao = db.gasolineraDao();
             gasolineras = gasolinerasDao.getAll();
             loadingMethod = LOAD_OFFLINE;
-            //gasolineras = null;
         }
 
-        //persistToDB(gasolineras);
         return gasolineras;
     }
 
@@ -94,15 +92,6 @@ public class GasolinerasRepository implements IGasolinerasRepository {
             // save the current time to the app preferences
             Prefs.from(context).putInstant(KEY_LAST_SAVED, Instant.now());
         }
-    }
-
-    /**
-     *
-     */
-    private List<Gasolinera> loadFromDB() {
-        final GasolineraDatabase db = GasolineraDatabase.getDB(context);
-        final GasolineraDao gasolinerasDao = db.gasolineraDao();
-        return gasolinerasDao.getAll();
     }
 
     /**

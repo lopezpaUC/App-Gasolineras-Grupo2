@@ -38,7 +38,6 @@
     </string-array>
 
     <string-array name="brands_types_array">
-        <item>@string/all</item>
         <item>@string/avia</item>
         <item>@string/campsa</item>
         <item>@string/carrefour</item>

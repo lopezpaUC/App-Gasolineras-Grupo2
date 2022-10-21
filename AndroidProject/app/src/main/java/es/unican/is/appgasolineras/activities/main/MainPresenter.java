@@ -3,7 +3,6 @@ package es.unican.is.appgasolineras.activities.main;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.unican.is.appgasolineras.common.Callback;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 
@@ -44,10 +43,10 @@ public class MainPresenter implements IMainContract.Presenter {
         }
     }
 
-    /**
+    /** NO USADO POR EL MOMENTO
      * Muestra contenido antes de haber intentado recibir el actualizado de internet.
      */
-    private void doAsyncInit() {
+    /**private void doAsyncInit() {
         repository.requestGasolineras(new Callback<List<Gasolinera>>() {
             @Override
             public void onSuccess(List<Gasolinera> data) {
@@ -67,7 +66,7 @@ public class MainPresenter implements IMainContract.Presenter {
                 view.showLoadError();
             }
         });
-    }
+    }*/
 
     /**
      * Muestra contenido despues de intentar haber recibido el actualizado de internet.
@@ -124,23 +123,17 @@ public class MainPresenter implements IMainContract.Presenter {
         init();
     }
 
-    /**
-     * Filtra la lista de gasolineras en funcion de unas marcas seleccionadas y/o un tipo
-     * determinado de combustible.
-     *
-     * @param combustibleType Tipo de combustible.
-     * @param brands Mara o listado de marcas.
-     */
     @Override
     public void filter(CombustibleType combustibleType, List<String> brands) {
-        shownGasolineras = repository.getGasolineras();
+        shownGasolineras = repository.getGasolineras(); // Lista Completa
+
         filterByCombustible(combustibleType);
         filterByBrand(brands);
 
         if (!shownGasolineras.isEmpty()) { // Si hay gasolineras a mostrar despues de filtrado
             view.showGasolineras(shownGasolineras);
 
-            // Muestra la informacion de las gasolineras obtenidas
+            // Muestra la informacion de la obtencion de las gasolineras
             if (loadMethod == LOAD_ONLINE) {
                 view.showLoadCorrectOnline(shownGasolineras.size());
             } else {
@@ -157,7 +150,7 @@ public class MainPresenter implements IMainContract.Presenter {
      * Filtra por tipo de combustible.
      * @param combustibleType Tipo de combustible a utilizar para filtrar
      */
-    private void filterByCombustible(CombustibleType combustibleType) {
+    public void filterByCombustible(CombustibleType combustibleType) {
         List<Gasolinera> resultadoFiltrado;
 
         // Determina que gasolineras mostrar
@@ -172,7 +165,7 @@ public class MainPresenter implements IMainContract.Presenter {
                 resultadoFiltrado = repository.getGasolineras();
                 break;
         }
-        if (resultadoFiltrado.isEmpty()) {
+        if (resultadoFiltrado.isEmpty()) { // Si no hay gasolineras compatibles -> Lista vacia
             shownGasolineras = new ArrayList<>();
         } else {
             shownGasolineras = resultadoFiltrado;
@@ -185,7 +178,8 @@ public class MainPresenter implements IMainContract.Presenter {
      */
     private void filterByBrand(List<String> marcas) {
         List<Gasolinera> resultadoFiltrado = new ArrayList<>();
-        if (!marcas.isEmpty()) {
+
+        if (!marcas.isEmpty()) { // Solo se filtra si se han indicado marcas
             for (String m:marcas) {
                  resultadoFiltrado.addAll(clearStationsWithoutBrand(m));
             }
@@ -200,6 +194,7 @@ public class MainPresenter implements IMainContract.Presenter {
      */
     private List<Gasolinera> clearStationsWithoutBrand (String marca) {
         List<Gasolinera> compatibles = new ArrayList<>();
+
         for (Gasolinera g:shownGasolineras) {
             if (g.getRotulo().equals(marca.toUpperCase())) {
                 compatibles.add(g);

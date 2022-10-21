@@ -5,15 +5,11 @@ import static org.mockito.Mockito.when;
 import junit.framework.TestCase;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.junit.MockitoRule;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +40,6 @@ public class MainPresenterTest extends TestCase {
 
     @Before
     public void inicializa(){
-
         // Inicializamos nuevas gasolineras
         fuelStation1.setId("111");
         fuelStation1.setRotulo("CEPSA");
@@ -61,7 +56,7 @@ public class MainPresenterTest extends TestCase {
         fuelStation2.setHorario("323232");
         fuelStation2.setDireccion("AABBCC");
         fuelStation2.setMunicipio("COMILLAS");
-        fuelStation2.setDieselA("1.5");
+        fuelStation2.setDieselA("");
         fuelStation2.setNormal95("2.0");
 
         fuelStation3.setId("333");
@@ -71,7 +66,7 @@ public class MainPresenterTest extends TestCase {
         fuelStation3.setDireccion("AABBCC");
         fuelStation3.setMunicipio("COMILLAS");
         fuelStation3.setDieselA("1.5");
-        fuelStation3.setNormal95("2.0");
+        fuelStation3.setNormal95("");
 
         fuelStation4.setId("444");
         fuelStation4.setRotulo("REPSOL");
@@ -79,8 +74,8 @@ public class MainPresenterTest extends TestCase {
         fuelStation4.setHorario("323232");
         fuelStation4.setDireccion("AABBCC");
         fuelStation4.setMunicipio("COMILLAS");
-        fuelStation4.setDieselA("1.5");
-        fuelStation4.setNormal95("2.0");
+        fuelStation4.setDieselA("");
+        fuelStation4.setNormal95("");
 
         // Anhadimos las gasolineras a una lista
         fuelStationsList.add(fuelStation1);
@@ -126,4 +121,38 @@ public class MainPresenterTest extends TestCase {
         assertNull(sut.getShownGasolineras());
     }
 
+    @Test
+    public void testFilterByCombustible() {
+
+        // Filtrar por diésel
+        sut.filterByCombustible(CombustibleType.DIESEL);
+        assertEquals("111", sut.getShownGasolineras().get(0).getId());
+        assertEquals("333", sut.getShownGasolineras().get(1).getId());
+        assertTrue(2 == sut.getShownGasolineras().size());
+
+
+        // Filtrar por gasolina
+        sut.init();
+        sut.filterByCombustible(CombustibleType.GASOLINA);
+        assertEquals("111", sut.getShownGasolineras().get(0).getId());
+        assertEquals("222", sut.getShownGasolineras().get(1).getId());
+        assertTrue(2 == sut.getShownGasolineras().size());
+
+
+        // Filtrar por todos
+        sut.init();
+        sut.filterByCombustible(CombustibleType.ALL_COMB);
+        assertEquals("111", sut.getShownGasolineras().get(0).getId());
+        assertEquals("222", sut.getShownGasolineras().get(1).getId());
+        assertEquals("333", sut.getShownGasolineras().get(2).getId());
+        assertEquals("444", sut.getShownGasolineras().get(3).getId());
+        assertTrue(4 == sut.getShownGasolineras().size());
+
+        // Lista de gasolineras vacía
+        fuelStationsList.clear();
+        when(mockFuelStationRepository.getGasolineras()).thenReturn(fuelStationsList);
+        sut.init();
+        sut.filterByCombustible(CombustibleType.ALL_COMB);
+        assertTrue(sut.getShownGasolineras().isEmpty());
+    }
 }
