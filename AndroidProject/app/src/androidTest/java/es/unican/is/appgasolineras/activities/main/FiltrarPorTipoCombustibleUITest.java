@@ -52,20 +52,20 @@ public class FiltrarPorTipoCombustibleUITest {
         gas.onChildView(withId(R.id.tv95)).check(matches(withText("1,859")));
         gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));
 
-        /**gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(1);
-        gas.onChildView(withId(R.id.tvName)).check(matches(withText("PETRONOR")));
-        gas.onChildView(withId(R.id.tvAddress)).check(matches(withText("CARRETERA N-611 KM. 163,2")));
-        gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
-        gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
-        gas.onChildView(withId(R.id.tv95)).check(matches(withText("-")));
-        gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,969")));
-
         gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(2);
         gas.onChildView(withId(R.id.tvName)).check(matches(withText("E.S. CARBURANTES DE ARNUERO S.L.")));
         gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
         gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
         gas.onChildView(withId(R.id.tv95)).check(matches(withText("1,829")));
         gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("2,019")));
+
+        gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(1);
+        gas.onChildView(withId(R.id.tvName)).check(matches(withText("PETRONOR")));
+        gas.onChildView(withId(R.id.tvAddress)).check(matches(withText("CARRETERA N-611 KM. 163,2")));
+        gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
+        gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
+        gas.onChildView(withId(R.id.tv95)).check(matches(withText("-")));
+        gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,969")));
 
         gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(3);
         gas.onChildView(withId(R.id.tvName)).check(matches(withText("G2")));
@@ -89,6 +89,6 @@ public class FiltrarPorTipoCombustibleUITest {
         gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
         gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
         gas.onChildView(withId(R.id.tv95)).check(matches(withText("1,809")));
-        gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));*/
+        gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));
     }
 }
