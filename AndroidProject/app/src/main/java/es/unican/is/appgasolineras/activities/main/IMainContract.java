@@ -39,6 +39,26 @@ public interface IMainContract {
          * Refresh button has been clicked
          */
         void onRefreshClicked();
+
+        /**
+         * This method should be used by the View to notify the Presenter that the
+         * Filter button has been clicked
+         */
+        void onFilterClicked();
+
+
+        /**
+         * Obtiene la lista de gasolineras que debe mostrar la vista.
+         * @return lista de gasolineras que debe mostrar la vista.
+         */
+        List<Gasolinera> getShownGasolineras();
+
+        /**
+         * Filtra gasolineras a mostrar en funcion de los parametros especificados.
+         * @param combustibleType Tipo de combustible.
+         * @param brands Mara o listado de marcas.
+         */
+        void filter(CombustibleType combustibleType, List<String> brands);
     }
 
     /**
@@ -70,16 +90,29 @@ public interface IMainContract {
 
         /**
          * The View is requested to show an alert informing that the gas stations were loaded
-         * correctly
+         * correctly from online repository.
          * @param gasolinerasCount the number of gas stations that were loaded
          */
-        void showLoadCorrect(int gasolinerasCount);
+        void showLoadCorrectOnline(int gasolinerasCount);
+
+        /**
+         * The View is requested to show an alert informing that the gas stations were loaded
+         * correctly from DB.
+         * @param gasolinerasCount the number of gas stations that were loaded
+         */
+        void showLoadCorrectOffline(int gasolinerasCount);
 
         /**
          * The View is requested to show an alert informing that there was an error while
          * loading the gas stations
          */
         void showLoadError();
+
+        /**
+         * The View is requested to show an alert informing that there are not compatible gas
+         * stations after filtering.
+         */
+        void showLoadEmpty();
 
         /**
          * The View is requested to open a Details view on the given gas station
@@ -91,6 +124,12 @@ public interface IMainContract {
          * The View is requested to open the Info view
          */
         void openInfoView();
+
+        /**
+         * The View is requested to open the Filter dialog
+         */
+        void openFilterDialog();
+
     }
 
 }

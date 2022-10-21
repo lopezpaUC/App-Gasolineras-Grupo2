@@ -2,7 +2,6 @@ package es.unican.is.appgasolineras.model;
 
 import junit.framework.TestCase;
 
-import org.junit.Before;
 import org.junit.Test;
 
 public class GasolineraTest extends TestCase {

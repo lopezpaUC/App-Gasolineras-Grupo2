@@ -1,10 +1,6 @@
 package es.unican.is.appgasolineras.repository.rest;
 
-import java.util.List;
-
 import es.unican.is.appgasolineras.common.Callback;
-import es.unican.is.appgasolineras.model.Gasolinera;
-import es.unican.is.appgasolineras.model.GasolinerasResponse;
 import retrofit2.Call;
 import retrofit2.Response;
 
