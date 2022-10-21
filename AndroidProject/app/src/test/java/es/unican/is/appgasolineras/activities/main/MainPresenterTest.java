@@ -9,6 +9,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -25,7 +27,6 @@ public class MainPresenterTest extends TestCase {
     private List<String> wrongBrandList = new ArrayList<>();
     private List<Gasolinera> fuelStationsList = new ArrayList<>();
     private List<Gasolinera> fuelStationsCepsa = new ArrayList<>();
-    private List<Gasolinera> emptyFuelStationsList = new ArrayList<>();
 
     private Gasolinera fuelStation1 = new Gasolinera();
     private Gasolinera fuelStation2 = new Gasolinera();
@@ -107,18 +108,22 @@ public class MainPresenterTest extends TestCase {
         // Caso valido: lista con una marca existente
         sut.filter(CombustibleType.ALL_COMB, brandsList.subList(0, 1));
         assertEquals(fuelStationsCepsa, sut.getShownGasolineras());
+        verify(mockMainView).showGasolineras(sut.getShownGasolineras());
 
         // Caso válido: lista con mas de una marca existente
         sut.filter(CombustibleType.ALL_COMB, brandsList);
         assertEquals(fuelStationsList, sut.getShownGasolineras());
+        verify(mockMainView, atLeast(2)).showGasolineras(sut.getShownGasolineras());
 
         // Caso valido: lista vacia
         sut.filter(CombustibleType.ALL_COMB, brandsList.subList(0, 0));
         assertEquals(fuelStationsList, sut.getShownGasolineras());
+        verify(mockMainView, atLeast(3)).showGasolineras(sut.getShownGasolineras());
 
         // Caso no valido: lista con una marca no existente
         sut.filter(CombustibleType.ALL_COMB, wrongBrandList);
         assertNull(sut.getShownGasolineras());
+        verify(mockMainView).showLoadEmpty();
     }
 
     @Test
