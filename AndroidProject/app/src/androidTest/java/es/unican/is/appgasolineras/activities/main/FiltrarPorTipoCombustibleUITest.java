@@ -90,5 +90,6 @@ public class FiltrarPorTipoCombustibleUITest {
         gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
         gas.onChildView(withId(R.id.tv95)).check(matches(withText("1,809")));
         gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));*/
+
     }
 }
