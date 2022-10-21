@@ -45,6 +45,12 @@ public class FiltrarPorTipoCombustibleUITest {
         onView(withId(R.id.tvApply)).inRoot(isTouchable()).perform(click());
         DataInteraction gas;
 
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
         gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(0);
         gas.onChildView(withId(R.id.tvName)).check(matches(withText("CEPSA")));
         gas.onChildView(withId(R.id.tvAddress)).check(matches(withText("CARRETERA 6316 KM. 10,5")));
