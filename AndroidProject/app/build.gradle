@@ -72,9 +72,6 @@ android {
         targetCompatibility JavaVersion.VERSION_11
     }
 
-    testOptions {
-        animationsDisabled = true;
-    }
 }
 
 dependencies {
