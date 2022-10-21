@@ -6,25 +6,25 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.CoreMatchers.anything;
 
 import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
-public class FiltrarPorTipoCombustibleUITest {
+@RunWith(AndroidJUnit4.class)
 
-    @Rule
-    public ActivityScenarioRule<MainView> activityRule =
-            new ActivityScenarioRule<>(MainView.class);
+public class FiltrarPorTipoCombustibleUITest {
 
     @BeforeClass
     public static void setUp() {
@@ -33,16 +33,41 @@ public class FiltrarPorTipoCombustibleUITest {
 
     @AfterClass
     public static void clean() {
+        onView(withId(R.id.menuRefresh)).perform(click());
+        onView(withText("Recargar")).inRoot(RootMatchers.isDialog()).perform(click());
         GasolinerasServiceConstants.setMinecoURL();
     }
 
+    @Rule
+    public ActivityScenarioRule<MainView> activityRule = new ActivityScenarioRule<>(MainView.class);
+
     @Test
     public void testFiltrarPorTipoCombustible() {
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         onView(withId(R.id.menuFilter)).perform(click());
         onView(withId(R.id.spnTipoCombustible)).perform(click());
+
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         onView(withText("Diésel")).inRoot(RootMatchers.isDialog()).perform(click());
+
         onView(withId(R.id.tvApply)).perform(click());
         DataInteraction gas;
+
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(0);
         gas.onChildView(withId(R.id.tvName)).check(matches(withText("CEPSA")));
@@ -52,7 +77,9 @@ public class FiltrarPorTipoCombustibleUITest {
         gas.onChildView(withId(R.id.tv95)).check(matches(withText("1,859")));
         gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));
 
-        /**gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(1);
+
+
+        gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(1);
         gas.onChildView(withId(R.id.tvName)).check(matches(withText("PETRONOR")));
         gas.onChildView(withId(R.id.tvAddress)).check(matches(withText("CARRETERA N-611 KM. 163,2")));
         gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
@@ -89,7 +116,13 @@ public class FiltrarPorTipoCombustibleUITest {
         gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
         gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
         gas.onChildView(withId(R.id.tv95)).check(matches(withText("1,809")));
-        gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));*/
+        gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));
+
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 }

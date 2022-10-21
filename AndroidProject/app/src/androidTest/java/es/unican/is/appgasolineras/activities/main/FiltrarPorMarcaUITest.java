@@ -33,6 +33,8 @@ public class FiltrarPorMarcaUITest {
 
     @AfterClass
     public static void clean() {
+        onView(withId(R.id.menuRefresh)).perform(click());
+        onView(withText("Recargar")).inRoot(RootMatchers.isDialog()).perform(click());
         GasolinerasServiceConstants.setMinecoURL();
     }
 
