@@ -58,5 +58,6 @@ public class FiltrarPorMarcaUITest {
         gasolinera.onChildView(withId(R.id.tv95)).check(matches(withText("1,859")));
         gasolinera.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
         gasolinera.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));
+
     }
 }
