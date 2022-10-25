@@ -35,6 +35,14 @@ public class GasolinerasService {
     }
 
     /**
+     * Method that reset the API for problems in tests.
+     * @return the api
+     */
+    public static GasolinerasAPI resetAPI(){
+        return api = null;
+    }
+
+    /**
      * Download gas stations located in Cantabria from the REST API asynchronously
      * @param cb the callback that processes the response asynchronously
      */

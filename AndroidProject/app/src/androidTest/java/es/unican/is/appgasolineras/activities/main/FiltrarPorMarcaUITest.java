@@ -20,6 +20,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import es.unican.is.appgasolineras.R;
+import es.unican.is.appgasolineras.repository.rest.GasolinerasAPI;
+import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 @RunWith(AndroidJUnit4.class)
@@ -33,9 +35,8 @@ public class FiltrarPorMarcaUITest {
 
     @AfterClass
     public static void clean() {
-        onView(withId(R.id.menuRefresh)).perform(click());
-        onView(withText("Recargar")).inRoot(RootMatchers.isDialog()).perform(click());
         GasolinerasServiceConstants.setMinecoURL();
+        GasolinerasService.resetAPI();
     }
 
     @Rule

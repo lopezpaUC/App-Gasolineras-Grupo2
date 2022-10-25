@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import es.unican.is.appgasolineras.R;
+import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 @RunWith(AndroidJUnit4.class)
@@ -33,9 +34,8 @@ public class FiltrarPorTipoCombustibleUITest {
 
     @AfterClass
     public static void clean() {
-        onView(withId(R.id.menuRefresh)).perform(click());
-        onView(withText("Recargar")).inRoot(RootMatchers.isDialog()).perform(click());
         GasolinerasServiceConstants.setMinecoURL();
+        GasolinerasService.resetAPI();
     }
 
     @Rule
@@ -43,32 +43,12 @@ public class FiltrarPorTipoCombustibleUITest {
 
     @Test
     public void testFiltrarPorTipoCombustible() {
-        try {
-            Thread.sleep(15000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         onView(withId(R.id.menuFilter)).perform(click());
         onView(withId(R.id.spnTipoCombustible)).perform(click());
-
-        try {
-            Thread.sleep(15000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         onView(withText("Diésel")).inRoot(RootMatchers.isDialog()).perform(click());
-
         onView(withId(R.id.tvApply)).perform(click());
+
         DataInteraction gas;
-
-        try {
-            Thread.sleep(15000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(0);
         gas.onChildView(withId(R.id.tvName)).check(matches(withText("CEPSA")));
         gas.onChildView(withId(R.id.tvAddress)).check(matches(withText("CARRETERA 6316 KM. 10,5")));
@@ -76,8 +56,6 @@ public class FiltrarPorTipoCombustibleUITest {
         gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
         gas.onChildView(withId(R.id.tv95)).check(matches(withText("1,859")));
         gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));
-
-
 
         gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(1);
         gas.onChildView(withId(R.id.tvName)).check(matches(withText("PETRONOR")));
@@ -117,12 +95,5 @@ public class FiltrarPorTipoCombustibleUITest {
         gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
         gas.onChildView(withId(R.id.tv95)).check(matches(withText("1,809")));
         gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));
-
-        try {
-            Thread.sleep(15000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
     }
 }
