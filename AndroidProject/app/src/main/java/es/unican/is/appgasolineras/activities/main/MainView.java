@@ -22,12 +22,13 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
-import java.time.Instant;
 import java.util.List;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.detail.GasolineraDetailView;
 import es.unican.is.appgasolineras.activities.info.InfoView;
+import es.unican.is.appgasolineras.activities.promotion.IListaPromocionesContract;
+import es.unican.is.appgasolineras.activities.promotion.ListaPromocionesView;
 import es.unican.is.appgasolineras.common.prefs.Prefs;
 import es.unican.is.appgasolineras.common.utils.MultipleSpinner;
 import es.unican.is.appgasolineras.model.Gasolinera;
@@ -105,6 +106,10 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             case R.id.menuFilter:
                 presenter.onFilterClicked();
                 return true;
+            case R.id.menuAnahdirPromocion:
+                presenter.onAddPromotionClicked();
+            case R.id.menuListaPromociones:
+                presenter.onListPromotionsClicked();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -175,6 +180,18 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     @Override
     public void openInfoView() {
         Intent intent = new Intent(this, InfoView.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void openAnhadirPromocionView() {
+        //Intent intent = new Intent(this, AddPromotionView.class);
+        //startActivity(intent);
+    }
+
+    @Override
+    public void openListaPromocionesView() {
+        Intent intent = new Intent(this, ListaPromocionesView.class);
         startActivity(intent);
     }
 

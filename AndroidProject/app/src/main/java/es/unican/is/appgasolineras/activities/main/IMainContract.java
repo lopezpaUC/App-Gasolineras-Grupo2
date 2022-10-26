@@ -46,6 +46,17 @@ public interface IMainContract {
          */
         void onFilterClicked();
 
+        /**
+         * This method should be used by the View to notifiy the Presenter that the
+         * Promocion button has been clicked
+         */
+        void onAddPromotionClicked();
+
+        /**
+         * This method should be used by the View to notifiy the Presenter that the
+         * Promocion button has been clicked
+         */
+        void onListPromotionsClicked();
 
         /**
          * Obtiene la lista de gasolineras que debe mostrar la vista.
@@ -124,6 +135,16 @@ public interface IMainContract {
          * The View is requested to open the Info view
          */
         void openInfoView();
+
+        /**
+         * The View is requested to open the Promotion view
+         */
+        void openAnhadirPromocionView();
+
+        /**
+         * The View is requested to open the Promotion view
+         */
+        void openListaPromocionesView();
 
         /**
          * The View is requested to open the Filter dialog
