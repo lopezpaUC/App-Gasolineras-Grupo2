@@ -1,8 +1,12 @@
 package es.unican.is.appgasolineras.activities.main;
 
+import android.content.Intent;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.unican.is.appgasolineras.activities.detail.AnhadirPromocionPresenter;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 
@@ -30,6 +34,10 @@ public class MainPresenter implements IMainContract.Presenter {
     public MainPresenter(IMainContract.View view) {
         this.view = view;
         loadMethod = LOAD_ONLINE; // Por defecto, se cargan de repositorio online
+    }
+
+    public IGasolinerasRepository getRepository() {
+        return repository;
     }
 
     @Override
@@ -93,7 +101,10 @@ public class MainPresenter implements IMainContract.Presenter {
             shownGasolineras = null;
             view.showLoadError();
         }
+
     }
+
+
 
     @Override
     public List<Gasolinera> getShownGasolineras() {

@@ -10,6 +10,9 @@ import java.util.List;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.common.utils.MultipleSpinner;
+import es.unican.is.appgasolineras.model.Gasolinera;
+import es.unican.is.appgasolineras.repository.GasolinerasRepository;
+import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 
 /**
  * Vista abierta para anhadir una promocion.
@@ -17,6 +20,7 @@ import es.unican.is.appgasolineras.common.utils.MultipleSpinner;
 public class AnhadirPromocionView extends AppCompatActivity implements IAnhadirPromocionContract.View {
     private IAnhadirPromocionContract.Presenter presenter;
     private List<String> checkedBrandBoxes;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +38,16 @@ public class AnhadirPromocionView extends AppCompatActivity implements IAnhadirP
         initializeSpinnerMarcas(spinnerCombustible);
     }
 
+
     private void initializeSpinnerMarcas(MultipleSpinner spinnerMarcas) {
         String[] marcas = getResources().getStringArray(R.array.brands_types_array);
         spinnerMarcas.setElementos(marcas, "Varias", "-");
         spinnerMarcas.setSelectedStrings(checkedBrandBoxes);
+    }
+
+    private void initializeSpinnerGasolineras(Spinner spinner) {
+
+
     }
 
 }
