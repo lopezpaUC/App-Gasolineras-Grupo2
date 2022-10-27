@@ -1,13 +1,11 @@
-package es.unican.is.appgasolineras.activities.detail;
+package es.unican.is.appgasolineras.activities.promotion;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class AnhadirPromocionView extends AppCompatActivity implements IAnhadirP
 
 
         presenter = new AnhadirPromocionPresenter(this);
-       presenter.init();
+        presenter.init();
         checkedBrandBoxes = new ArrayList<>();
         this.init();
     }
@@ -69,8 +67,6 @@ public class AnhadirPromocionView extends AppCompatActivity implements IAnhadirP
             spinnerFinal.setAdapter(arrayAdapter2);
 
     }
-
-
 
     private void initializeMultipleSpinnerMarcas(MultipleSpinner spinnerMarcas) {
         String[] marcas = getResources().getStringArray(R.array.brands_types_array);

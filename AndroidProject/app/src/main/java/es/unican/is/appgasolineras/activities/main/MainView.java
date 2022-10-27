@@ -105,6 +105,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             case R.id.menuFilter:
                 presenter.onFilterClicked();
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -176,6 +177,11 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     public void openInfoView() {
         Intent intent = new Intent(this, InfoView.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void openAnhadirPromociones() {
+        Intent intent = new Intent(this, InfoView.class);
     }
 
     @Override

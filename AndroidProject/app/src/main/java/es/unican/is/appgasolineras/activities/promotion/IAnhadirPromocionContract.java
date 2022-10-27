@@ -1,4 +1,4 @@
-package es.unican.is.appgasolineras.activities.detail;
+package es.unican.is.appgasolineras.activities.promotion;
 
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 

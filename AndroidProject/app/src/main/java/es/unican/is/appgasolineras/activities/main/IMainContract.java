@@ -46,7 +46,6 @@ public interface IMainContract {
          */
         void onFilterClicked();
 
-
         /**
          * Obtiene la lista de gasolineras que debe mostrar la vista.
          * @return lista de gasolineras que debe mostrar la vista.
@@ -130,6 +129,10 @@ public interface IMainContract {
          */
         void openFilterDialog();
 
+        /**
+         * The View is requested to open a new window to add promotions.
+         */
+        void openAnhadirPromociones();
     }
 
 }

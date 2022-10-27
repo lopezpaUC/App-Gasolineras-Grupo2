@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppGasolineras"
         tools:targetApi="32">
-        <activity android:name=".activities.detail.AnhadirPromocionView"
+        <activity android:name=".activities.promotion.AnhadirPromocionView"
             android:exported="true"/>
         <activity
             android:name=".activities.info.InfoView"

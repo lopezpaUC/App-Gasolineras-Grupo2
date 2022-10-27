@@ -1,18 +1,12 @@
-package es.unican.is.appgasolineras.activities.detail;
+package es.unican.is.appgasolineras.activities.promotion;
 
-import android.util.Log;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
-import es.unican.is.appgasolineras.repository.db.GasolineraDao;
-import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
 
 public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Presenter {
-
 
     // Vista
     private final IAnhadirPromocionContract.View view;
@@ -25,8 +19,6 @@ public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Pres
 
     // Lista con el nombre y la dirección de todas las gasolineras
     ArrayList<String> dataNombreDireccion;
-
-
 
     /**
      * Constructor
@@ -41,6 +33,7 @@ public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Pres
     @Override
     public void init() {
         dataNombreDireccion = new ArrayList<String>();
+        repository = view.getGasolineraRepository();
 
         rellenaGasolineras();
     }
@@ -56,10 +49,7 @@ public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Pres
 
          */
     }
-
-
-
-    }
+}
 
 
 
