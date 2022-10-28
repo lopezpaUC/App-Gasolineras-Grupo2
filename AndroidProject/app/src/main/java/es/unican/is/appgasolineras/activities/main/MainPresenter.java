@@ -121,6 +121,16 @@ public class MainPresenter implements IMainContract.Presenter {
     }
 
     @Override
+    public void onAddPromotionClicked() {
+        view.openAnhadirPromocionView();
+    }
+
+    @Override
+    public void onListPromotionsClicked() {
+        view.openListaPromocionesView();
+    }
+
+    @Override
     public void onRefreshClicked() {
         init();
     }
