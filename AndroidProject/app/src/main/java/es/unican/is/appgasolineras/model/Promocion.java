@@ -1,44 +1,87 @@
 package es.unican.is.appgasolineras.model;
 
-import java.util.LinkedList;
-import java.util.List;
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import es.unican.is.appgasolineras.activities.main.CombustibleType;
 
+/**
+ * Clase que representa una promocion registrada para gasolineras, registrada por un usuario.
+ */
+@Entity(tableName = "promociones")
 public class Promocion {
 
-    private LinkedList<CombustibleType> combustibles;
-    private String nombre;
-    private boolean EsPorcentaje;
-    private double valor;
-    private LinkedList<Gasolinera> gasolineras;
+    @NonNull @PrimaryKey
+    private String id;
 
-    public LinkedList<CombustibleType> getCombustibles() {
-        return combustibles;
+    @ColumnInfo(name = "descuento_porcentual")
+    private double descuentoPorcentual; // 0.0 - 100.0 %
+
+    @ColumnInfo(name = "decuento_euros_litro")
+    private double descuentoEurosLitro; // > 0.0
+
+    @ColumnInfo(name = "combustible")
+    private CombustibleType combustible;
+
+    /**
+     * Crea una promocion por defecto o vacia.
+     */
+    public Promocion() {
+        id = "";
+        descuentoPorcentual = -1.0;
+        descuentoEurosLitro = -1.0;
+        combustible = null;
     }
 
-    public String getNombre() {
-        return nombre;
+    /**
+     * Crea una promocion detallada. Solo uno de los dos descuentos debe contener un valor valido.
+     *
+     * @param id Nombre de la promocion, unico y que la identifica.
+     * @param descuentoPorcentual Descuento porcentual.
+     * @param descuentoEurosLitro Descuento en euros litro.
+     * @param combustible Combustible.
+     */
+    public Promocion(String id, double descuentoPorcentual, double descuentoEurosLitro,
+                     CombustibleType combustible) {
+        this.id = id;
+        this.descuentoPorcentual = descuentoPorcentual;
+        this.descuentoEurosLitro = descuentoEurosLitro;
+        this.combustible = combustible;
     }
 
-    public boolean isEsPorcentaje() {
-        return EsPorcentaje;
+    @NonNull
+    public String getId() {
+        return id;
     }
 
-    public double getValor() {
-        return valor;
+    public void setId(@NonNull String id) {
+        this.id = id;
     }
 
-    public LinkedList<Gasolinera> getListaGasolineras() {
-        return gasolineras;
+    public double getDescuentoPorcentual() {
+        return descuentoPorcentual;
     }
 
-    public Promocion(LinkedList<CombustibleType> combustibles, String nombre, boolean esPorcentaje, double valor, LinkedList<Gasolinera> gasolineras) {
-        this.combustibles = combustibles;
-        this.nombre = nombre;
-        EsPorcentaje = esPorcentaje;
-        this.valor = valor;
-        this.gasolineras = gasolineras;
+    public void setDescuentoPorcentual(double descuentoPorcentual) {
+        this.descuentoPorcentual = descuentoPorcentual;
+    }
+
+    public double getDescuentoEurosLitro() {
+        return descuentoEurosLitro;
+    }
+
+    public void setDescuentoEurosLitro(double descuentoEurosLitro) {
+        this.descuentoEurosLitro = descuentoEurosLitro;
+    }
+
+    public CombustibleType getCombustible() {
+        return combustible;
+    }
+
+    public void setCombustible(CombustibleType combustible) {
+        this.combustible = combustible;
     }
 
     @Override
@@ -48,7 +91,7 @@ public class Promocion {
         } else if (o.getClass() != this.getClass()) {
             return false;
         } else {
-            return((Promocion) o).nombre.equals(this.nombre);
+            return((Promocion) o).id.equals(this.id);
         }
     }
 }

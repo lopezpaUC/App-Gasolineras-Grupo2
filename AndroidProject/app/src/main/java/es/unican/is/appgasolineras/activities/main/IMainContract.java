@@ -150,7 +150,6 @@ public interface IMainContract {
          * The View is requested to open the Filter dialog
          */
         void openFilterDialog();
-
     }
 
 }
