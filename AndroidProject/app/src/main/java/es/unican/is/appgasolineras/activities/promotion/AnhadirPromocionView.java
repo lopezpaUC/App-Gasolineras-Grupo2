@@ -42,6 +42,14 @@ public class AnhadirPromocionView extends AppCompatActivity implements IAnhadirP
         presenter = new AnhadirPromocionPresenter(this);
         presenter.init();
 
+        this.init();
+    }
+
+
+    public void init() {
+        /*MultipleSpinner spinnerMarcas = findViewById(R.id.marcasSp);
+        initializeMultipleSpinnerMarcas(spinnerMarcas);*/
+
         // Enlazar elementos de la vista
         nombreEditText = findViewById(R.id.nombreEditText);
         combustiblesSp = findViewById(R.id.combustiblesSp);
@@ -57,14 +65,6 @@ public class AnhadirPromocionView extends AppCompatActivity implements IAnhadirP
         initializeSpinnersSelector(selectorSp, selector2Sp);
         initializeSpinnerTipoDescuento(tipoDescuentoSp);
         initializeSpinnerCombustibles(combustiblesSp);
-
-        this.init();
-    }
-
-
-    public void init() {
-        /*MultipleSpinner spinnerMarcas = findViewById(R.id.marcasSp);
-        initializeMultipleSpinnerMarcas(spinnerMarcas);*/
 
 
     }
