@@ -31,6 +31,14 @@ public class Gasolinera implements Parcelable {
     @SerializedName("Precio Gasoleo A")             private String dieselA;
     @SerializedName("Precio Gasolina 95 E5")        private String normal95;  // 95 octanes
 
+
+    /* CELSO
+    private Promocion promocion;
+    private Double gasoleoAConDescuento;
+    private Double normal95ConDescuento;
+     */
+
+
     public Gasolinera() {
         id = "";
         rotulo = "";
@@ -40,20 +48,14 @@ public class Gasolinera implements Parcelable {
         horario = "";
         dieselA = "";
         normal95 = "";
+        /* CELSO
+        promocion = null;
+        gasoleoAConDescuento = 0.0;
+        normal95ConDescuento = 0.0;*/
+
     }
 
-    public Gasolinera(String id, String rotulo, String cp, String direccion,
-                      String municipio, String horario, String dieselA,
-                      String normal95) {
-        this.id = id;
-        this.rotulo = rotulo;
-        this.cp = cp;
-        this.direccion = direccion;
-        this.municipio = municipio;
-        this.horario = horario;
-        this.dieselA = dieselA;
-        this.normal95 = normal95;
-    }
+
 
     @NonNull
     public String getId() {
@@ -119,6 +121,18 @@ public class Gasolinera implements Parcelable {
     public void setNormal95(String normal95) {
         this.normal95 = normal95;
     }
+
+   /* CELSO
+    public Promocion getPromocion() {
+        return promocion;
+    }
+
+    public void setPromocion(Promocion promocion) {
+        this.promocion = promocion;
+    }*/
+
+
+
 
     /*
      * Methods for Parcelable interface. Needed to send this object in an Intent.
@@ -188,4 +202,30 @@ public class Gasolinera implements Parcelable {
     public int hashCode() {
         return this.id.hashCode();
     }
+
+    /**
+     * Aplica descuento de dicha promocion en caso de que sea un mejor descuento
+     * @param p
+     */
+    /* CELSO
+    public void aplicarPromocion(Promocion p) {
+        switch(p.getCombustibleType()) {
+            case GASOLINA:
+                if(normal95ConDescuento < p.getValor()*Double.parseDouble(normal95) && p.isEsPorcentaje()) {
+                    normal95ConDescuento = p.getValor()*(100.0 - Double.parseDouble(normal95));
+                } else if(normal95ConDescuento < p.getValor()*Double.parseDouble(normal95) && !p.isEsPorcentaje()) {
+                    normal95ConDescuento = p.getValor() - Double.parseDouble(normal95);
+                }
+                break;
+            case DIESEL:
+                if(gasoleoAConDescuento < p.getValor()*Double.parseDouble(dieselA) && p.isEsPorcentaje()) {
+                    gasoleoAConDescuento = p.getValor()*(100.0 - Double.parseDouble(dieselA));
+
+                } else if(gasoleoAConDescuento < p.getValor()*Double.parseDouble(dieselA) && !p.isEsPorcentaje()) {
+                    gasoleoAConDescuento = p.getValor() - Double.parseDouble(dieselA);
+                }
+                break;
+            default:
+        }
+    }*/
 }

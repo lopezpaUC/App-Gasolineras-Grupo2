@@ -1,24 +1,23 @@
 package es.unican.is.appgasolineras.activities.detail;
 
-import android.util.Log;
+import static java.lang.Double.parseDouble;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import es.unican.is.appgasolineras.activities.main.CombustibleType;
 import es.unican.is.appgasolineras.model.Gasolinera;
-import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
-import es.unican.is.appgasolineras.repository.db.GasolineraDao;
-import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
+import es.unican.is.appgasolineras.model.Promocion;
 
 public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Presenter {
 
+    private static final int NUM_COMBUSTIBLES = 2;
 
     // Vista
     private final IAnhadirPromocionContract.View view;
 
-    // Repositorio de gasolineras
-    private IGasolinerasRepository repository;
+
 
     // Lista con todas las gasolineras
     List<Gasolinera> data;
@@ -34,32 +33,87 @@ public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Pres
      */
     public AnhadirPromocionPresenter(IAnhadirPromocionContract.View view) {
         this.view = view;
-        repository = repository;
 
     }
 
     @Override
     public void init() {
         dataNombreDireccion = new ArrayList<String>();
-
         rellenaGasolineras();
     }
 
+    /**
+     * Obtiene la lista con las gasolineras
+     */
     private void rellenaGasolineras() {
-        int i= 0;
+        /* TODO */
+    }
 
-        /*
-        for (Gasolinera gasolinera : data = dao.getAll()) {
-            //dataNombreDireccion.set(i, gasolinera.getRotulo() + " - " + gasolinera.getDireccion());
-            i++;
+
+    /**
+     * Anhade una promocion.
+     * @return true Si se ha podido anhadir. False en caso contrario.
+     */
+
+    @Override
+    public boolean anhadePromocion(String n, String c, String m, String m2, double d, String e, List<String> gasolineras) {
+
+        /*Promocion p;
+
+        // Convertir combustible
+        CombustibleType combustibleType = null;
+        c = c.toUpperCase(Locale.ROOT);
+        for(int i = 0; i < NUM_COMBUSTIBLES; i++ ) {
+            combustibleType.getCombTypeFromInt(i);
+            if(combustibleType.toString() == c) {
+                break;
+            }
         }
 
-         */
+        // Convertir porMarca
+        boolean porMarca;
+        if(m == "Por marca") {
+            porMarca = true;
+        } else {
+            porMarca = false;
+        }
+
+        // Convertir esPorcentaje
+        boolean esPorcentaje;
+        if(m == "%") {
+            esPorcentaje = true;
+        } else {
+            esPorcentaje = false;
+        }
+
+        *//* TODO convertir gasolineras y quitar el null *//*
+        List<Gasolinera> listaGasolineras = null;
+        // Crear la promocion
+        p = new Promocion(n, combustibleType, porMarca, m2, d, esPorcentaje, listaGasolineras);
+        aplicarPromocion(p);
+
+        *//* TODO llamar a la dao para anhadir promocion a la base de datos *//*
+        *//* TODO actualizar base de datos con los nuevos cambios en las gasolineras */
+
+        return true;
+
+    }
+
+    /**
+     * Aplica la promocion en todas las gasolineras afectadas
+     * @param promocion
+     */
+    /* CELSO
+    private void aplicarPromocion(Promocion promocion) {
+        for(Gasolinera gasolinera: promocion.getGasolineras()) {
+            gasolinera.aplicarPromocion(promocion);
+        }
+        }*/
     }
 
 
 
-    }
+
 
 
 

@@ -19,6 +19,7 @@
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.121"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,8 +30,13 @@
         android:layout_width="300dp"
         android:layout_height="44dp"
         android:layout_marginTop="16dp"
-        android:background="#FFFF"
+        android:background="@color/white"
         android:inputType="text"
+        android:hint=" Escriba aquí el nombre"
+
+
+
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.369"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,10 +46,9 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:text="@string/nuevaPromocion"
-        android:textColor="@color/black"
-        android:textColorLink="#0000"
+        android:textColor="#000000"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,7 +75,9 @@
         android:layout_width="300dp"
         android:layout_height="44dp"
         android:layout_marginTop="16dp"
-        android:background="@color/white"
+
+        android:backgroundTint="#F44336"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.36"
         app:layout_constraintStart_toStartOf="parent"
@@ -78,25 +85,26 @@
         tools:ignore="DuplicateSpeakableTextCheck" />
 
     <Button
-        android:id="@+id/back"
+        android:id="@+id/backBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:text="@string/atras"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.229"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descuentoEditText" />
 
     <Button
-        android:id="@+id/accept"
+        android:id="@+id/acceptBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:text="@string/aceptar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.562"
-        app:layout_constraintStart_toEndOf="@+id/back"
+        app:layout_constraintStart_toEndOf="@+id/backBtn"
         app:layout_constraintTop_toBottomOf="@+id/tipoDescuentoSp" />
 
     <TextView
@@ -118,8 +126,8 @@
         android:layout_width="150dp"
         android:layout_height="44dp"
         android:layout_marginTop="16dp"
+        android:backgroundTint="#F44336"
 
-        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.157"
         app:layout_constraintStart_toStartOf="parent"
@@ -142,11 +150,12 @@
 
     <EditText
         android:id="@+id/descuentoEditText"
-        android:layout_width="163dp"
+        android:layout_width="100dp"
         android:layout_height="44dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
-        android:background="#FFFF"
+        android:background="@color/white"
+        android:hint="  ..."
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.108"
@@ -155,11 +164,11 @@
 
     <Spinner
         android:id="@+id/tipoDescuentoSp"
-        android:layout_width="137dp"
+        android:layout_width="90dp"
         android:layout_height="44dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="48dp"
-        android:background="@color/white"
+        android:backgroundTint="#F44336"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/descuentoEditText"
@@ -170,11 +179,14 @@
         android:layout_width="150dp"
         android:layout_height="44dp"
         android:layout_marginTop="16dp"
-        android:background="@color/white"
+        android:backgroundTint="#F44336"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/selectorSp"
         app:layout_constraintTop_toBottomOf="@+id/gasolinerasLabel" />
+
+
 
     <!--<es.unican.is.appgasolineras.common.utils.MultipleSpinner
         class="es.unican.is.appgasolineras.common.utils.MultipleSpinner"

@@ -7,38 +7,35 @@ import es.unican.is.appgasolineras.activities.main.CombustibleType;
 
 public class Promocion {
 
-    private LinkedList<CombustibleType> combustibles;
+    private CombustibleType combustibleType;
     private String nombre;
-    private boolean EsPorcentaje;
+    private boolean porMarca;
     private double valor;
-    private LinkedList<Gasolinera> gasolineras;
+    private List<Gasolinera> gasolineras;
+    private boolean esPorcentaje;
+    private String marca;
 
-    public LinkedList<CombustibleType> getCombustibles() {
-        return combustibles;
-    }
+
 
     public String getNombre() {
         return nombre;
     }
 
-    public boolean isEsPorcentaje() {
-        return EsPorcentaje;
-    }
 
     public double getValor() {
         return valor;
     }
 
-    public LinkedList<Gasolinera> getListaGasolineras() {
-        return gasolineras;
-    }
 
-    public Promocion(LinkedList<CombustibleType> combustibles, String nombre, boolean esPorcentaje, double valor, LinkedList<Gasolinera> gasolineras) {
-        this.combustibles = combustibles;
+
+    public Promocion(String nombre, CombustibleType combustibleType, boolean porMarca, String marca, double valor, boolean esPorcentaje, List<Gasolinera> gasolineras) {
+        this.combustibleType = combustibleType;
         this.nombre = nombre;
-        EsPorcentaje = esPorcentaje;
+        this.porMarca = porMarca;
         this.valor = valor;
         this.gasolineras = gasolineras;
+        this.esPorcentaje = esPorcentaje;
+        this.marca = marca;
     }
 
     @Override
@@ -50,5 +47,17 @@ public class Promocion {
         } else {
             return((Promocion) o).nombre.equals(this.nombre);
         }
+    }
+
+    public List<Gasolinera> getGasolineras() {
+        return gasolineras;
+    }
+
+    public boolean isEsPorcentaje() {
+        return esPorcentaje;
+    }
+
+    public CombustibleType getCombustibleType() {
+        return this.combustibleType;
     }
 }
