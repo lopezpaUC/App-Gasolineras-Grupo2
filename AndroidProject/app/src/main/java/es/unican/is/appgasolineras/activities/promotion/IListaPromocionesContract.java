@@ -41,7 +41,7 @@ public interface IListaPromocionesContract {
          * Android Context, and this is available in the View
          * @return the Repository object to access promotions
          */
-        IPromocionesRepository getPromocionRepository();
+        //IPromocionesRepository getPromocionRepository();
 
         /**
          * The View is requested to show a list of promotions

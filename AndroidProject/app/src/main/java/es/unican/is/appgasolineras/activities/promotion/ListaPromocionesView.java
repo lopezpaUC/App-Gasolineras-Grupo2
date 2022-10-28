@@ -33,10 +33,10 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
     @Override
     public void init() {}
 
-    @Override
+    /**@Override
     public IPromocionesRepository getPromocionRepository() {
         return new PromocionRepository(this);
-    }
+    }*/
 
     @Override
     public void showLoadCorrectOnline(int promocionesCount) {
