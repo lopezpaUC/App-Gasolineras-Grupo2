@@ -1,4 +1,4 @@
-package es.unican.is.appgasolineras.activities.detail;
+package es.unican.is.appgasolineras.activities.promotion;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,8 +8,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.LinkedList;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.common.utils.MultipleSpinner;
@@ -60,7 +58,6 @@ public class AnhadirPromocionView extends AppCompatActivity implements IAnhadirP
         initializeSpinnerTipoDescuento(tipoDescuentoSp);
         initializeSpinnerCombustibles(combustiblesSp);
 
-
         this.init();
     }
 
@@ -76,6 +73,11 @@ public class AnhadirPromocionView extends AppCompatActivity implements IAnhadirP
     public IGasolinerasRepository getGasolineraRepository() {
         /*TODO*/
         return null;
+    }
+
+    @Override
+    public void onClick(IAnhadirPromocionContract.View view) {
+
     }
 
 
@@ -106,7 +108,6 @@ public class AnhadirPromocionView extends AppCompatActivity implements IAnhadirP
 
     }
 
-
     /**
      * Inicializador de MultiSpinner
      */
@@ -126,8 +127,6 @@ public class AnhadirPromocionView extends AppCompatActivity implements IAnhadirP
         arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         spinnerCombustibles.setAdapter(arrayAdapter);
     }
-
-    
 
 
     @Override

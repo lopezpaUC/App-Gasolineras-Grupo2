@@ -1,19 +1,12 @@
 package es.unican.is.appgasolineras.activities.main;
 
-import android.content.Intent;
-import android.os.Bundle;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.unican.is.appgasolineras.activities.detail.AnhadirPromocionPresenter;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 
 public class MainPresenter implements IMainContract.Presenter {
-
-
 
     // Constante para indicar si las gasolineras se cargan de forma online u offline
     private static final int LOAD_ONLINE = 0;
@@ -38,10 +31,6 @@ public class MainPresenter implements IMainContract.Presenter {
     public MainPresenter(IMainContract.View view) {
         this.view = view;
         loadMethod = LOAD_ONLINE; // Por defecto, se cargan de repositorio online
-    }
-
-    public IGasolinerasRepository getRepository() {
-        return repository;
     }
 
     @Override
@@ -108,8 +97,6 @@ public class MainPresenter implements IMainContract.Presenter {
 
     }
 
-
-
     @Override
     public List<Gasolinera> getShownGasolineras() {
         return this.shownGasolineras;
@@ -131,6 +118,16 @@ public class MainPresenter implements IMainContract.Presenter {
     @Override
     public void onFilterClicked(){
         view.openFilterDialog();
+    }
+
+    @Override
+    public void onAddPromotionClicked() {
+        view.openAnhadirPromocionView();
+    }
+
+    @Override
+    public void onListPromotionsClicked() {
+        view.openListaPromocionesView();
     }
 
     @Override
@@ -247,6 +244,4 @@ public class MainPresenter implements IMainContract.Presenter {
         }
         return compatibles;
     }
-
-
 }

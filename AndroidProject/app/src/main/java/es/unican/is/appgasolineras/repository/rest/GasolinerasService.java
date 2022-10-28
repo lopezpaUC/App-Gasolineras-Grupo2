@@ -34,6 +34,10 @@ public class GasolinerasService {
         return api;
     }
 
+    public static GasolinerasAPI resetAPI(){
+        return api = null;
+    }
+
     /**
      * Download gas stations located in Cantabria from the REST API asynchronously
      * @param cb the callback that processes the response asynchronously

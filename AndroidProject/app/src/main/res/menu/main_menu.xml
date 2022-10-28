@@ -7,6 +7,19 @@
         android:title="@string/filter"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/menuPromotion"
+        android:icon="@drawable/descuento"
+        android:title="@string/promotion"
+        app:showAsAction="ifRoom" >
+        <!-- "file" submenu -->
+        <menu>
+            <item android:id="@+id/menuAnahdirPromocion"
+                android:title="@string/addPromotion" />
+            <item android:id="@+id/menuListaPromociones"
+                android:title="@string/listPromotions" />
+        </menu>
+    </item>
+    <item
         android:id="@+id/menuInfo"
         android:title="@string/info" />
     <item

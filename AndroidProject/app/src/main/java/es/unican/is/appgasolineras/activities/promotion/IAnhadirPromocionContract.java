@@ -1,4 +1,4 @@
-package es.unican.is.appgasolineras.activities.detail;
+package es.unican.is.appgasolineras.activities.promotion;
 
 import java.util.List;
 
@@ -16,5 +16,6 @@ public interface IAnhadirPromocionContract {
 
         IGasolinerasRepository getGasolineraRepository();
 
+        void onClick(View view);
     }
 }

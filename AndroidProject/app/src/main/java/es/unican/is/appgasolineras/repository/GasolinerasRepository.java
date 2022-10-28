@@ -2,6 +2,7 @@ package es.unican.is.appgasolineras.repository;
 
 import android.content.Context;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;

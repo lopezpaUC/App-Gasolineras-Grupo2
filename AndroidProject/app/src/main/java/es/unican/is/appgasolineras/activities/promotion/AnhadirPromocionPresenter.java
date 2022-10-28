@@ -1,6 +1,4 @@
-package es.unican.is.appgasolineras.activities.detail;
-
-import static java.lang.Double.parseDouble;
+package es.unican.is.appgasolineras.activities.promotion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,12 +6,10 @@ import java.util.Locale;
 
 import es.unican.is.appgasolineras.activities.main.CombustibleType;
 import es.unican.is.appgasolineras.model.Gasolinera;
-import es.unican.is.appgasolineras.model.Promocion;
+
+import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 
 public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Presenter {
-
-    private static final int NUM_COMBUSTIBLES = 2;
-
     // Vista
     private final IAnhadirPromocionContract.View view;
 
@@ -24,8 +20,6 @@ public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Pres
 
     // Lista con el nombre y la dirección de todas las gasolineras
     ArrayList<String> dataNombreDireccion;
-
-
 
     /**
      * Constructor
@@ -39,6 +33,7 @@ public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Pres
     @Override
     public void init() {
         dataNombreDireccion = new ArrayList<String>();
+        //repository = view.getGasolineraRepository();
         rellenaGasolineras();
     }
 
@@ -108,9 +103,9 @@ public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Pres
         for(Gasolinera gasolinera: promocion.getGasolineras()) {
             gasolinera.aplicarPromocion(promocion);
         }
-        }*/
-    }
-
+        }
+    }*/
+}
 
 
 
