@@ -39,11 +39,6 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
     }
 
     @Override
-    public void showPromociones(List<Promocion> promociones) {
-
-    }
-
-    @Override
     public void showLoadCorrectOnline(int promocionesCount) {
 
     }
@@ -59,7 +54,7 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
     }
 
     @Override
-    public void showPromotions(List<Promocion> promociones) {
+    public void showPromociones(List<Promocion> promociones) {
         PromocionesArrayAdapter adapter = new PromocionesArrayAdapter(this, promociones);
         ListView list = findViewById(R.id.lvPromociones);
         list.setAdapter(adapter);

@@ -68,7 +68,5 @@ public interface IListaPromocionesContract {
          * loading the promotions
          */
         void showLoadError();
-
-        void showPromotions(List<Promocion> promociones);
     }
 }
