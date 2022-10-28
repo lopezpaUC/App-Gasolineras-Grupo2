@@ -108,8 +108,10 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
                 return true;
             case R.id.menuAnahdirPromocion:
                 presenter.onAddPromotionClicked();
+                return true;
             case R.id.menuListaPromociones:
                 presenter.onListPromotionsClicked();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -264,7 +266,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
      * @param spinnerMarcas Spinner con las opciones de marcas.
      */
     private void initializeSpinnerMarcas(MultipleSpinner spinnerMarcas) {
-        // Bucle para crear y añadir las marcas al array de marcas
         String[] marcas = getResources().getStringArray(R.array.brands_types_array);
         spinnerMarcas.setElementos(marcas, getResources().getString(R.string.varias), "-");
         spinnerMarcas.setSelectedStrings(checkedBrandBoxes);

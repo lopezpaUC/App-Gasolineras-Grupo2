@@ -55,10 +55,11 @@
     <string name="preference_filter_file_key_">AppFilterPreference</string>
     <string name="saved_comb_type_filter">TipoCombustible</string>
     <string name="saved_marca_type_filter">TipoMarca</string>
-    <string name="atras">Atrás</string>
+
     <string name="nuevaPromocion">NUEVA PROMOCIÓN</string>
     <string name="name">Nombre</string>
-    <string name="aceptar">Aceptar</string>
+    <string name="indicacionNombre">Introduzca el nombre de la promoción.</string>
+    <string name="anhadir">Añadir</string>
     <string name="BiodieselAlabel">Biodiesel</string>
     <string name="BioetanolAlabel">Bioetanol</string>
     <string name="GasNaturalComprimidolabel">Gas natural comprimido</string>

@@ -18,10 +18,9 @@
         tools:targetApi="32">
 
         <activity android:name=".activities.promotion.AnhadirPromocionView"
-            android:exported="false"
-            />
-
-
+            android:exported="false" />
+        <activity android:name=".activities.promotion.ListaPromocionesView"
+            android:exported="false" />
         <activity
             android:name=".activities.info.InfoView"
             android:exported="false" />
