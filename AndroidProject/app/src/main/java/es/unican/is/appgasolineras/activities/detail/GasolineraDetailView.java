@@ -17,7 +17,6 @@ import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.CombustibleType;
 import es.unican.is.appgasolineras.activities.main.MainView;
 import es.unican.is.appgasolineras.model.Gasolinera;
-import es.unican.is.appgasolineras.model.Promocion;
 
 /**
  * Vista para la actividad relacionada con la muestra de información detallada de una gasolinera.
