@@ -18,8 +18,8 @@
         tools:targetApi="32">
 
         <activity android:name=".activities.promotion.AnhadirPromocionView"
-            android:exported="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:exported="false"
+            />
 
 
         <activity

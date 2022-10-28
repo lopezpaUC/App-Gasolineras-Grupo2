@@ -27,6 +27,7 @@ import java.util.List;
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.detail.GasolineraDetailView;
 import es.unican.is.appgasolineras.activities.info.InfoView;
+import es.unican.is.appgasolineras.activities.promotion.AnhadirPromocionView;
 import es.unican.is.appgasolineras.activities.promotion.ListaPromocionesView;
 import es.unican.is.appgasolineras.common.prefs.Prefs;
 import es.unican.is.appgasolineras.common.utils.MultipleSpinner;
@@ -184,8 +185,8 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     @Override
     public void openAnhadirPromocionView() {
-        //Intent intent = new Intent(this, AddPromotionView.class);
-        //startActivity(intent);
+        Intent intent = new Intent(this, AnhadirPromocionView.class);
+        startActivity(intent);
     }
 
     @Override

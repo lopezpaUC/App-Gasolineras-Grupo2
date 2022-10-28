@@ -1,7 +1,9 @@
 package es.unican.is.appgasolineras.activities.promotion;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -9,7 +11,11 @@ import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import es.unican.is.appgasolineras.R;
+import es.unican.is.appgasolineras.activities.main.MainView;
 import es.unican.is.appgasolineras.common.utils.MultipleSpinner;
 
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
@@ -17,7 +23,7 @@ import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 /**
  * Vista abierta para anhadir una promocion.
  */
-public class AnhadirPromocionView extends AppCompatActivity implements IAnhadirPromocionContract.View, View.OnClickListener {
+public class AnhadirPromocionView extends AppCompatActivity implements IAnhadirPromocionContract.View {
     private IAnhadirPromocionContract.Presenter presenter;
 
     // Elementos de la vista
@@ -30,6 +36,10 @@ public class AnhadirPromocionView extends AppCompatActivity implements IAnhadirP
     private Button backBtn;
     private Button acceptBtn;
 
+    // Elementos necesarios para hacer los spinners
+    List<String> listSelector2;
+    ArrayAdapter<CharSequence> arrayAdapterCombustibles, arrayAdapterSelector1, arrayAdapterTipoDescuento, arrayAdapterSelector2a;
+    ArrayAdapter<String> arrayAdapterSelector2b;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +72,62 @@ public class AnhadirPromocionView extends AppCompatActivity implements IAnhadirP
 
 
         // Inicializar spinners
-        initializeSpinnersSelector(selectorSp, selector2Sp);
-        initializeSpinnerTipoDescuento(tipoDescuentoSp);
-        initializeSpinnerCombustibles(combustiblesSp);
+        loadSpinnerSelector1(selectorSp);
+        loadSpinnerSelector2(selector2Sp, null, false);  // Esta inicializado así pero el ultimo parametro deberia de ser true
+        loadSpinnerTipoDescuento(tipoDescuentoSp);
+        loadSpinnerCombustibles(combustiblesSp);
+
+
+        // Listeners
+        backBtn.setOnClickListener(view -> {
+            /* TODO hacer que mantenga los filtros*/
+            Intent intent = new Intent(this, MainView.class);
+            startActivity(intent);
+
+        });
+
+        acceptBtn.setOnClickListener(view -> {
+            /* TODO guardar promocion y aplicar la promocion*/
+            /* TODO yo pondría que fuese a la vista con la lista de promociones*/
+        });
+
+
+//        selectorSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                int position = (int)adapterView.getItemAtPosition(i);
+//                switch(position) {
+//                    case 0:
+//                        // Lista vacía
+//
+//                        loadSpinnerSelector2(selector2Sp, null, true);
+//                        break;
+//                    case 1:
+//                        // Lista con las marcas
+//
+//                        loadSpinnerSelector2(selector2Sp, null, false);
+//                        break;
+//                    case 2:
+//
+//                        /* TODO hay que cambiar esto, esta para probar que el metodo funciona */
+//                        // Lista con todas las gasolineras
+//                        listSelector2 = new ArrayList<>();
+//                        listSelector2.add("Gasolinera 1");
+//                        listSelector2.add("Gasolinrea 2");
+//                        loadSpinnerSelector2(selector2Sp, listSelector2, false);
+//                        break;
+//                }
+//            }
+//
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
+
+
 
 
     }
@@ -75,37 +138,70 @@ public class AnhadirPromocionView extends AppCompatActivity implements IAnhadirP
         return null;
     }
 
-    @Override
-    public void onClick(IAnhadirPromocionContract.View view) {
 
+
+
+    /**
+     * Inicializador de spinner que selecciona el tipo de descuento:
+     *      - Euros por litro
+     *      - Porcentaje
+     */
+    private void loadSpinnerTipoDescuento(Spinner spinnerTipoDescuento) {
+        arrayAdapterTipoDescuento = ArrayAdapter.createFromResource(this.getApplicationContext(), R.array.type_descuento_array,
+                android.R.layout.simple_spinner_item);
+        arrayAdapterTipoDescuento.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        spinnerTipoDescuento.setAdapter(arrayAdapterTipoDescuento);
     }
 
 
     /**
-     * Inicializador de spinner
+     * Inicializador del spinner en el que se selecciona de que forma se va a aplicar la promocion:
+     *      - A todas las gasolineras
+     *      - A una serie de gasolineras
+     *      - A una marca en concreto
      */
-    private void initializeSpinnerTipoDescuento(Spinner spinnerTipoDescuento) {
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this.getApplicationContext(), R.array.type_descuento_array,
+    private void loadSpinnerSelector1(Spinner spinnerInicial) {
+        arrayAdapterSelector1 = ArrayAdapter.createFromResource(this.getApplicationContext(), R.array.selectors_types_array,
                 android.R.layout.simple_spinner_item);
-        arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
-        spinnerTipoDescuento.setAdapter(arrayAdapter);
+        arrayAdapterSelector1.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        spinnerInicial.setAdapter(arrayAdapterSelector1);
+
+
+
     }
 
-
     /**
-     * Inicializador de spinner
+     * Inicializador del spinner o multispinner que es dependiente del spinner que selecciona a que gasolineras se aplica
+     * la promocion
+     * @param spinnerFinal
+     * @param lista_gasolineras
+     * @param todas
      */
-    private void initializeSpinnersSelector(Spinner spinnerInicial, Spinner spinnerFinal) {
-        ArrayAdapter<CharSequence> arrayAdapter1 = ArrayAdapter.createFromResource(this.getApplicationContext(), R.array.selectors_types_array,
-                android.R.layout.simple_spinner_item);
-        arrayAdapter1.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
-        spinnerInicial.setAdapter(arrayAdapter1);
+    private void loadSpinnerSelector2(Spinner spinnerFinal, List<String> lista_gasolineras, boolean todas) {
 
-        ArrayAdapter<CharSequence> arrayAdapter2 = ArrayAdapter.createFromResource(this.getApplicationContext(), R.array.brands_types_array2,
-                android.R.layout.simple_spinner_item);
-        arrayAdapter2.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
-        spinnerFinal.setAdapter(arrayAdapter2);
+        // Caso en el que se selecciona por marca
+        if(!todas && lista_gasolineras == null) {
+            arrayAdapterSelector2a = ArrayAdapter.createFromResource(this.getApplicationContext(), R.array.brands_types_array,
+                    android.R.layout.simple_spinner_item);
+            arrayAdapterSelector2a.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+            spinnerFinal.setAdapter(arrayAdapterSelector2a);
 
+
+            // Caso en el que se selecciona por todas
+        } else if (todas) {
+            listSelector2 = new ArrayList<String>();
+            lista_gasolineras.add("");
+            arrayAdapterSelector2b = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, lista_gasolineras);
+            spinnerFinal.setAdapter(arrayAdapterSelector2b);
+
+            // Caso en el que se selecciona por gasolinera
+        } else if(!todas && lista_gasolineras != null) {
+            /* TODO pasar la lista al multispinner. Hay que cambiar el spinner por el multispinner*/
+            listSelector2 = new ArrayList<String>();
+            lista_gasolineras.add("");
+            arrayAdapterSelector2b = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, lista_gasolineras);
+            spinnerFinal.setAdapter(arrayAdapterSelector2b);
+        }
     }
 
     /**
@@ -119,34 +215,19 @@ public class AnhadirPromocionView extends AppCompatActivity implements IAnhadirP
 
 
     /**
-     * Inicializador de spinner
+     * Inicializador de spinner de combustibles.
      */
-    private void initializeSpinnerCombustibles(Spinner spinnerCombustibles) {
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this.getApplicationContext(), R.array.combustible_types_array,
+    private void loadSpinnerCombustibles(Spinner spinnerCombustibles) {
+        arrayAdapterCombustibles = ArrayAdapter.createFromResource(this.getApplicationContext(), R.array.combustible_types_array,
                 android.R.layout.simple_spinner_item);
-        arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
-        spinnerCombustibles.setAdapter(arrayAdapter);
+        arrayAdapterCombustibles.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        spinnerCombustibles.setAdapter(arrayAdapterCombustibles);
     }
 
 
-    @Override
-    public void onClick(View view) {
-        /* CELSO
-        if(view.getId() == R.id.acceptBtn) {
 
-            // Convierto datos
-            String n = nombreEditText.getText().toString();
-            String c= combustiblesSp.getSelectedItem().toString();
-            String m = selectorSp.getSelectedItem().toString();
-            String m2 = selector2Sp.getSelectedItem().toString();
-            *//* TODO mismo proceso para la lista de gasolineras *//*
-            Double d = Double.parseDouble(descuentoEditText.getText().toString());
-            String e = tipoDescuentoSp.getSelectedItem().toString();
 
-            // Anhado promocion
-            presenter.anhadePromocion(n, c, m, m2, d, e, null);
-        *//* TODO Salir de la view */
-            
-        }
+
+
     }
 

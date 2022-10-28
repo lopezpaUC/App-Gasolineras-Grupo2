@@ -15,7 +15,5 @@ public interface IAnhadirPromocionContract {
     public interface View {
 
         IGasolinerasRepository getGasolineraRepository();
-
-        void onClick(View view);
     }
 }
