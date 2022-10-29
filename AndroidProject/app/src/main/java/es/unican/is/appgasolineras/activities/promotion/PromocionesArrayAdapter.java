@@ -17,6 +17,7 @@ import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.CombustibleType;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
+import es.unican.is.appgasolineras.repository.PromocionRepository;
 
 public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
 
@@ -37,23 +38,23 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
         // logo
         logo(promocion, convertView);
 
-        // name
+        // namePromocion
         name(promocion, convertView);
 
-        // address
+        // nameGasolinera
         gasolinera(promocion, convertView);
 
-        // 95 octanes price
+        // descuento
         descuento(promocion, convertView);
 
-        // diesel A price
+        // combustible
         combustible(promocion, convertView);
 
         return convertView;
     }
 
     private void logo(Promocion promocion, View convertView){
-
+        ImageView iv = convertView.findViewById(R.id.ivLogoPromocion);
     }
 
     private void name(Promocion promocion, View convertView){
@@ -62,28 +63,19 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
     }
 
     private void gasolinera(Promocion promocion, View convertView){
-        /**TextView tv = convertView.findViewById(R.id.tvNameGasolinera);
-        if(promocion.getListaGasolineras().size()==1){
-            tv.setText(promocion.getListaGasolineras().get(0).getRotulo());
-        }
-        else {
-            tv.setText("Todas");
-        }*/
+       TextView tv = convertView.findViewById(R.id.tvNameGasolinera);
     }
 
     private void descuento(Promocion promocion, View convertView){
         TextView tv = convertView.findViewById(R.id.tvDescuento);
-        //tv.setText(Double.toString(promocion.getValor()));
+        if (promocion.getDescuentoEurosLitro() > 0)
+            tv.setText(Double.toString(promocion.getDescuentoEurosLitro()));
+        else
+            tv.setText(Double.toString(promocion.getDescuentoPorcentual()));
     }
 
     private void combustible(Promocion promocion, View convertView){
         TextView tv = convertView.findViewById(R.id.tvCombustible);
-        /**if (promocion.getCombustibles().size()==1){
-            tv.setText(promocion.getCombustibles().get(0).name());
-        } else if (promocion.getCombustibles().size() < CombustibleType.values().length) {
-            tv.setText("Varios");
-        } else {
-            tv.setText("Todos");
-        }*/
+        tv.setText(promocion.getCombustible().toString());
     }
 }

@@ -2,27 +2,23 @@ package es.unican.is.appgasolineras.activities.promotion;
 
 import java.util.List;
 
-import es.unican.is.appgasolineras.activities.main.IMainContract;
-import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
+import es.unican.is.appgasolineras.repository.IPromocionRepository;
 
 public class ListaPromocionesPresenter implements IListaPromocionesContract.Presenter {
-
-    // Constante para indicar si las promociones se cargan de forma online u offline
-    private static final int LOAD_ONLINE = 0;
 
     // Vista principal
     private final IListaPromocionesContract.View view;
 
+    // Repositorio de promociones
+    private IPromocionRepository repositoryPromociones;
+
     // Repositorio de gasolineras
-    //private IPromocionesRepository repository;
+    private IGasolinerasRepository repositoryGasolineras;
 
     // Lista de promociones a mostrar
     private List<Promocion> shownPromociones;
-
-    // Metodo utilizado para la carga de promociones
-    private int loadMethod;
 
     /**
      * Constructor del presenter de la vista principal de promociones.
@@ -31,45 +27,37 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
      */
     public ListaPromocionesPresenter(IListaPromocionesContract.View view) {
         this.view = view;
-        loadMethod = LOAD_ONLINE; // Por defecto, se cargan de repositorio online
     }
 
     @Override
     public void init() {
-        /**if (repository == null) { // Si no consta repositorio asignado
-            repository = view.getPromocionRepository();
+        if (repositoryPromociones == null) { // Si no consta repositorio asignado
+            repositoryPromociones = view.getPromocionRepository();
+            repositoryGasolineras = view.getGasolineraRepository();
         }
-
-        if (repository != null) { // Si ya consta un repositorio
+        if (repositoryPromociones != null) { // Si ya consta un repositorio
             doSyncInit();
-        }*/
+        }
     }
 
     /**
      * Muestra contenido despues de intentar haber recibido el actualizado de internet.
      */
     private void doSyncInit() {
-        /**List<Promocion> data = repository.getPromociones();
+        List<Promocion> data = repositoryPromociones.getPromociones();
 
         if (!data.isEmpty()) { // Si se obtiene una lista con promociones
-            // Obtiene si se ha cargado de BD o repositorio online.
-            loadMethod = repository.getLoadingMethod();
-
             // Muestra promociones
             view.showPromociones(data);
             shownPromociones = data;
 
-            if (loadMethod == LOAD_ONLINE) { // Si se obtienen de repositorio online
-                // Muestra que estan actualizadas y el numero
-                view.showLoadCorrectOnline(data.size());
-            } else { // Si se obtienen de BD
-                // Muestra la fecha de ultima actualizacion y el numero
-                view.showLoadCorrectOffline(data.size());
-            }
+            // Avisamos que se han caragdo correctamente
+            view.showLoadCorrect(data.size());
         } else { // Si no se obtienen gasolineras
             shownPromociones = null;
+            // Avisamos que ha habido un error cargando las promociones
             view.showLoadError();
-        }*/
+        }
     }
 
     @Override
