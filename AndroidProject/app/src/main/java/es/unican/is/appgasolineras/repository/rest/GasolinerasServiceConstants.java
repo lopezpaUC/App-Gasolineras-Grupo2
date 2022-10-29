@@ -28,6 +28,6 @@ public class GasolinerasServiceConstants {
     }
 
     public static final String getAPIURL() {
-        return API_URL;
+        return STATIC_API_URL2;
     }
 }

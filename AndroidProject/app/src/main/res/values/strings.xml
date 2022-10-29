@@ -35,10 +35,9 @@
     <string name="loadErrorEmpty">No hay gasolineras compatibles.</string>
 
     <string-array name="combustible_types_array">
+        <item>@string/all</item>
         <item>@string/dieselAlabel</item>
         <item>@string/gasolina95label</item>
-
-
     </string-array>
 
     <string-array name="brands_types_array">

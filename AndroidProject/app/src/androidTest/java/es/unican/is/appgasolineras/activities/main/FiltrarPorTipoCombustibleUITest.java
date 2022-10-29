@@ -40,6 +40,7 @@ public class FiltrarPorTipoCombustibleUITest {
 
     @Test
     public void testFiltrarPorTipoCombustible() {
+
         onView(withId(R.id.menuFilter)).perform(click());
         onView(withId(R.id.spnTipoCombustible)).perform(click());
         onView(withText("Diésel")).inRoot(RootMatchers.isDialog()).perform(click());
