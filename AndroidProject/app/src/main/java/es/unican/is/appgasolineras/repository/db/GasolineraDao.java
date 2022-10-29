@@ -23,10 +23,4 @@ public interface GasolineraDao {
 
     @Query("DELETE FROM gasolineras")
     void deleteAll();
-
-    @Query("SELECT * FROM promociones inner join gasolinera_promocion " +
-    "on promociones.id = gasolinera_promocion.promocionID where gasolinera_promocion.gasolineraID" +
-    " = :gasID")
-    List<Promocion> findPromocionesRelatedById(String gasID);
-
 }
