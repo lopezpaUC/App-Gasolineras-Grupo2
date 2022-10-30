@@ -3,10 +3,13 @@ package es.unican.is.appgasolineras.activities.detail;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import es.unican.is.appgasolineras.activities.main.CombustibleType;
 import es.unican.is.appgasolineras.model.Gasolinera;
+import es.unican.is.appgasolineras.model.Promocion;
 
 /**
  * Presenter para la actividad relacionada con la muestra de información detallada de una
@@ -194,5 +197,64 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         }
 
         return correccion;
+    }
+
+    /**
+     * Calcula el precio sumario de la gasolinera.
+     * @return Precio sumario.
+     */
+    private double calculateDiscountedSummaryPrice() {
+
+        double sumario;
+        // Gets the best promotion for the list it contains
+        // List<Promocion> promotions = gasolinera.getPromociones();
+        //
+
+        // Obtiene los precios de los tipos de combustible como cadena de texto
+        String precioDieselStr = gasolinera.getDieselA();
+        String precioGasolinaStr = gasolinera.getNormal95();
+
+        // Variables para almacenar los precios en formato numerico en lugar de cadenas de texto
+        double precioDiesel;
+        double precioGasolina;
+
+        // Define el formato a utilizar para el 'parseo' de los precios
+        NumberFormat formato = NumberFormat.getInstance(Locale.FRANCE);
+
+        // Convierte a double el precio del diesel A
+        precioDiesel = precioToDouble(precioDieselStr, formato);
+
+
+        // Convierte a double el precio de la gasolina 95
+        precioGasolina = precioToDouble(precioGasolinaStr, formato);
+
+        // Determina el precio de sumario en base a la validez de los precios del combustible
+        if (precioDiesel <= 0.0) { // Si no hay un precio de diesel valido
+            sumario = precioGasolina;
+        } else if(precioGasolina <= 0.0) { // Si no hay un precio de gasolina valido
+            sumario = precioDiesel;
+        } else { // Si todos los precios son validos
+            sumario = (precioDiesel + precioGasolina * 2.0) / 3.0;
+        }
+
+        return sumario;
+    }
+    // TODO
+    private Promocion bestPromotion(double price, List<Promocion> promotions) {
+        Promocion bestPromotion = null;
+        double bestPrice = Double.POSITIVE_INFINITY;
+        for (Promocion promotion : promotions) {
+            double percentage = promotion.getDescuentoPorcentual();
+            double euros = promotion.getDescuentoEurosLitro();
+            double discountedPrice = Math.min(price * (1 - percentage), price - euros);
+
+            if (discountedPrice < bestPrice) {
+                bestPrice = discountedPrice;
+                bestPromotion = promotion;
+            }
+            bestPromotion = promotion;
+        }
+        return bestPromotion;
+
     }
 }

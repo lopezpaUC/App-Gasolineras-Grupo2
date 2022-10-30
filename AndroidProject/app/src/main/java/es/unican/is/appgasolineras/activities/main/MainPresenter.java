@@ -162,7 +162,7 @@ public class MainPresenter implements IMainContract.Presenter {
      * Filtra por tipo de combustible.
      * @param combustibleType Tipo de combustible a utilizar para filtrar
      */
-    public void filterByCombustible(CombustibleType combustibleType) {
+    private void filterByCombustible(CombustibleType combustibleType) {
         List<Gasolinera> resultadoFiltrado;
 
         // Determina que gasolineras mostrar

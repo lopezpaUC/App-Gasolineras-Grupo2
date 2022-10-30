@@ -2,7 +2,9 @@ package es.unican.is.appgasolineras.activities.detail;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.CombinedVibration;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.CombustibleType;
 import es.unican.is.appgasolineras.activities.main.MainView;
 import es.unican.is.appgasolineras.model.Gasolinera;
+import es.unican.is.appgasolineras.model.Promocion;
 
 /**
  * Vista para la actividad relacionada con la muestra de información detallada de una gasolinera.
@@ -146,47 +149,26 @@ public class GasolineraDetailView extends AppCompatActivity
         return imageID;
     }
 
-    private void applyDiscount(Gasolinera g, List<Promocion> promotions) {
-        double unleaded95Discount, dieselDiscount, discountedSummaryPrice;
-        Promocion appliedPromotion = null;
-        Iterator<Gasolinera> iterator;
+    // TODO
+    public void applyDiscount(Promocion promotion) {
 
-        // Iterates the promotions
-        for (Promocion promotion : promotions) {
-            List<Gasolinera> gasolinerasAttachedToPromotion = promotion.getListaGasolineras();
+        double discountedUnleaded95Price, discountedDieselPrice, discountedSummaryPrice, discount;
+        CombustibleType fuel = promotion.getCombustible();
+        double eurosDiscount = promotion.getDescuentoEurosLitro();
+        double percentageDiscount = promotion.getDescuentoPorcentual();
 
-            // The promotion has to be applied to, at least, one gas station
-            if (!gasolinerasAttachedToPromotion.isEmpty()) {
-                // Loops all gas stations included in the promotion
-                for (Gasolinera gasolinera : gasolinerasAttachedToPromotion) {
-                    if (gasolinera.equals(g)) {
-                        appliedPromotion = promotion;
-                        break; // TODO: iterator
-                    }
-                }
-            }
+        discount = eurosDiscount < 0 ? percentageDiscount : eurosDiscount;
+
+        // Diesel
+        if (fuel == CombustibleType.DIESEL || fuel == CombustibleType.ALL_COMB) {
+            discountedDieselPrice = Double.parseDouble(tvDieselAPrecioDet.toString()) - discount;
+            tvDieselAPrecioDet.setPaintFlags(tvDieselAPrecioDet.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
-
-        // Promotion exists
-        if (appliedPromotion != null) {
-            List<CombustibleType> fuels = appliedPromotion.getCombustibles();
-
-            // The promotion must have, at least, one fuel to discount from
-            if (!fuels.isEmpty()) {
-                for (CombustibleType ct: fuels) {
-                    if (ct.name().equals("DIESEL") || ct.name().equals("ALL_COMB")) {
-                        dieselDiscount = appliedPromotion.getValor();
-                    }
-                    else if (ct.name().equals("GASOLINA") || ct.name().equals("ALL_COMB")) {
-                        unleaded95Discount = appliedPromotion.getValor();
-                    }
-                }
-            }
+        // Unleaded 95
+        if (fuel == CombustibleType.GASOLINA || fuel == CombustibleType.ALL_COMB) {
+            discountedUnleaded95Price = discountedDieselPrice = Double.parseDouble(tv95PrecioDet.toString()) - discount;
+            tv95PrecioDet.setPaintFlags(tvDieselAPrecioDet.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
-
-        // TODO: apply discount in tv
-
-
 
 
     }
