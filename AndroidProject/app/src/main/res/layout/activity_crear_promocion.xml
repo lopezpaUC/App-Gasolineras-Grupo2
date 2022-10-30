@@ -7,6 +7,8 @@
     android:background="#E8E8E8">
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
+    android:focusableInTouchMode="true"
+    android:focusable="true"
     android:layout_height="match_parent"
     android:background="#E8E8E8">
 
@@ -15,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:text="@string/name"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -26,14 +28,16 @@
 
     <EditText
         android:id="@+id/etNombre"
-        android:layout_width="300dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
         android:background="@color/white"
         android:hint="@string/indicacionNombre"
+
+
         android:inputType="text"
-
-
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tvNombreLbl"
         app:layout_constraintTop_toBottomOf="@+id/tvNombreLbl" />
 
@@ -54,7 +58,7 @@
         android:id="@+id/tvCombustiblesLbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="24dp"
         android:text="Combustibles"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -62,27 +66,24 @@
         app:layout_constraintStart_toStartOf="@+id/etNombre"
         app:layout_constraintTop_toBottomOf="@+id/etNombre" />
 
-
-    <Spinner
-        android:id="@+id/spCombustibles"
-        android:layout_width="300dp"
-        android:layout_height="44dp"
+    <es.unican.is.appgasolineras.common.utils.MultipleSpinner
+        android:id="@+id/spMultipleCombustibles"
+        class="es.unican.is.appgasolineras.common.utils.MultipleSpinner"
+        android:layout_width="150dp"
+        android:layout_height="48dp"
         android:layout_marginTop="16dp"
-
         android:backgroundTint="#F44336"
-
         app:layout_constraintStart_toStartOf="@+id/tvCombustiblesLbl"
-        app:layout_constraintTop_toBottomOf="@+id/tvCombustiblesLbl"
-        tools:ignore="DuplicateSpeakableTextCheck" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCombustiblesLbl" />
 
     <Button
         android:id="@+id/btnCancelar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:backgroundTint="#FA4848"
         android:text="@string/cancel"
         app:layout_constraintStart_toStartOf="@+id/etDescuento"
-        app:layout_constraintTop_toBottomOf="@+id/etDescuento" />
+        app:layout_constraintTop_toTopOf="@+id/btnAnhadir" />
 
 
     <Button
@@ -91,22 +92,34 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="32dp"
+        android:backgroundTint="#279F2A"
         android:text="@string/anhadir"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spTipoDescuento" />
+
+    <EditText
+        android:id="@+id/etDescuento"
+        android:layout_width="101dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/white"
+        android:hint="..."
+        android:inputType="numberSigned|numberDecimal"
+        app:layout_constraintStart_toStartOf="@+id/tvDescuentoLbl"
+        app:layout_constraintTop_toBottomOf="@+id/tvDescuentoLbl" />
 
     <TextView
         android:id="@+id/tvGasolinerasLbl"
         class="es.unican.is.appgasolineras.common.utils.MultipleSpinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="24dp"
         android:text="Gasolineras afectadas"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/spCombustibles"
-        app:layout_constraintTop_toBottomOf="@+id/spCombustibles" />
+        app:layout_constraintStart_toStartOf="@+id/spMultipleCombustibles"
+        app:layout_constraintTop_toBottomOf="@+id/spMultipleCombustibles" />
 
     <Spinner
         android:id="@+id/spCriterioGasolineras"
@@ -123,7 +136,7 @@
         android:id="@+id/tvDescuentoLbl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="24dp"
         android:text="Descuento"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -131,25 +144,14 @@
         app:layout_constraintStart_toStartOf="@+id/spCriterioGasolineras"
         app:layout_constraintTop_toBottomOf="@+id/spCriterioGasolineras" />
 
-    <EditText
-        android:id="@+id/etDescuento"
-        android:layout_width="100dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/white"
-        android:hint="  ..."
-        android:inputType="numberDecimal"
-        app:layout_constraintStart_toStartOf="@+id/tvDescuentoLbl"
-        app:layout_constraintTop_toBottomOf="@+id/tvDescuentoLbl" />
-
     <Spinner
         android:id="@+id/spTipoDescuento"
-        android:layout_width="90dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
         android:backgroundTint="#F44336"
+        app:layout_constraintBottom_toBottomOf="@+id/etDescuento"
         app:layout_constraintStart_toEndOf="@+id/etDescuento"
-        app:layout_constraintTop_toBottomOf="@+id/tvDescuentoLbl" />
+        app:layout_constraintTop_toTopOf="@+id/etDescuento" />
 
     <Spinner
         android:id="@+id/spGasolinerasAplicables"
@@ -162,18 +164,15 @@
         app:layout_constraintTop_toBottomOf="@+id/tvGasolinerasLbl" />
 
 
-
     <es.unican.is.appgasolineras.common.utils.MultipleSpinner
-        class="es.unican.is.appgasolineras.common.utils.MultipleSpinner"
         android:id="@+id/spMultipleGasolinerasMarcas"
+        class="es.unican.is.appgasolineras.common.utils.MultipleSpinner"
         android:layout_width="150dp"
         android:layout_height="44dp"
-        android:layout_marginTop="16dp"
         android:backgroundTint="#F44336"
 
         app:layout_constraintStart_toEndOf="@+id/spCriterioGasolineras"
-        app:layout_constraintTop_toBottomOf="@+id/tvGasolinerasLbl"
-        />
+        app:layout_constraintTop_toTopOf="@+id/spCriterioGasolineras" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -38,4 +38,6 @@ public abstract class GasolineraDatabase extends RoomDatabase {
     public abstract GasolineraDao gasolineraDao();
 
     public abstract PromocionDao promocionDao();
+
+    public abstract MarcaDao marcaDao();
 }
