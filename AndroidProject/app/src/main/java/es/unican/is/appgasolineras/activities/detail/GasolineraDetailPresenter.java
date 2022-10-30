@@ -64,18 +64,18 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
      */
     private double calculateSummaryPrice() {
         // Obtiene los precios de los tipos de combustible como cadena de texto
-        String precioDieselStr = gasolinera.getDieselA();
+        String dieselPriceStr = gasolinera.getDieselA();
         String precioGasolinaStr = gasolinera.getNormal95();
 
         // Variables para almacenar los precios en formato numerico en lugar de cadenas de texto
-        double precioDiesel;
+        double dieselPrice;
         double precioGasolina;
 
         // Define el formato a utilizar para el 'parseo' de los precios
         NumberFormat formato = NumberFormat.getInstance(Locale.FRANCE);
 
         // Convierte a double el precio del diesel A
-        precioDiesel = precioToDouble(precioDieselStr, formato);
+        dieselPrice = precioToDouble(dieselPriceStr, formato);
 
         // Convierte a double el precio de la gasolina 95
         precioGasolina = precioToDouble(precioGasolinaStr, formato);
@@ -83,12 +83,12 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         double sumario;
 
         // Determina el precio de sumario en base a la validez de los precios del combustible
-        if (precioDiesel <= 0.0) { // Si no hay un precio de diesel valido
+        if (dieselPrice <= 0.0) { // Si no hay un precio de diesel valido
             sumario = precioGasolina;
         } else if(precioGasolina <= 0.0) { // Si no hay un precio de gasolina valido
-            sumario = precioDiesel;
+            sumario = dieselPrice;
         } else { // Si todos los precios son validos
-            sumario = (precioDiesel + precioGasolina * 2.0) / 3.0;
+            sumario = (dieselPrice + precioGasolina * 2.0) / 3.0;
         }
 
         return sumario;
@@ -205,56 +205,71 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
      */
     private double calculateDiscountedSummaryPrice() {
 
-        double sumario;
+        double discountedSummary;
         // Gets the best promotion for the list it contains
         // List<Promocion> promotions = gasolinera.getPromociones();
-        //
 
         // Obtiene los precios de los tipos de combustible como cadena de texto
-        String precioDieselStr = gasolinera.getDieselA();
+        String dieselPriceStr = gasolinera.getDieselA();
         String precioGasolinaStr = gasolinera.getNormal95();
 
         // Variables para almacenar los precios en formato numerico en lugar de cadenas de texto
-        double precioDiesel;
+        double dieselPrice;
         double precioGasolina;
+
+
 
         // Define el formato a utilizar para el 'parseo' de los precios
         NumberFormat formato = NumberFormat.getInstance(Locale.FRANCE);
 
         // Convierte a double el precio del diesel A
-        precioDiesel = precioToDouble(precioDieselStr, formato);
+        dieselPrice = precioToDouble(dieselPriceStr, formato);
+        /*
+        if (bestPromotionDiesel != null) {
+            dieselPrice =
+         */
 
 
         // Convierte a double el precio de la gasolina 95
         precioGasolina = precioToDouble(precioGasolinaStr, formato);
+        // Promocion bestPromotionGasolina = bestPromotion(precioGasolina, promociones);
 
         // Determina el precio de sumario en base a la validez de los precios del combustible
-        if (precioDiesel <= 0.0) { // Si no hay un precio de diesel valido
-            sumario = precioGasolina;
-        } else if(precioGasolina <= 0.0) { // Si no hay un precio de gasolina valido
-            sumario = precioDiesel;
+        if (dieselPrice <= 0.0) { // Si no hay un precio de diesel valido
+            discountedSummary = precioGasolina;
+        } else if (precioGasolina <= 0.0) { // Si no hay un precio de gasolina valido
+            discountedSummary = dieselPrice;
         } else { // Si todos los precios son validos
-            sumario = (precioDiesel + precioGasolina * 2.0) / 3.0;
+            discountedSummary = (dieselPrice + precioGasolina * 2.0) / 3.0;
         }
 
-        return sumario;
+        return discountedSummary;
     }
+
     // TODO
     private Promocion bestPromotion(double price, List<Promocion> promotions) {
         Promocion bestPromotion = null;
         double bestPrice = Double.POSITIVE_INFINITY;
+
+        // Loops all promotions
         for (Promocion promotion : promotions) {
             double percentage = promotion.getDescuentoPorcentual();
             double euros = promotion.getDescuentoEurosLitro();
-            double discountedPrice = Math.min(price * (1 - percentage), price - euros);
+            double discountedPrice;
 
+            // Checks which promotion is active
+            if (percentage > 0) {
+                discountedPrice = price * (1 - percentage);
+            } else {
+                discountedPrice = price - euros;
+            }
+
+            // Updates best price and promotion
             if (discountedPrice < bestPrice) {
                 bestPrice = discountedPrice;
                 bestPromotion = promotion;
             }
-            bestPromotion = promotion;
         }
         return bestPromotion;
-
     }
 }
