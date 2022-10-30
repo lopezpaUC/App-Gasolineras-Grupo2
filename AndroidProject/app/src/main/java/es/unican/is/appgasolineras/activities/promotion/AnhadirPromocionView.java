@@ -1,88 +1,164 @@
 package es.unican.is.appgasolineras.activities.promotion;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import es.unican.is.appgasolineras.R;
+import es.unican.is.appgasolineras.activities.main.MainView;
 import es.unican.is.appgasolineras.common.utils.MultipleSpinner;
-import es.unican.is.appgasolineras.repository.GasolinerasRepository;
+
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 
 /**
  * Vista abierta para anhadir una promocion.
  */
-public class AnhadirPromocionView extends AppCompatActivity implements IAnhadirPromocionContract.View {
-    private IAnhadirPromocionContract.Presenter presenter;
-    private List<String> checkedBrandBoxes;
+public class AnhadirPromocionView extends AppCompatActivity
+        implements IAnhadirPromocionContract.View {
 
+    private static final int TODAS = 0;
+    private static final int MARCAS = 1;
+    private static final int GASOLINERAS = 2;
+
+    private IAnhadirPromocionContract.Presenter presenter; // Presenter de la vista
+
+    // Elementos de la vista
+    private EditText etNombre;
+    private Spinner spCombustibles;
+    private Spinner spCriterioGasolineras;
+    private MultipleSpinner spGasolinerasAplicablesMp;
+    private Spinner spGasolinerasAplicables;
+    private EditText etDescuento;
+    private Spinner spTipoDescuento;
+    private Button btnCancelar;
+    private Button btnAnhadir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Crea la vista
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_promocion);
 
-
+        // Crea el presenter
         presenter = new AnhadirPromocionPresenter(this);
-        presenter.init();
-        checkedBrandBoxes = new ArrayList<>();
-        this.init();
-    }
 
+        // Inicializa
+        this.init();
+        presenter.init();
+    }
 
     public void init() {
         /*MultipleSpinner spinnerMarcas = findViewById(R.id.marcasSp);
         initializeMultipleSpinnerMarcas(spinnerMarcas);*/
-        Spinner spinnerCombustibles = findViewById(R.id.combustiblesSp);
-        initializeSpinnerCombustibles(spinnerCombustibles);
-        Spinner spinnerInicial = findViewById(R.id.selectorSp);
-        Spinner spinnerFinal = findViewById(R.id.selector2Sp);
-        initializeSpinnersSelector(spinnerInicial, spinnerFinal);
-        Spinner spinnerTipoDescuento = findViewById(R.id.tipoDescuentoSp);
-        initializeSpinnerTipoDescuento(spinnerTipoDescuento);
-    }
+
+        // Identifica los diferentes elementos a utilizar de la vista
+        etNombre = findViewById(R.id.etNombre);
+        spCombustibles = findViewById(R.id.spCombustibles);
+        spCriterioGasolineras = findViewById(R.id.spCriterioGasolineras);
+
+        spGasolinerasAplicables = findViewById(R.id.spGasolinerasAplicables);
+        spGasolinerasAplicables.setVisibility(View.GONE);
+
+        spGasolinerasAplicablesMp = findViewById(R.id.spMultipleGasolinerasMarcas);
+        spGasolinerasAplicablesMp.setVisibility(View.GONE);
+
+        etDescuento = findViewById(R.id.etDescuento);
+        spTipoDescuento = findViewById(R.id.spTipoDescuento);
+        btnCancelar = findViewById(R.id.btnCancelar);
+        btnAnhadir = findViewById(R.id.btnAnhadir);
 
 
-    private void initializeSpinnerTipoDescuento(Spinner spinnerTipoDescuento) {
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this.getApplicationContext(),R.array.type_descuento_array,
-                android.R.layout.simple_spinner_item);
-        arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
-        spinnerTipoDescuento.setAdapter(arrayAdapter);
-    }
+        // Inicializar spinner de combustibles
+        initializeSpinnerRadioButton(spCombustibles, R.array.combustible_types_array,
+                android.R.layout.select_dialog_singlechoice);
 
-    private void initializeSpinnersSelector(Spinner spinnerInicial, Spinner spinnerFinal) {
-            ArrayAdapter<CharSequence> arrayAdapter1 = ArrayAdapter.createFromResource(this.getApplicationContext(), R.array.selectors_types_array,
-                    android.R.layout.simple_spinner_item);
-            arrayAdapter1.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
-            spinnerInicial.setAdapter(arrayAdapter1);
+        // Inicializar spinner de criterio para aplicar promocion a gasolineras
+        initializeSpinnerRadioButton(spCriterioGasolineras, R.array.selectors_types_array,
+                android.R.layout.select_dialog_singlechoice);
 
-            ArrayAdapter<CharSequence> arrayAdapter2 = ArrayAdapter.createFromResource(this.getApplicationContext(), R.array.brands_types_array2,
-                    android.R.layout.simple_spinner_item);
-            arrayAdapter2.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
-            spinnerFinal.setAdapter(arrayAdapter2);
+        // Inicializar spinner de tipos de descuentos
+        initializeSpinnerRadioButton(spTipoDescuento, R.array.type_descuento_array,
+                android.R.layout.select_dialog_singlechoice);
 
-    }
+        // Inicializa funcionalidad de botones
+        btnCancelar.setOnClickListener(view -> {
+            launchMainActivity();
+        });
 
-    private void initializeMultipleSpinnerMarcas(MultipleSpinner spinnerMarcas) {
-        String[] marcas = getResources().getStringArray(R.array.brands_types_array);
-        spinnerMarcas.setElementos(marcas, "Varias", "-");
-        spinnerMarcas.setSelectedStrings(checkedBrandBoxes);
-    }
+        btnAnhadir.setOnClickListener(view -> {
+            launchMainActivity();
+        });
 
-    private void initializeSpinnerCombustibles(Spinner spinnerCombustibles) {
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this.getApplicationContext(),R.array.combustible_types_array,
-                android.R.layout.simple_spinner_item);
-        arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
-        spinnerCombustibles.setAdapter(arrayAdapter);
+        spCriterioGasolineras.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> av, View view, int pos, long id) {
+                switch (pos) {
+                    case TODAS:
+                        spGasolinerasAplicablesMp.setVisibility(View.GONE);
+                        spGasolinerasAplicables.setVisibility(View.GONE);
+                        break;
+
+                    case MARCAS:
+                        spGasolinerasAplicables.setVisibility(View.GONE);
+                        spGasolinerasAplicablesMp.setVisibility(View.VISIBLE);
+
+                        String[] marcas = getResources().getStringArray(R.array.brands_types_array);
+                        spGasolinerasAplicablesMp.setElementos(marcas, getResources().getString(R.string.varias), "-");
+                        break;
+
+                    case GASOLINERAS:
+                        spGasolinerasAplicablesMp.setVisibility(View.GONE);
+                        spGasolinerasAplicables.setVisibility(View.VISIBLE);
+
+                        // TODO: PONER LISTA DE GASOLINERAS
+                        initializeSpinnerRadioButton(spGasolinerasAplicables, R.array.combustible_types_array,
+                                android.R.layout.select_dialog_singlechoice);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> av) {
+                //
+            }
+        });
     }
 
     @Override
     public IGasolinerasRepository getGasolineraRepository() {
-        return new GasolinerasRepository(this);
+        /*TODO*/
+        return null;
+    }
+
+    /**
+     * Inicializa un spinner de radio botones.
+     *
+     * @param sp Spinner a inicializar
+     * @param resource Recurso con las opciones a mostrar
+     * @param mode Modo de presentacion (desplegable o dialogo)
+     */
+    private void initializeSpinnerRadioButton(Spinner sp, int resource, int mode) {
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this,
+                resource, android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(mode);
+        sp.setAdapter(arrayAdapter);
+    }
+
+    /**
+     * Lanza actividad principal.
+     */
+    private void launchMainActivity() {
+        Intent intent = new Intent(this, MainView.class);
+        startActivity(intent);
     }
 }
+

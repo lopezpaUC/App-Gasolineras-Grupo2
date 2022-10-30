@@ -47,4 +47,14 @@ public interface PromocionDao {
      */
     @Query("SELECT * FROM gasolinera_promocion where promocionID = :promID")
     List<GasolineraPromocionCrossRef> findGasolinerasRelatedByID(String promID);
+
+    /**
+     *
+     * @param gasID
+     * @return
+     */
+    @Query("SELECT * FROM promociones inner join gasolinera_promocion " + "on promociones.id = " +
+            "gasolinera_promocion.promocionID where gasolinera_promocion.gasolineraID " +
+            "= :gasID")
+    List<Promocion> buscaPromocionesRelacionadasConGasolinera(String gasID);
 }
