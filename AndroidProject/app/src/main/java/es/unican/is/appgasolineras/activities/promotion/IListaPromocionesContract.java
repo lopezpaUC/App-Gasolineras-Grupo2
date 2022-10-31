@@ -6,7 +6,7 @@ import java.util.Map;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
-import es.unican.is.appgasolineras.repository.IPromocionRepository;
+import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 
 public interface IListaPromocionesContract {
 
@@ -42,7 +42,7 @@ public interface IListaPromocionesContract {
          * Android Context, and this is available in the View
          * @return the Repository object to access promotions
          */
-        IPromocionRepository getPromocionRepository();
+        IPromocionesRepository getPromocionRepository();
 
         /**
          * Returns the Gasolineras Repository object.
@@ -58,7 +58,7 @@ public interface IListaPromocionesContract {
          * The View is requested to show a list of promotions
          * @param promociones the list of promotions
          */
-        void showPromociones(List<Promocion> promociones, List<String> lista);
+        void showPromociones(List<Promocion> promociones, List<String> lista, List<String> rotulos);
 
         /**
          * The View is requested to show an alert informing that the promotions were loaded

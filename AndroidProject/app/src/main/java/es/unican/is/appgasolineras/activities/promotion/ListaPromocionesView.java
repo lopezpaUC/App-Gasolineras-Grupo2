@@ -18,8 +18,8 @@ import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
-import es.unican.is.appgasolineras.repository.IPromocionRepository;
-import es.unican.is.appgasolineras.repository.PromocionRepository;
+import es.unican.is.appgasolineras.repository.IPromocionesRepository;
+import es.unican.is.appgasolineras.repository.PromocionesRepository;
 
 public class ListaPromocionesView extends AppCompatActivity implements IListaPromocionesContract.View {
 
@@ -41,11 +41,13 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
     }
 
     @Override
-    public void init() {}
+    public void init() {
+
+    }
 
     @Override
-    public IPromocionRepository getPromocionRepository() {
-        return new PromocionRepository(this);
+    public IPromocionesRepository getPromocionRepository() {
+        return new PromocionesRepository(this);
     }
 
     @Override
@@ -67,8 +69,8 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
     }
 
     @Override
-    public void showPromociones(List<Promocion> promociones, List<String> lista) {
-        PromocionesArrayAdapter adapter = new PromocionesArrayAdapter(this, promociones, lista);
+    public void showPromociones(List<Promocion> promociones, List<String> lista, List<String> rotulos) {
+        PromocionesArrayAdapter adapter = new PromocionesArrayAdapter(this, promociones, lista, rotulos);
         ListView list = findViewById(R.id.lvPromociones);
         list.setAdapter(adapter);
     }

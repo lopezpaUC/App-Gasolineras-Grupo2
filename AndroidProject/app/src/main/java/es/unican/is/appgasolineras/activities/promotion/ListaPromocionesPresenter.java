@@ -1,10 +1,12 @@
 package es.unican.is.appgasolineras.activities.promotion;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
-import es.unican.is.appgasolineras.repository.IPromocionRepository;
+import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 
 public class ListaPromocionesPresenter implements IListaPromocionesContract.Presenter {
 
@@ -12,13 +14,18 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
     private final IListaPromocionesContract.View view;
 
     // Repositorio de promociones
-    private IPromocionRepository repositoryPromociones;
+    private IPromocionesRepository repositoryPromociones;
 
     // Repositorio de gasolineras
     private IGasolinerasRepository repositoryGasolineras;
 
     // Lista de promociones a mostrar
     private List<Promocion> shownPromociones;
+
+    // Lista con los strings de las gasolineras
+    private List<String> listaNombreGasolineras = new ArrayList<>();
+
+    private List<String> listaImagenPromocion = new ArrayList<>();
 
     /**
      * Constructor del presenter de la vista principal de promociones.
@@ -45,18 +52,19 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
      */
     private void doSyncInit() {
         List<Promocion> data = repositoryPromociones.getPromociones();
-        List<String> lista = null;
         for(Promocion promocion: data){
             if(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).size()>1){
-                lista.add("Varias");
+                listaNombreGasolineras.add("Varias");
+                listaImagenPromocion.add("composicion");
             } else {
-                lista.add(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).get(0).getRotulo());
+                listaNombreGasolineras.add(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).get(0).getRotulo());
+                listaImagenPromocion.add(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).get(0).getRotulo().toLowerCase());
             }
         }
 
         if (!data.isEmpty()) { // Si se obtiene una lista con promociones
             // Muestra promociones
-            view.showPromociones(data, lista);
+            view.showPromociones(data, listaNombreGasolineras, listaImagenPromocion);
             shownPromociones = data;
 
             // Avisamos que se han caragdo correctamente
