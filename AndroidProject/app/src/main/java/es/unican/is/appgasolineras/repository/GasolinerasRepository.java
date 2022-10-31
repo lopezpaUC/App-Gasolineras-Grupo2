@@ -69,6 +69,19 @@ public class GasolinerasRepository implements IGasolinerasRepository {
     }
 
     @Override
+    public Gasolinera getGasolineraByNameDirLocalidad(String name, String dir, String municipio) {
+        GasolineraDatabase db = GasolineraDatabase.getDB(context);
+        GasolineraDao gasolinerasDao = db.gasolineraDao();
+        return gasolinerasDao.getByNameDirLocalidad(name, dir, municipio);
+    }
+
+    public List<Gasolinera> getGasolinerasRelacionadasConPromocion(String promID) {
+        GasolineraDatabase db = GasolineraDatabase.getDB(context);
+        GasolineraDao gasolinerasDao = db.gasolineraDao();
+        return gasolinerasDao.buscaGasolinerasRelacionadasConPromocion(promID);
+    }
+
+    @Override
     public int getLoadingMethod() {
         return loadingMethod;
     }

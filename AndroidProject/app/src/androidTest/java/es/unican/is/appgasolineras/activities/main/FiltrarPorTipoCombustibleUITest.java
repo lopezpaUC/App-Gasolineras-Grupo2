@@ -18,6 +18,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import es.unican.is.appgasolineras.R;
+import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 public class FiltrarPorTipoCombustibleUITest {
@@ -33,11 +34,13 @@ public class FiltrarPorTipoCombustibleUITest {
 
     @AfterClass
     public static void clean() {
+        GasolinerasService.resetAPI();
         GasolinerasServiceConstants.setMinecoURL();
     }
 
     @Test
     public void testFiltrarPorTipoCombustible() {
+
         onView(withId(R.id.menuFilter)).perform(click());
         onView(withId(R.id.spnTipoCombustible)).perform(click());
         onView(withText("Diésel")).inRoot(RootMatchers.isDialog()).perform(click());
@@ -52,7 +55,7 @@ public class FiltrarPorTipoCombustibleUITest {
         gas.onChildView(withId(R.id.tv95)).check(matches(withText("1,859")));
         gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));
 
-        /**gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(1);
+        gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(1);
         gas.onChildView(withId(R.id.tvName)).check(matches(withText("PETRONOR")));
         gas.onChildView(withId(R.id.tvAddress)).check(matches(withText("CARRETERA N-611 KM. 163,2")));
         gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
@@ -89,7 +92,7 @@ public class FiltrarPorTipoCombustibleUITest {
         gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
         gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
         gas.onChildView(withId(R.id.tv95)).check(matches(withText("1,809")));
-        gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));*/
+        gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));
 
     }
 }

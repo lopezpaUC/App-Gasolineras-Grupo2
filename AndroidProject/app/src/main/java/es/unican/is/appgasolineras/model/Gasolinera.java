@@ -42,9 +42,8 @@ public class Gasolinera implements Parcelable {
         normal95 = "";
     }
 
-    public Gasolinera(String id, String rotulo, String cp, String direccion,
-                      String municipio, String horario, String dieselA,
-                      String normal95) {
+    public Gasolinera(String id, String rotulo, String cp, String direccion, String municipio,
+                      String horario, String dieselA, String normal95) {
         this.id = id;
         this.rotulo = rotulo;
         this.cp = cp;

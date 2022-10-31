@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E8E8E8">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:focusableInTouchMode="true"
+    android:focusable="true"
+    android:layout_height="match_parent"
+    android:background="#E8E8E8">
+
+    <TextView
+        android:id="@+id/tvNombreLbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/name"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTituloNuevaProm" />
+
+    <EditText
+        android:id="@+id/etNombre"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:background="@color/white"
+        android:hint="@string/indicacionNombre"
+
+
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tvNombreLbl"
+        app:layout_constraintTop_toBottomOf="@+id/tvNombreLbl" />
+
+    <TextView
+        android:id="@+id/tvTituloNuevaProm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/nuevaPromocion"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvCombustiblesLbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Combustibles"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/etNombre"
+        app:layout_constraintTop_toBottomOf="@+id/etNombre" />
+
+    <es.unican.is.appgasolineras.common.utils.MultipleSpinner
+        android:id="@+id/spMultipleCombustibles"
+        class="es.unican.is.appgasolineras.common.utils.MultipleSpinner"
+        android:layout_width="150dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#F44336"
+        app:layout_constraintStart_toStartOf="@+id/tvCombustiblesLbl"
+        app:layout_constraintTop_toBottomOf="@+id/tvCombustiblesLbl" />
+
+    <Button
+        android:id="@+id/btnCancelar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FA4848"
+        android:text="@string/cancel"
+        app:layout_constraintStart_toStartOf="@+id/etDescuento"
+        app:layout_constraintTop_toTopOf="@+id/btnAnhadir" />
+
+
+    <Button
+        android:id="@+id/btnAnhadir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="32dp"
+        android:backgroundTint="#279F2A"
+        android:text="@string/anhadir"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spTipoDescuento" />
+
+    <EditText
+        android:id="@+id/etDescuento"
+        android:layout_width="101dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/white"
+        android:hint="..."
+        android:inputType="numberSigned|numberDecimal"
+        app:layout_constraintStart_toStartOf="@+id/tvDescuentoLbl"
+        app:layout_constraintTop_toBottomOf="@+id/tvDescuentoLbl" />
+
+    <TextView
+        android:id="@+id/tvGasolinerasLbl"
+        class="es.unican.is.appgasolineras.common.utils.MultipleSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Gasolineras afectadas"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/spMultipleCombustibles"
+        app:layout_constraintTop_toBottomOf="@+id/spMultipleCombustibles" />
+
+    <Spinner
+        android:id="@+id/spCriterioGasolineras"
+        android:layout_width="150dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#F44336"
+
+        app:layout_constraintStart_toStartOf="@+id/tvGasolinerasLbl"
+        app:layout_constraintTop_toBottomOf="@+id/tvGasolinerasLbl"
+        tools:ignore="DuplicateSpeakableTextCheck" />
+
+    <TextView
+        android:id="@+id/tvDescuentoLbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Descuento"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/spCriterioGasolineras"
+        app:layout_constraintTop_toBottomOf="@+id/spCriterioGasolineras" />
+
+    <Spinner
+        android:id="@+id/spTipoDescuento"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:backgroundTint="#F44336"
+        app:layout_constraintBottom_toBottomOf="@+id/etDescuento"
+        app:layout_constraintStart_toEndOf="@+id/etDescuento"
+        app:layout_constraintTop_toTopOf="@+id/etDescuento" />
+
+    <Spinner
+        android:id="@+id/spGasolinerasAplicables"
+        android:layout_width="150dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#F44336"
+
+        app:layout_constraintStart_toEndOf="@+id/spCriterioGasolineras"
+        app:layout_constraintTop_toBottomOf="@+id/tvGasolinerasLbl" />
+
+
+    <es.unican.is.appgasolineras.common.utils.MultipleSpinner
+        android:id="@+id/spMultipleGasolinerasMarcas"
+        class="es.unican.is.appgasolineras.common.utils.MultipleSpinner"
+        android:layout_width="150dp"
+        android:layout_height="44dp"
+        android:backgroundTint="#F44336"
+
+        app:layout_constraintStart_toEndOf="@+id/spCriterioGasolineras"
+        app:layout_constraintTop_toTopOf="@+id/spCriterioGasolineras" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

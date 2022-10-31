@@ -7,6 +7,7 @@ import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 
 public class MainPresenter implements IMainContract.Presenter {
+
     // Constante para indicar si las gasolineras se cargan de forma online u offline
     private static final int LOAD_ONLINE = 0;
 
@@ -93,6 +94,7 @@ public class MainPresenter implements IMainContract.Presenter {
             shownGasolineras = null;
             view.showLoadError();
         }
+
     }
 
     @Override

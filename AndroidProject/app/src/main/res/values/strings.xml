@@ -6,6 +6,7 @@
     <string name="info">Info</string>
     <string name="loadCorrectOn">Se han cargado %d gasolineras actualizadas.</string>
     <string name="loadCorrectOff">Se han cargado %d gasolineras. Desactualizadas con fecha %s.</string>
+    <string name="loadCorrectPromociones">Se han cargado %d promociones.</string>
     <string name="loadError">Ha habido un error cargando las gasolineras</string>
     <string name="prices">Precios</string>
     <string name="schedule">Horario</string>
@@ -17,8 +18,9 @@
     <string name="cancel">Cancelar</string>
     <string name="filter">Filtrar gasolineras</string>
     <string name="promotion">Menu promociones</string>
-    <string name="addPromotion">Anhadir promocion</string>
+    <string name="addPromotion">Añadir promoción</string>
     <string name="listPromotions">Ver promociones</string>
+    <string name="loadErrorPromociones">Ha habido un error cargando las promociones</string>
     <string name="combustible_types">Tipos de combustible</string>
     <string name="brands">Marcas</string>
     <string name="all">Todos</string>
@@ -32,10 +34,16 @@
     <string name="repsol">Repsol</string>
     <string name="shell">Shell</string>
     <string name="varias">Varias</string>
+    <string name="varios">Varios</string>
     <string name="loadErrorEmpty">No hay gasolineras compatibles.</string>
 
     <string-array name="combustible_types_array">
         <item>@string/all</item>
+        <item>@string/dieselAlabel</item>
+        <item>@string/gasolina95label</item>
+    </string-array>
+
+    <string-array name="combustible_types_array_nall">
         <item>@string/dieselAlabel</item>
         <item>@string/gasolina95label</item>
     </string-array>
@@ -51,7 +59,57 @@
         <item>@string/shell</item>
     </string-array>
 
+    <string-array name="empty_array">
+        <item>-</item>
+    </string-array>
+
     <string name="preference_filter_file_key_">AppFilterPreference</string>
     <string name="saved_comb_type_filter">TipoCombustible</string>
     <string name="saved_marca_type_filter">TipoMarca</string>
+
+    <string name="nuevaPromocion">NUEVA PROMOCIÓN</string>
+    <string name="name">Nombre</string>
+    <string name="indicacionNombre">Introduzca el nombre de la promoción.</string>
+    <string name="anhadir">Añadir</string>
+    <string name="BiodieselAlabel">Biodiesel</string>
+    <string name="BioetanolAlabel">Bioetanol</string>
+    <string name="GasNaturalComprimidolabel">Gas natural comprimido</string>
+    <string name="GasNaturalLicuadolabel">Gas natural licuado</string>
+    <string name="GasesLicuadosDelPetroleolabel">Gas licuado del petróleo</string>
+    <string name="GasoleoAlabel">Gasóleo A</string>
+    <string name="GasoleoBlabel">Gasóleo B</string>
+    <string name="GasoleoPremiumlabel">Gasóleo premium</string>
+    <string name="Gasolina95E10label">Gasolina 95 E10</string>
+    <string name="Gasolina95E5label">Gasolina 95 E5</string>
+    <string name="Gasolina95E5Premiumlabel">Gasolina 95 E5 premium</string>
+    <string name="Gasolina98E10label">Gasolina 98 E10</string>
+    <string name="Gasolina98E5label">Gasolina 98 E5</string>
+    <string name="Hidrogenolabel">Hidrógeno</string>
+    <string name="PorMarcalabel">Por marca</string>
+    <string name="PorGasolineralabel">Por gasolinera</string>
+    <string name="EurosPorLitrolabel">€/L</string>
+    <string name="Porcentajelabel">%</string>
+    <string name="allA">Todas</string>
+
+    <string-array name="selectors_types_array">
+        <item>@string/allA</item>
+        <item>@string/PorMarcalabel</item>
+        <item>@string/PorGasolineralabel</item>
+    </string-array>
+
+    <string-array name="type_descuento_array">
+        <item>@string/EurosPorLitrolabel</item>
+        <item>@string/Porcentajelabel</item>
+    </string-array>
+
+    <string name="informacion">Información</string>
+    <string name="promoExito">Promoción añadida con éxito.</string>
+    <string name="promoRepe">Ya existe una promoción con ese nombre.</string>
+    <string name="promoSinComb">No se han indicado combustibles.</string>
+    <string name="promoSinGas">No se han indicado gasolineras.</string>
+    <string name="promoSinDesc">No se ha indicado un descuento.</string>
+    <string name="promoPorcErr">El porcentaje indicado no es válido.</string>
+    <string name="promoEuroLErr">El descuento en €/L indicado no es válido.</string>
+    <string name="promoBDErr">Se ha producido un error al acceder a la base de datos.</string>
+
 </resources>

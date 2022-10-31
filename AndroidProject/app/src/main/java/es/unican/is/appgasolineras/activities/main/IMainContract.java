@@ -15,7 +15,7 @@ public interface IMainContract {
      * A Presenter for the Main Activity must implement this functionality
      * These methods (excluding init), are meant to be used by the View.
      */
-    public interface Presenter {
+    interface Presenter {
         /**
          * Initialization method
          */
@@ -76,7 +76,7 @@ public interface IMainContract {
      * A View for the Main Activity must implement this functionality
      * These methods (excluding init), are meant to be used by the Presenter.
      */
-    public interface View {
+    interface View {
 
         /**
          * Initialization method
@@ -137,12 +137,12 @@ public interface IMainContract {
         void openInfoView();
 
         /**
-         * The View is requested to open the Promotion view
+         * Se requiere abrir la vista Anhadir Promocion
          */
         void openAnhadirPromocionView();
 
         /**
-         * The View is requested to open the Promotion view
+         * Se requiere abrir la vista Lista Promociones
          */
         void openListaPromocionesView();
 
@@ -150,7 +150,6 @@ public interface IMainContract {
          * The View is requested to open the Filter dialog
          */
         void openFilterDialog();
-
     }
 
 }
