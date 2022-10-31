@@ -68,7 +68,6 @@ public class FiltrarPorTipoCombustibleITest {
         assertEquals("E.S. CARBURANTES DE ARNUERO S.L.", sut.getShownGasolineras().get(2).getRotulo());
         assertEquals("G2", sut.getShownGasolineras().get(3).getRotulo());
         assertEquals("COBO", sut.getShownGasolineras().get(4).getRotulo());
-        assertEquals("REPSOL", sut.getShownGasolineras().get(5).getRotulo());
 
 
         // Filtrar por gasolina
@@ -81,7 +80,6 @@ public class FiltrarPorTipoCombustibleITest {
         assertEquals("AREA DE SERVICIO LA PALMERA", sut.getShownGasolineras().get(4).getRotulo());
         assertEquals("COBO", sut.getShownGasolineras().get(5).getRotulo());
         assertEquals("GALP", sut.getShownGasolineras().get(6).getRotulo());
-        assertEquals("REPSOL", sut.getShownGasolineras().get(7).getRotulo());
 
 
 
@@ -97,7 +95,6 @@ public class FiltrarPorTipoCombustibleITest {
         assertEquals("AREA DE SERVICIO LA PALMERA", sut.getShownGasolineras().get(6).getRotulo());
         assertEquals("COBO", sut.getShownGasolineras().get(7).getRotulo());
         assertEquals("GALP", sut.getShownGasolineras().get(8).getRotulo());
-        assertEquals("REPSOL", sut.getShownGasolineras().get(9).getRotulo());
 
     }
 
