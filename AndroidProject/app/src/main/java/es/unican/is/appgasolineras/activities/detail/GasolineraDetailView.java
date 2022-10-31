@@ -1,6 +1,7 @@
 package es.unican.is.appgasolineras.activities.detail;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.w3c.dom.Text;
 
 import java.util.Iterator;
 import java.util.List;
@@ -32,6 +35,7 @@ public class GasolineraDetailView extends AppCompatActivity
 
     public static final String INTENT_GASOLINERA = "INTENT_GASOLINERA";
     private static final int NO_ECONTRADO = 0; // Logo no encontrado
+    private static final String PRICE_UNITS = " €/L";
 
     private IGasolineraDetailContract.Presenter presenter; // Presenter de la vista detallada
 
@@ -99,6 +103,9 @@ public class GasolineraDetailView extends AppCompatActivity
             label = "generic";
         }
         ivRotulo.setImageResource(loadLogoID(label));
+
+        // Shows info with discounts
+        applyDiscount();
     }
 
     @Override
@@ -149,27 +156,32 @@ public class GasolineraDetailView extends AppCompatActivity
         return imageID;
     }
 
-    // TODO
-    public void applyDiscount(Promocion promotion) {
+    private void applyDiscount() {
+        String discountedDieselPrice, discounted95OctanesPrice, discountedSummaryPrice;
 
-        double discountedUnleaded95Price, discountedDieselPrice, discountedSummaryPrice, discount;
-        CombustibleType fuel = promotion.getCombustible();
-        double eurosDiscount = promotion.getDescuentoEurosLitro();
-        double percentageDiscount = promotion.getDescuentoPorcentual();
 
-        discount = eurosDiscount < 0 ? percentageDiscount : eurosDiscount;
+        discountedSummaryPrice = presenter.getDiscountedSummaryPriceStr() + PRICE_UNITS;
+        discounted95OctanesPrice = presenter.getDiscounted95OctanesPriceStr() + PRICE_UNITS;
+        discountedDieselPrice = presenter.getDiscountedDieselPriceStr() + PRICE_UNITS;
 
-        // Diesel
-        if (fuel == CombustibleType.DIESEL || fuel == CombustibleType.ALL_COMB) {
-            discountedDieselPrice = Double.parseDouble(tvDieselAPrecioDet.toString()) - discount;
-            tvDieselAPrecioDet.setPaintFlags(tvDieselAPrecioDet.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        comparePrices(discountedSummaryPrice, tvPrecioSumarioDet, tvDiscountedPrecioSumarioDet);
+        comparePrices(discounted95OctanesPrice, tv95PrecioDet, tvDiscounted95Price);
+        comparePrices(discountedDieselPrice, tvDieselAPrecioDet, tvDiscountedDieselPrice);
+    }
+
+    private void comparePrices(String discountedPrice, TextView tvOriginalPrice, TextView tvDiscountedPrice) {
+        if (!discountedPrice.equals(tvOriginalPrice.getText().toString())) {
+
+            // Crosses out the original summary price
+            tvOriginalPrice.setPaintFlags(tvOriginalPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+            // Sets discountedPrice
+            tvDiscountedPrice.setText(discountedPrice);
         }
-        // Unleaded 95
-        if (fuel == CombustibleType.GASOLINA || fuel == CombustibleType.ALL_COMB) {
-            discountedUnleaded95Price = discountedDieselPrice = Double.parseDouble(tv95PrecioDet.toString()) - discount;
-            tv95PrecioDet.setPaintFlags(tvDieselAPrecioDet.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        }
+    }
 
-
+    @Override
+    public Context getContext() {
+        return super.getApplicationContext();
     }
 }
