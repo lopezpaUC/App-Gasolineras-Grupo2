@@ -32,10 +32,16 @@
     <string name="repsol">Repsol</string>
     <string name="shell">Shell</string>
     <string name="varias">Varias</string>
+    <string name="varios">Varios</string>
     <string name="loadErrorEmpty">No hay gasolineras compatibles.</string>
 
     <string-array name="combustible_types_array">
         <item>@string/all</item>
+        <item>@string/dieselAlabel</item>
+        <item>@string/gasolina95label</item>
+    </string-array>
+
+    <string-array name="combustible_types_array_nall">
         <item>@string/dieselAlabel</item>
         <item>@string/gasolina95label</item>
     </string-array>
@@ -49,6 +55,10 @@
         <item>@string/petronor</item>
         <item>@string/repsol</item>
         <item>@string/shell</item>
+    </string-array>
+
+    <string-array name="empty_array">
+        <item>-</item>
     </string-array>
 
     <string name="preference_filter_file_key_">AppFilterPreference</string>
@@ -90,5 +100,14 @@
         <item>@string/Porcentajelabel</item>
     </string-array>
 
+    <string name="informacion">Información</string>
+    <string name="promoExito">Promoción añadida con éxito.</string>
+    <string name="promoRepe">Ya existe una promoción con ese nombre.</string>
+    <string name="promoSinComb">No se han indicado combustibles.</string>
+    <string name="promoSinGas">No se han indicado gasolineras.</string>
+    <string name="promoSinDesc">No se ha indicado un descuento.</string>
+    <string name="promoPorcErr">El porcentaje indicado no es válido.</string>
+    <string name="promoEuroLErr">El descuento en €/L indicado no es válido.</string>
+    <string name="promoBDErr">Se ha producido un error al acceder a la base de datos.</string>
 
 </resources>
