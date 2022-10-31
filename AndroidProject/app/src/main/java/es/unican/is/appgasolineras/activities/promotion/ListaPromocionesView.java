@@ -64,4 +64,7 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
         ListView list = findViewById(R.id.lvPromociones);
         list.setAdapter(adapter);
     }
+
+
+    
 }
