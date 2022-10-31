@@ -58,7 +58,7 @@ public interface IListaPromocionesContract {
          * The View is requested to show a list of promotions
          * @param promociones the list of promotions
          */
-        void showPromociones(List<Promocion> promociones);
+        void showPromociones(List<Promocion> promociones, List<String> lista);
 
         /**
          * The View is requested to show an alert informing that the promotions were loaded

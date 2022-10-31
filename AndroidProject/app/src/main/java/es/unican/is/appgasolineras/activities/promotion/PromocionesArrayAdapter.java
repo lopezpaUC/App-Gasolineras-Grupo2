@@ -17,12 +17,16 @@ import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.CombustibleType;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
+import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.PromocionRepository;
 
 public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
 
-    public PromocionesArrayAdapter(@NonNull Context context, @NonNull List<Promocion> objects) {
+    private List<String> listaGasolineras;
+
+    public PromocionesArrayAdapter(@NonNull Context context, @NonNull List<Promocion> objects, @NonNull List<String> lista) {
         super(context, 0, objects);
+        this.listaGasolineras = lista;
     }
 
     @NonNull
@@ -42,7 +46,7 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
         name(promocion, convertView);
 
         // nameGasolinera
-        gasolinera(promocion, convertView);
+        gasolinera(promocion, convertView, listaGasolineras.get(position));
 
         // descuento
         descuento(promocion, convertView);
@@ -62,8 +66,9 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
         tv.setText(promocion.getId());
     }
 
-    private void gasolinera(Promocion promocion, View convertView){
+    private void gasolinera(Promocion promocion, View convertView, String gasolinera){
        TextView tv = convertView.findViewById(R.id.tvNameGasolinera);
+       tv.setText(gasolinera);
     }
 
     private void descuento(Promocion promocion, View convertView){

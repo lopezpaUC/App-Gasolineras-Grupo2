@@ -45,10 +45,18 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
      */
     private void doSyncInit() {
         List<Promocion> data = repositoryPromociones.getPromociones();
+        List<String> lista = null;
+        for(Promocion promocion: data){
+            if(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).size()>1){
+                lista.add("Varias");
+            } else {
+                lista.add(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).get(0).getRotulo());
+            }
+        }
 
         if (!data.isEmpty()) { // Si se obtiene una lista con promociones
             // Muestra promociones
-            view.showPromociones(data);
+            view.showPromociones(data, lista);
             shownPromociones = data;
 
             // Avisamos que se han caragdo correctamente

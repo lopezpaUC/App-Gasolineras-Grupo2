@@ -67,8 +67,8 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
     }
 
     @Override
-    public void showPromociones(List<Promocion> promociones) {
-        PromocionesArrayAdapter adapter = new PromocionesArrayAdapter(this, promociones);
+    public void showPromociones(List<Promocion> promociones, List<String> lista) {
+        PromocionesArrayAdapter adapter = new PromocionesArrayAdapter(this, promociones, lista);
         ListView list = findViewById(R.id.lvPromociones);
         list.setAdapter(adapter);
     }
