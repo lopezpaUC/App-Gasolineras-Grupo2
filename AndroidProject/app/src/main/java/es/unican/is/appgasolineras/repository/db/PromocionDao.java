@@ -15,11 +15,17 @@ import es.unican.is.appgasolineras.model.Promocion;
  */
 @Dao
 public interface PromocionDao {
+    @Query("SELECT * FROM promociones where id = :id")
+    Promocion getPromocionById(String id);
+
     @Query("SELECT * FROM promociones")
     List<Promocion> getPromociones();
 
     @Insert
     void insertAll(Promocion... promociones);
+
+    @Insert
+    void insert(Promocion promocion);
 
     @Query("DELETE FROM promociones")
     void deleteAll();
@@ -49,12 +55,24 @@ public interface PromocionDao {
     List<GasolineraPromocionCrossRef> findGasolinerasRelatedByID(String promID);
 
     /**
+     * Devuelve las promociones relacionadas con una gasolinera.
      *
-     * @param gasID
-     * @return
+     * @param gasID ID Gasolinera
+     * @return lista de promociones relacionadas con la gasolinera
      */
     @Query("SELECT * FROM promociones inner join gasolinera_promocion " + "on promociones.id = " +
             "gasolinera_promocion.promocionID where gasolinera_promocion.gasolineraID " +
             "= :gasID")
     List<Promocion> buscaPromocionesRelacionadasConGasolinera(String gasID);
+
+    /**
+     * Devuelve las promociones relacionadas con una marca.
+     *
+     * @param marcaID ID Marca.
+     * @return lista de promociones relacionadas con la marca.
+     */
+    @Query("SELECT * FROM promociones inner join promocion_marca " + "on promociones.id = " +
+            "promocion_marca.promocionID where promocion_marca.marcaID " +
+            "= :marcaID")
+    List<Promocion> buscaPromocionesRelacionadasConMarca(String marcaID);
 }
