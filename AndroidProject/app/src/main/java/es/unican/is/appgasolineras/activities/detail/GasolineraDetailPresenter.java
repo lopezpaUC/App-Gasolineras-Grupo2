@@ -13,8 +13,8 @@ import java.util.Map;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
-import es.unican.is.appgasolineras.repository.IPromocionRepository;
-import es.unican.is.appgasolineras.repository.PromocionRepository;
+import es.unican.is.appgasolineras.repository.IPromocionesRepository;
+import es.unican.is.appgasolineras.repository.PromocionesRepository;
 
 /**
  * Presenter para la actividad relacionada con la muestra de información detallada de una
@@ -32,7 +32,7 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
     private String discountedSummaryPriceStr;
     private String discountedDieselPriceStr;
     private String discounted95OctanesPriceStr;
-    private IPromocionRepository repPromotions;          // Promotions repository
+    private IPromocionesRepository repPromotions;          // Promotions repository
 
     /**
      * Constructor del presenter.
@@ -44,7 +44,7 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         this.view = view;
         this.gasolinera = gasolinera;
 
-        repPromotions = new PromocionRepository(view.getContext());
+        repPromotions = new PromocionesRepository(view.getContext());
     }
 
     @Override
