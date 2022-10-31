@@ -62,13 +62,13 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
     }
 
     private void gasolinera(Promocion promocion, View convertView){
-        /**TextView tv = convertView.findViewById(R.id.tvNameGasolinera);
+        TextView tv = convertView.findViewById(R.id.tvNameGasolinera);
         if(promocion.getListaGasolineras().size()==1){
             tv.setText(promocion.getListaGasolineras().get(0).getRotulo());
         }
         else {
             tv.setText("Todas");
-        }*/
+        }
     }
 
     private void descuento(Promocion promocion, View convertView){
@@ -78,12 +78,12 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
 
     private void combustible(Promocion promocion, View convertView){
         TextView tv = convertView.findViewById(R.id.tvCombustible);
-        /**if (promocion.getCombustibles().size()==1){
+        if (promocion.getCombustibles().size()==1){
             tv.setText(promocion.getCombustibles().get(0).name());
         } else if (promocion.getCombustibles().size() < CombustibleType.values().length) {
             tv.setText("Varios");
         } else {
             tv.setText("Todos");
-        }*/
+        }
     }
 }

@@ -16,7 +16,7 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
     private final IListaPromocionesContract.View view;
 
     // Repositorio de gasolineras
-    //private IPromocionesRepository repository;
+    private IPromocionesRepository repository;
 
     // Lista de promociones a mostrar
     private List<Promocion> shownPromociones;
@@ -36,20 +36,20 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
 
     @Override
     public void init() {
-        /**if (repository == null) { // Si no consta repositorio asignado
+        if (repository == null) { // Si no consta repositorio asignado
             repository = view.getPromocionRepository();
         }
 
         if (repository != null) { // Si ya consta un repositorio
             doSyncInit();
-        }*/
+        }
     }
 
     /**
      * Muestra contenido despues de intentar haber recibido el actualizado de internet.
      */
     private void doSyncInit() {
-        /**List<Promocion> data = repository.getPromociones();
+        List<Promocion> data = repository.getPromociones();
 
         if (!data.isEmpty()) { // Si se obtiene una lista con promociones
             // Obtiene si se ha cargado de BD o repositorio online.
@@ -69,7 +69,7 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
         } else { // Si no se obtienen gasolineras
             shownPromociones = null;
             view.showLoadError();
-        }*/
+        }
     }
 
     @Override
