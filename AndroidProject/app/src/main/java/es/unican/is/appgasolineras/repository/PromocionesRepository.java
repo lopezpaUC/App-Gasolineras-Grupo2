@@ -111,4 +111,22 @@ public class PromocionesRepository implements IPromocionesRepository {
         MarcaDao marcasDao = db.marcaDao();
         marcasDao.insertRelationMarcaPromocion(m.getNombre(), p.getId());
     }
+
+    @Override
+    public void deletePromocion(Promocion p) {
+        GasolineraDatabase db = GasolineraDatabase.getDB(context);
+        PromocionDao promocionesDao = db.promocionDao();
+        promocionesDao.deleteAllRelationsMarcaPromocion(p.getId());
+        promocionesDao.deleteAllRelationsGasolineraPromocion(p.getId());
+        promocionesDao.deletePromocion(p.getId());
+    }
+
+    @Override
+    public void deleteAllPromociones() {
+        GasolineraDatabase db = GasolineraDatabase.getDB(context);
+        PromocionDao promocionesDao = db.promocionDao();
+        promocionesDao.deleteAllRelationsMarcaPromocion();
+        promocionesDao.deleteAllRelationsGasolineraPromocion();
+        promocionesDao.deleteAll();
+    }
 }
