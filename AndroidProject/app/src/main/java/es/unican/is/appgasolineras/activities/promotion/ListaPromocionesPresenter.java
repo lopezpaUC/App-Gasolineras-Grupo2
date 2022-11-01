@@ -63,11 +63,10 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
     }
 
     /**
-     * Muestra contenido despues de intentar haber recibido el actualizado de internet.
+     * Muestra contenido.
      */
     private void doSyncInit() {
         List<Promocion> data = repositoryPromociones.getPromociones();
-
         for(Promocion promocion: data){
             promocionAEnsenhar(promocion);
         }

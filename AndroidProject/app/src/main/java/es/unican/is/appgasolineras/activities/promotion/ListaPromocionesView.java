@@ -33,7 +33,6 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
 
         // Crea el presenter
         presenter = new ListaPromocionesPresenter(this);
-        presenter.init();
 
         // Inicializa
         this.init();

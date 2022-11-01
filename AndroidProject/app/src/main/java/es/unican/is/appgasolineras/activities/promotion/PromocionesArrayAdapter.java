@@ -37,8 +37,6 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        System.out.println("Prueba");
-
         Promocion promocion = getItem(position);
 
         if (convertView == null) {
