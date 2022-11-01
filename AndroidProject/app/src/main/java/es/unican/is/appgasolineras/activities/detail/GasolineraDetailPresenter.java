@@ -75,7 +75,6 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         return discounted95OctanesPriceStr;
     }
 
-
     @Override
     public String getDiscountedSummaryPriceStr() {
         return precioSumarioToStr(calculateDiscountedSummaryPrice());
@@ -104,6 +103,62 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         precioGasolina = precioToDouble(precioGasolinaStr, formato);
 
         return calculateSummary(precioDiesel, precioGasolina);
+    }
+
+    /**
+     * Calculates the discounted summary price and updates the discounted diesel and 95-octanes
+     * prices
+     * @return the discounted summary price
+     */
+    private double calculateDiscountedSummaryPrice() {
+        // Obtains the list of promotions assigned to the gas station
+        List<Promocion> promotions = repPromotions.getPromocionesRelacionadasConGasolinera
+                (gasolinera.getId());
+
+        double discountedSummary;
+
+        // Obtains fuel-types prices as text
+        String dieselPriceStr = gasolinera.getDieselA();
+        String precioGasolinaStr = gasolinera.getNormal95();
+
+        // Prices in numerical format
+        double dieselPrice;
+        double precioGasolina;
+
+        // Price format with decimal comma
+        NumberFormat formato = NumberFormat.getInstance(Locale.FRANCE);
+
+        // Converts diesel price to double
+        dieselPrice = precioToDouble(dieselPriceStr, formato);
+
+        // Converts 95-octanes price to double
+        precioGasolina = precioToDouble(precioGasolinaStr, formato);
+
+        // If the gas station has no promotions assigned, all prices remain unaltered
+        if (promotions.isEmpty()) {
+            discountedDieselPriceStr = precioSumarioToStr(truncateFuelPrice(dieselPrice));
+            discounted95OctanesPriceStr = precioSumarioToStr(truncateFuelPrice(precioGasolina));
+            return calculateSummaryPrice();
+        }
+
+        // Gets the best promotion for both diesel and unleaded 95 octanes
+        Promocion bestPromotionDiesel = bestPromotion(dieselPrice, promotions, "Diésel");
+        Promocion bestPromotion95Octanes = bestPromotion(precioGasolina, promotions, "Gasolina");
+
+        // Calculates the best price for both diesel and 95 octanes
+        double dieselDiscountedPrice = truncateFuelPrice(calculateDiscountedPrice(dieselPrice,
+                bestPromotionDiesel));
+        discountedDieselPriceStr = precioSumarioToStr(dieselDiscountedPrice);
+
+        double unleaded95DiscountedPrice = truncateFuelPrice(calculateDiscountedPrice(precioGasolina,
+                bestPromotion95Octanes));
+        discounted95OctanesPriceStr = precioSumarioToStr(unleaded95DiscountedPrice);
+
+        // Calculates the summary price according to the validity of the fuel's prices
+        discountedSummary = calculateSummary(dieselDiscountedPrice, unleaded95DiscountedPrice);
+        discountedSummaryPriceStr = precioSumarioToStr(discountedSummary);
+
+        return discountedSummary;
     }
 
     /**
@@ -211,6 +266,12 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         return correccion;
     }
 
+    /**
+     * Calculates the discounted price for a fuel based on its price and the promotion applied
+     * @param price the base price
+     * @param promotion the promotion which will be applied on the price
+     * @return the discounted price
+     */
     public double calculateDiscountedPrice(double price, Promocion promotion) {
         if (promotion == null) {
             return price;
@@ -222,58 +283,6 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         } else {
             return price * (100 - promotion.getDescuentoPorcentual());
         }
-    }
-
-
-    private double calculateDiscountedSummaryPrice() {
-        // Obtains the list of promotions assigned to the gas station
-        List<Promocion> promotions = repPromotions.getPromocionesRelacionadasConGasolinera
-                (gasolinera.getId());
-
-        double discountedSummary;
-
-        // Obtains fuel-types prices as text
-        String dieselPriceStr = gasolinera.getDieselA();
-        String precioGasolinaStr = gasolinera.getNormal95();
-
-        // Prices in numerical format
-        double dieselPrice;
-        double precioGasolina;
-
-        // Price format with decimal comma
-        NumberFormat formato = NumberFormat.getInstance(Locale.FRANCE);
-
-        // Converts diesel price to double
-        dieselPrice = precioToDouble(dieselPriceStr, formato);
-
-        // Converts 95-octanes price to double
-        precioGasolina = precioToDouble(precioGasolinaStr, formato);
-
-        // If the gas station has no promotions assigned, all prices remain unaltered
-        if (promotions.isEmpty()) {
-            discountedDieselPriceStr = precioSumarioToStr(truncateFuelPrice(dieselPrice));
-            discounted95OctanesPriceStr = precioSumarioToStr(truncateFuelPrice(precioGasolina));
-            return calculateSummaryPrice();
-        }
-
-        // Gets the best promotion for both diesel and unleaded 95 octanes
-        Promocion bestPromotionDiesel = bestPromotion(dieselPrice, promotions, "DIESEL");
-        Promocion bestPromotion95Octanes = bestPromotion(precioGasolina, promotions, "GASOLINA");
-
-        // Calculates the best price for both diesel and 95 octanes
-        double dieselDiscountedPrice = truncateFuelPrice(calculateDiscountedPrice(dieselPrice,
-                bestPromotionDiesel));
-        discountedDieselPriceStr = precioSumarioToStr(dieselDiscountedPrice);
-
-        double unleaded95DiscountedPrice = truncateFuelPrice(calculateDiscountedPrice(precioGasolina,
-                bestPromotion95Octanes));
-        discounted95OctanesPriceStr = precioSumarioToStr(unleaded95DiscountedPrice);
-
-        // Calculates the summary price according to the validity of the fuel's prices
-        discountedSummary = calculateSummary(dieselDiscountedPrice, unleaded95DiscountedPrice);
-        discountedSummaryPriceStr = precioSumarioToStr(discountedSummary);
-
-        return discountedSummary;
     }
 
     /**
@@ -313,15 +322,21 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         return price / Math.pow(10, 2);
     }
 
-    private double calculateSummary(double dieselPrice, double unleaded95) {
+    /**
+     * Calculates the summary price given the diesel and 95-octanes prices
+     * @param dieselPrice the price for diesel
+     * @param unleaded95Price the price for 95-octanes
+     * @return the summary price
+     */
+    private double calculateSummary(double dieselPrice, double unleaded95Price) {
         double summary;
-        // Determina el precio de sumario en base a la validez de los precios del combustible
-        if (dieselPrice <= 0.0) { // Si no hay un precio de diesel valido
-            summary = unleaded95;
-        } else if(unleaded95 <= 0.0) { // Si no hay un precio de gasolina valido
+        // Determines the summary price based on the validity of both prices
+        if (dieselPrice <= 0.0) { // Invalid diesel price
+            summary = unleaded95Price;
+        } else if(unleaded95Price <= 0.0) { // Invalid 95-octanes price
             summary = dieselPrice;
-        } else { // Si todos los precios son validos
-            summary = (dieselPrice + unleaded95 * 2.0) / 3.0;
+        } else { // Both prices are valid
+            summary = (dieselPrice + unleaded95Price * 2.0) / 3.0;
         }
         return summary;
     }
