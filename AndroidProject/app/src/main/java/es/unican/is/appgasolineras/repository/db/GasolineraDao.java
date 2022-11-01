@@ -33,7 +33,7 @@ public interface GasolineraDao {
      * @param promID ID Promocion
      * @return lista de gasolineras relacionadas con la promocion.
      */
-    @Query("SELECT * FROM gasolineras inner join gasolinera_promocion " + "on gasolineras.id = " +
+    @Query("SELECT gasolineras.* FROM gasolineras inner join gasolinera_promocion " + "on gasolineras.id = " +
             "gasolinera_promocion.gasolineraID where gasolinera_promocion.promocionID " +
             "= :promID")
     List<Gasolinera> buscaGasolinerasRelacionadasConPromocion(String promID);
