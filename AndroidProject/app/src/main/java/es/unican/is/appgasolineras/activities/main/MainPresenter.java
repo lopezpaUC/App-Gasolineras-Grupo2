@@ -182,6 +182,7 @@ public class MainPresenter implements IMainContract.Presenter {
         } else {
             shownGasolineras = resultadoFiltrado;
         }
+        g
     }
 
     /**
