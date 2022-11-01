@@ -110,20 +110,20 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
      * prices
      * @return the discounted summary price
      */
+    //TODO: refactor with calculateSummaryPrice
     private double calculateDiscountedSummaryPrice() {
         // Obtains the list of promotions assigned to the gas station
         List<Promocion> promotions = repPromotions.getPromocionesRelacionadasConGasolinera
                 (gasolinera.getId());
 
+        // Prices in numerical format
+        double dieselPrice;
+        double precioGasolina;
         double discountedSummary;
 
         // Obtains fuel-types prices as text
         String dieselPriceStr = gasolinera.getDieselA();
         String precioGasolinaStr = gasolinera.getNormal95();
-
-        // Prices in numerical format
-        double dieselPrice;
-        double precioGasolina;
 
         // Price format with decimal comma
         NumberFormat formato = NumberFormat.getInstance(Locale.FRANCE);
