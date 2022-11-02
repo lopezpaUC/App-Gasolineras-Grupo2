@@ -90,7 +90,7 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
      */
     private void name(Promocion promocion, View convertView){
         TextView tv = convertView.findViewById(R.id.tvNamePromocion);
-        tv.setText(promocion.getId().toUpperCase());
+        tv.setText(promocion.getId());
         tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
     }
 
