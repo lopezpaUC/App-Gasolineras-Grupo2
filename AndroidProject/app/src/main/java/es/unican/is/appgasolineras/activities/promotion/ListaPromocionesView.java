@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -76,7 +77,7 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
         list.setAdapter(adapter);
     }
 
-
+    
     public void deletePromocionSeleccionada(View v) {
         ImageView bin = (ImageView) findViewById(R.id.ivBin);
         bin.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +89,10 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
 
                 alertDialog.setButton2("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        presenter.deletePromocion(findViewById(R.id.tvNamePromocion).toString());
+                        TextView campo = findViewById(R.id.tvNamePromocion);
+                        String nombre = campo.getText().toString();
+                        presenter.deletePromocion(nombre);
+
                         alertDialog.dismiss();
                     }
                 });
