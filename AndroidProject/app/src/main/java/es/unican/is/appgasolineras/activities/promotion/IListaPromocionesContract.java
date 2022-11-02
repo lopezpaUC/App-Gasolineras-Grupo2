@@ -6,6 +6,7 @@ import java.util.Map;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
+import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 
 public interface IListaPromocionesContract {
 
@@ -41,27 +42,30 @@ public interface IListaPromocionesContract {
          * Android Context, and this is available in the View
          * @return the Repository object to access promotions
          */
-        //IPromocionesRepository getPromocionRepository();
+        IPromocionesRepository getPromocionRepository();
+
+        /**
+         * Returns the Gasolineras Repository object.
+         * This object can be used to access promotions from
+         * different sources (REST API, persisted DB, etc.)
+         * This method is in the View because it generally requires access to the
+         * Android Context, and this is available in the View
+         * @return the Repository object to access gasolineras
+         */
+        IGasolinerasRepository getGasolineraRepository();
 
         /**
          * The View is requested to show a list of promotions
          * @param promociones the list of promotions
          */
-        void showPromociones(List<Promocion> promociones);
-
-        /**
-         * The View is requested to show an alert informing that the promotions were loaded
-         * correctly from online repository.
-         * @param promocionesCount the number of promotions that were loaded
-         */
-        void showLoadCorrectOnline(int promocionesCount);
+        void showPromociones(List<Promocion> promociones, List<String> lista, List<String> rotulos);
 
         /**
          * The View is requested to show an alert informing that the promotions were loaded
          * correctly from DB.
          * @param promocionesCount the number of promotions that were loaded
          */
-        void showLoadCorrectOffline(int promocionesCount);
+        void showLoadCorrect(int promocionesCount);
 
         /**
          * The View is requested to show an alert informing that there was an error while

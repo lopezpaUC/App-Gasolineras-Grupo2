@@ -8,13 +8,16 @@ import androidx.room.RoomDatabase;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.GasolineraPromocionCrossRef;
+import es.unican.is.appgasolineras.model.Marca;
+import es.unican.is.appgasolineras.model.MarcaPromocionCrossRef;
 import es.unican.is.appgasolineras.model.Promocion;
 
 /**
  * Class to persist gas stations into a local DB using Room
  * Usage: https://developer.android.com/training/data-storage/room
  */
-@Database(entities = {Gasolinera.class, Promocion.class, GasolineraPromocionCrossRef.class},
+@Database(entities = {Gasolinera.class, Promocion.class, GasolineraPromocionCrossRef.class,
+                        Marca.class, MarcaPromocionCrossRef.class},
         version = 1, exportSchema = false)
 public abstract class GasolineraDatabase extends RoomDatabase {
 
@@ -34,4 +37,7 @@ public abstract class GasolineraDatabase extends RoomDatabase {
 
     public abstract GasolineraDao gasolineraDao();
 
+    public abstract PromocionDao promocionDao();
+
+    public abstract MarcaDao marcaDao();
 }

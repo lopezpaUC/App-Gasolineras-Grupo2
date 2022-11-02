@@ -22,6 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+        android:ems="8"
         android:text="TextView"
         app:layout_constraintStart_toEndOf="@+id/ivLogoPromocion"
         app:layout_constraintTop_toTopOf="@+id/ivLogoPromocion" />
@@ -31,13 +32,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+        android:ems="8"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/ivLogoPromocion"
         app:layout_constraintStart_toEndOf="@+id/ivLogoPromocion" />
 
     <TextView
         android:id="@+id/tvDescuento"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:text="TextView"
@@ -46,11 +48,10 @@
 
     <TextView
         android:id="@+id/tvCombustible"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/tvNameGasolinera"
-        app:layout_constraintStart_toEndOf="@+id/tvNameGasolinera" />
+        app:layout_constraintStart_toStartOf="@+id/tvDescuento" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

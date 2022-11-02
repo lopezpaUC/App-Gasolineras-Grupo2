@@ -23,7 +23,7 @@ public class Promocion {
     private double descuentoEurosLitro; // > 0.0
 
     @ColumnInfo(name = "combustible")
-    private CombustibleType combustible;
+    private String combustibles;
 
     /**
      * Crea una promocion por defecto o vacia.
@@ -32,7 +32,7 @@ public class Promocion {
         id = "";
         descuentoPorcentual = -1.0;
         descuentoEurosLitro = -1.0;
-        combustible = null;
+        combustibles = null;
     }
 
     /**
@@ -41,14 +41,14 @@ public class Promocion {
      * @param id Nombre de la promocion, unico y que la identifica.
      * @param descuentoPorcentual Descuento porcentual.
      * @param descuentoEurosLitro Descuento en euros litro.
-     * @param combustible Combustible.
+     * @param combustibles Combustible.
      */
     public Promocion(String id, double descuentoPorcentual, double descuentoEurosLitro,
-                     CombustibleType combustible) {
+                     String combustibles) {
         this.id = id;
         this.descuentoPorcentual = descuentoPorcentual;
         this.descuentoEurosLitro = descuentoEurosLitro;
-        this.combustible = combustible;
+        this.combustibles = combustibles;
     }
 
     @NonNull
@@ -76,12 +76,12 @@ public class Promocion {
         this.descuentoEurosLitro = descuentoEurosLitro;
     }
 
-    public CombustibleType getCombustible() {
-        return combustible;
+    public String getCombustibles() {
+        return combustibles;
     }
 
-    public void setCombustible(CombustibleType combustible) {
-        this.combustible = combustible;
+    public void setCombustibles(String combustibles) {
+        this.combustibles = combustibles;
     }
 
     @Override

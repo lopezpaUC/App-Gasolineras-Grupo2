@@ -15,11 +15,17 @@ import es.unican.is.appgasolineras.model.Promocion;
  */
 @Dao
 public interface PromocionDao {
+    @Query("SELECT * FROM promociones where id = :id")
+    Promocion getPromocionById(String id);
+
     @Query("SELECT * FROM promociones")
     List<Promocion> getPromociones();
 
     @Insert
     void insertAll(Promocion... promociones);
+
+    @Insert
+    void insert(Promocion promocion);
 
     @Query("DELETE FROM promociones")
     void deleteAll();
@@ -41,10 +47,73 @@ public interface PromocionDao {
     void deleteRelationGasolineraPromocion(String gasID, String promID);
 
     /**
+     * Elimina una relacion entre marca y promocion.
+     * @param marcaID ID Marca.
+     * @param promID ID Promocion.
+     */
+    @Query("DELETE FROM promocion_marca where marcaID = :marcaID and promocionID = :promID")
+    void deleteRelationMarcaPromocion(String marcaID, String promID);
+
+    /**
+     * Elimina todas las relaciones entre marca y promocion.
+     * @param promID ID Promocion
+     */
+    @Query("DELETE FROM promocion_marca where promocionID = :promID")
+    void deleteAllRelationsMarcaPromocion(String promID);
+
+    /**
+     * Elimina todas las relaciones entre gasolinera y promocion.
+     * @param promID ID Promocion
+     */
+    @Query("DELETE FROM gasolinera_promocion where promocionID = :promID")
+    void deleteAllRelationsGasolineraPromocion(String promID);
+
+    /**
+     * Elimina todas las relaciones entre todas las gasolineras y todas las promociones.
+     */
+    @Query("DELETE FROM gasolinera_promocion")
+    void deleteAllRelationsGasolineraPromocion();
+
+    /**
+     * Elimina todas las relaciones entre todas las marcas y todas las promociones.
+     */
+    @Query("DELETE FROM promocion_marca")
+    void deleteAllRelationsMarcaPromocion();
+
+    /**
+     * Elimina una promocion.
+     * @paaram promID ID Promocion
+     */
+    @Query("DELETE FROM promociones where id = :promID")
+    void deletePromocion(String promID);
+
+    /**
      * Devuelve las parejas Gasolinera-Promocion correspondientes a una promocion.
      * @param promID Promocion de la que interesa obtener las gasolineras a las que afecta.
      * @return lista de parejas IDGasolinera-IDPromocion, para la promocion indicada.
      */
     @Query("SELECT * FROM gasolinera_promocion where promocionID = :promID")
     List<GasolineraPromocionCrossRef> findGasolinerasRelatedByID(String promID);
+
+    /**
+     * Devuelve las promociones relacionadas con una gasolinera.
+     *
+     * @param gasID ID Gasolinera
+     * @return lista de promociones relacionadas con la gasolinera
+     */
+    @Query("SELECT * FROM promociones inner join gasolinera_promocion " + "on promociones.id = " +
+            "gasolinera_promocion.promocionID where gasolinera_promocion.gasolineraID " +
+            "= :gasID")
+    List<Promocion> buscaPromocionesRelacionadasConGasolinera(String gasID);
+
+    /**
+     * Devuelve las promociones relacionadas con una marca.
+     *
+     * @param marcaID ID Marca.
+     * @return lista de promociones relacionadas con la marca.
+     */
+    @Query("SELECT * FROM promociones inner join promocion_marca " + "on promociones.id = " +
+            "promocion_marca.promocionID where promocion_marca.marcaID " +
+            "= :marcaID")
+    List<Promocion> buscaPromocionesRelacionadasConMarca(String marcaID);
 }
