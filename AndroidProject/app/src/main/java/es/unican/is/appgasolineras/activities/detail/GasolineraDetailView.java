@@ -23,6 +23,7 @@ import es.unican.is.appgasolineras.activities.main.CombustibleType;
 import es.unican.is.appgasolineras.activities.main.MainView;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
+import es.unican.is.appgasolineras.repository.PromocionesRepository;
 
 /**
  * Vista para la actividad relacionada con la muestra de información detallada de una gasolinera.
@@ -182,5 +183,10 @@ public class GasolineraDetailView extends AppCompatActivity
     @Override
     public Context getContext() {
         return super.getApplicationContext();
+    }
+
+    @Override
+    public PromocionesRepository getPromocionesRepository() {
+        return new PromocionesRepository(this);
     }
 }
