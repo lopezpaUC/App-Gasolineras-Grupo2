@@ -14,7 +14,7 @@ public class GasolinerasServiceConstants {
             "https://raw.githubusercontent.com/isunican/App-Gasolineras-Grupo2/feature/454094-FiltrarPorTipoDeCombustible/StaticREST/ServiciosRESTCarburantes/PrecioCarburantes2/";
 
     private static final String STATIC_API_URL3 =
-            "https://raw.githubusercontent.com/isunican/App-Gasolineras-Grupo2/feature/454095-AnhadirPromociones/StaticREST/ServiciosRESTCarburantes/PrecioCarburantes_SP02/";
+            "https://raw.githubusercontent.com/isunican/App-Gasolineras-Grupo2/feature/454095-AnhadirPromociones/StaticREST/ServiciosRESTCarburantes/PrecioCarburantes_SP02_Anhadir/";
 
     private static String API_URL = MINECO_API_URL;
 
