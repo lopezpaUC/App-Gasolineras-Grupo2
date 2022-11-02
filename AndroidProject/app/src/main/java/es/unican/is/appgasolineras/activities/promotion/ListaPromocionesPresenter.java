@@ -90,4 +90,11 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
     public List<Promocion> getShownPromociones() {
         return this.shownPromociones;
     }
+
+
+    @Override
+    public void deletePromocion(String nombre) {
+        repositoryPromociones.deletePromocion(repositoryPromociones.getPromocionById(nombre));
+    }
+
 }

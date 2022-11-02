@@ -23,6 +23,8 @@ public interface IListaPromocionesContract {
          * Retorna la lista de promociones mostrada.
          */
         List<Promocion> getShownPromociones();
+
+        void deletePromocion(String nombre);
     }
 
     /**
