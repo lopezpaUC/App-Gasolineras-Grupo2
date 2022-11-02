@@ -86,7 +86,7 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
 
         bin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                
+
                 AlertDialog alertDialog = new AlertDialog.Builder(ListaPromocionesView.this).create(); //Read Update
                 alertDialog.setTitle("Confirmación");
                 alertDialog.setMessage("¿Desea eliminar esta promoción?");
