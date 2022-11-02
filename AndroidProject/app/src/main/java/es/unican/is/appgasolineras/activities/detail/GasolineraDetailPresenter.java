@@ -299,8 +299,8 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         for (Promocion promotion : promotions) {
             // Checks for type of fuel assigned to the promotion
             if (promotion.getCombustibles().contains(fuel) || fuel.contains(promotion.getCombustibles())) {
-                // Calculates the lowest price for the promotion
-                double discountedPrice = calculateDiscountedPrice(price, bestPromotion);
+                // Calculates the price for the promotion
+                double discountedPrice = calculateDiscountedPrice(price, promotion);
 
                 // Updates the best price and the best promotion
                 if (discountedPrice < bestPrice) {
