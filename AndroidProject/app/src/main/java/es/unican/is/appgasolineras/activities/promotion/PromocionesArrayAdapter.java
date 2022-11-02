@@ -61,38 +61,6 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
         // combustible
         combustible(promocion, convertView);
 
-        ImageView bin = (ImageView) convertView.findViewById(R.id.ivBin);
-
-        bin.setOnClickListener(new View.OnClickListener() {
-            public void onClick(final View view) {
-                AlertDialog alertDialog = new AlertDialog.Builder(null).create(); //Read Update
-                alertDialog.setTitle("Confirmación");
-                alertDialog.setMessage("¿Desea eliminar esta promoción?");
-
-                alertDialog.setButton2("Aceptar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        TextView campo = (TextView) view.findViewById(R.id.tvNamePromocion);
-                        String nombre = campo.getText().toString();
-
-                        //presenter.deletePromocion(nombre);
-
-                        alertDialog.dismiss();
-
-
-                    }
-                });
-
-                alertDialog.setButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        alertDialog.dismiss();
-                    }
-                });
-
-                alertDialog.show();
-            }
-
-        });
 
 
         return convertView;
