@@ -1,5 +1,7 @@
 package es.unican.is.appgasolineras.activities.detail;
 
+import android.content.Context;
+
 import java.util.Map;
 
 /**
@@ -29,6 +31,24 @@ public interface IGasolineraDetailContract {
          * Retorna el precio sumario de la gasolinera.
          */
         String getPrecioSumario();
+
+        /**
+         * Returns the discounted summary price as text
+         * @return the discounted summary price as text
+         */
+        String getDiscountedSummaryPriceStr();
+
+        /**
+         * Returns the discounted diesel price as text
+         * @return the discounted diesel price as text
+         */
+        String getDiscountedDieselPriceStr();
+
+        /**
+         * Returns the discounted 95-octanes price as text
+         * @return the discounted 95-octanes price as text
+         */
+        String getDiscounted95OctanesPriceStr();
     }
 
     /**
@@ -55,5 +75,11 @@ public interface IGasolineraDetailContract {
          * Abre la vista principal.
          */
         void openMainView();
+
+        /**
+         * Returns the context of the activity
+         * @return the context of the activity
+         */
+        Context getContext();
     }
 }

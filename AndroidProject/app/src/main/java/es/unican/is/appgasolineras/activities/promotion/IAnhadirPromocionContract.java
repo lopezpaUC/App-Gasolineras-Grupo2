@@ -22,8 +22,7 @@ public interface IAnhadirPromocionContract {
          * @param infoString Informacion introducida compuesta por strings.
          * @return el tipo de estado de la operacion: exito o un error determinado.
          */
-        EstadoOperacionAnhadirPromocion anhadirPromocion(Map<String, List<String>> infoList,
-                                                         Map<String, String> infoString);
+        void onAnhadirClicked(Map<String, List<String>> infoList, Map<String, String> infoString);
 
         /**
          * Obtiene strings que representen a las gasolineras del repositorio, con el formato:
@@ -60,5 +59,11 @@ public interface IAnhadirPromocionContract {
          */
         IPromocionesRepository getPromocionRepository();
 
+        /**
+         * Muestra estado de la operacion de anhadir promocion.
+         *
+         * @param status Estado.
+         */
+        void showStatus(EstadoOperacionAnhadirPromocion status);
     }
 }
