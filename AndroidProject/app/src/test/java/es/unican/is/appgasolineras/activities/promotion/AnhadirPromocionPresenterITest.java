@@ -7,6 +7,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import android.content.Context;
+import android.os.Build;
+
+import androidx.test.core.app.ApplicationProvider;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -22,8 +27,10 @@ import java.util.List;
 import java.util.Map;
 
 import es.unican.is.appgasolineras.model.Promocion;
+import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
+import es.unican.is.appgasolineras.repository.PromocionesRepository;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 @RunWith(RobolectricTestRunner.class)
@@ -51,12 +58,14 @@ public class AnhadirPromocionPresenterITest {
 
     @Before
     public void inicializaAtributos() {
+        Context context = ApplicationProvider.getApplicationContext();
+
+        repGasolineras = new GasolinerasRepository(context);
+        repPromociones = new PromocionesRepository(context);
+
         mockView = mock(AnhadirPromocionView.class);
         when(mockView.getPromocionRepository()).thenReturn(repPromociones);
         when(mockView.getGasolineraRepository()).thenReturn(repGasolineras);
-
-        repPromociones = mockView.getPromocionRepository();
-        repGasolineras = mockView.getGasolineraRepository();
 
         infoList = new HashMap<>();
         infoString = new HashMap<>();
@@ -77,6 +86,7 @@ public class AnhadirPromocionPresenterITest {
 
     @Test
     public void testOnAnhadirClicked() {
+        System.out.println(repGasolineras.getGasolineras().toString());
         List<String> combustibles = new ArrayList<>();
         List<String> marcas = new ArrayList<>();
         combustibles.add("Diésel");
@@ -98,6 +108,24 @@ public class AnhadirPromocionPresenterITest {
         sut.onAnhadirClicked(infoList, infoString);
         verify(mockView, times(1)).showStatus(EstadoOperacionAnhadirPromocion.EXITO);
 
+        /*
+          Descuento porcentual en una gasolinera especifica.
+          Caso 02
+         */
+        // Preparar argumentos de entrada
+        infoList.put("selectedCombustibles", combustibles);
+        infoList.put("selectedMarcas", marcas);
+
+        infoString.put("idPromocion", "P02");
+        infoString.put("selectedCriterio", "Por gasolinera");
+        infoString.put("selectedGasolinera", "CEPSA // CARRETERA 6316 KM. 10,5 // Alfoz de Lloredo");
+        infoString.put("descuento", "5");
+        infoString.put("selectedDescuentoTipo", "%");
+        infoString.put("stringValueAllGas", "Todas");
+
+        sut.onAnhadirClicked(infoList, infoString);
+
+        verify(mockView, times(2)).showStatus(EstadoOperacionAnhadirPromocion.EXITO);
 
     }
 
