@@ -53,7 +53,7 @@ public class AnhadirPromocionPresenterITest {
 
     @BeforeClass
     public static void init() {
-        GasolinerasServiceConstants.setStaticURL3();
+        GasolinerasServiceConstants.setStaticURL2();
     }
 
     @Before
