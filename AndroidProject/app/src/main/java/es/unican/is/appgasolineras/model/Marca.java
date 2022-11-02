@@ -29,4 +29,15 @@ public class Marca {
     public void setId(@NonNull String nombre) {
         this.nombre = nombre;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        } else if (o.getClass() != this.getClass()) {
+            return false;
+        } else {
+            return ((Marca) o).nombre.equals(this.nombre);
+        }
+    }
 }
