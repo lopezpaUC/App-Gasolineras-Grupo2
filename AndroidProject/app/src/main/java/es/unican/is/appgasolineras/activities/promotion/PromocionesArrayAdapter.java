@@ -1,6 +1,8 @@
 package es.unican.is.appgasolineras.activities.promotion;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -37,8 +39,6 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        System.out.println("Prueba");
-
         Promocion promocion = getItem(position);
 
         if (convertView == null) {
@@ -47,13 +47,13 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
         }
 
         // logo
-        logo(promocion, convertView, listaImagen.get(position));
+        logo(convertView, listaImagen.get(position));
 
-        // namePromocion
+        // nombrePromocion
         name(promocion, convertView);
 
-        // nameGasolinera
-        gasolinera(promocion, convertView, listaGasolineras.get(position));
+        // nombreGasolinera
+        gasolinera(convertView, listaGasolineras.get(position));
 
         // descuento
         descuento(promocion, convertView);
@@ -61,18 +61,57 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
         // combustible
         combustible(promocion, convertView);
 
+        ImageView bin = (ImageView) convertView.findViewById(R.id.ivBin);
+
+        bin.setOnClickListener(new View.OnClickListener() {
+            public void onClick(final View view) {
+                AlertDialog alertDialog = new AlertDialog.Builder(null).create(); //Read Update
+                alertDialog.setTitle("Confirmación");
+                alertDialog.setMessage("¿Desea eliminar esta promoción?");
+
+                alertDialog.setButton2("Aceptar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        TextView campo = (TextView) view.findViewById(R.id.tvNamePromocion);
+                        String nombre = campo.getText().toString();
+
+                        //presenter.deletePromocion(nombre);
+
+                        alertDialog.dismiss();
+
+
+                    }
+                });
+
+                alertDialog.setButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertDialog.dismiss();
+                    }
+                });
+
+                alertDialog.show();
+            }
+
+        });
+
+
         return convertView;
     }
 
-    private void logo(Promocion promocion, View convertView, String rotulo){
+
+
+
+    /**
+     * Logo de la gasolinera que tiene aplicada la promocion
+     * @param convertView Vista
+     * @param rotulo Rotulo
+     */
+    private void logo(View convertView, String rotulo){
         ImageView iv = convertView.findViewById(R.id.ivLogoPromocion);
         
-        int imageID = imageID = getContext().getResources()
+        int imageID = getContext().getResources()
                 .getIdentifier(rotulo, "drawable", getContext().getPackageName());
 
-        // Si el rotulo son sólo numeros, el método getIdentifier simplemente devuelve
-        // como imageID esos números, pero eso va a fallar porque no tendré ningún recurso
-        // que coincida con esos números
         if (imageID == 0 || TextUtils.isDigitsOnly(rotulo)) {
             imageID = getContext().getResources()
                     .getIdentifier("generic", "drawable", getContext().getPackageName());
@@ -83,18 +122,34 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
         }
     }
 
+    /**
+     * Nombre de la promocion
+     * @param promocion Promocion
+     * @param convertView Vista
+     */
     private void name(Promocion promocion, View convertView){
         TextView tv = convertView.findViewById(R.id.tvNamePromocion);
-        tv.setText(promocion.getId().toUpperCase());
+        tv.setText(promocion.getId());
         tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
     }
 
 
-    private void gasolinera(Promocion promocion, View convertView, String gasolinera){
+    /**
+     * Nombre de la gasolinera que tiene la promocion aplicada
+     * @param convertView Vista
+     * @param gasolinera Gasolinera
+     */
+    private void gasolinera(View convertView, String gasolinera){
+
        TextView tv = convertView.findViewById(R.id.tvNameGasolinera);
        tv.setText(gasolinera);
     }
 
+    /**
+     * Descuento que aplica la promoción
+     * @param promocion Promocion
+     * @param convertView Vista
+     */
     private void descuento(Promocion promocion, View convertView){
         TextView tv = convertView.findViewById(R.id.tvDescuento);
         if (promocion.getDescuentoEurosLitro() > 0)
@@ -103,11 +158,16 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
             tv.setText(Double.toString(promocion.getDescuentoPorcentual()) + "%");
     }
 
+    /**
+     * Combustible al cual aplica la promocion
+     * @param promocion Promocion
+     * @param convertView Vista
+     */
     private void combustible(Promocion promocion, View convertView){
         TextView tv = convertView.findViewById(R.id.tvCombustible);
 
         if(promocion.getCombustibles().contains("-")){
-            tv.setText("Varios");
+            tv.setText("Varios combustibles");
         } else {
             tv.setText(promocion.getCombustibles());
         }

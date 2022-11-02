@@ -3,7 +3,9 @@ package es.unican.is.appgasolineras.activities.promotion;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -27,6 +29,7 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
 
     private IListaPromocionesContract.Presenter presenter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Crea la vista
@@ -35,7 +38,6 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
 
         // Crea el presenter
         presenter = new ListaPromocionesPresenter(this);
-        presenter.init();
 
         // Inicializa
         this.init();
@@ -77,23 +79,35 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
         list.setAdapter(adapter);
     }
 
-    
+    @Override
     public void deletePromocionSeleccionada(View v) {
-        ImageView bin = (ImageView) findViewById(R.id.ivBin);
+
+        /**ImageView bin = (ImageView) v.findViewById(R.id.ivBin);
+
         bin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-
+                System.out.println("**");
                 AlertDialog alertDialog = new AlertDialog.Builder(ListaPromocionesView.this).create(); //Read Update
                 alertDialog.setTitle("Confirmación");
                 alertDialog.setMessage("¿Desea eliminar esta promoción?");
 
                 alertDialog.setButton2("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        TextView campo = findViewById(R.id.tvNamePromocion);
+
+                        TextView campo = (TextView) findViewById(R.id.tvNamePromocion);
                         String nombre = campo.getText().toString();
+
                         presenter.deletePromocion(nombre);
 
                         alertDialog.dismiss();
+
+
+                        if(presenter.tamanhoListaPromociones()){
+                            setContentView(R.layout.activity_promotions_list);
+                        }else{
+                            presenter.init();
+                        }
+
                     }
                 });
 
@@ -106,7 +120,7 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
                 alertDialog.show();
             }
 
-        });
+        });*/
     }
 
 

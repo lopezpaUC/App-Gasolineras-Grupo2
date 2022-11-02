@@ -43,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/tvNamePromocion"
         app:layout_constraintStart_toEndOf="@+id/tvNamePromocion"
         app:layout_constraintTop_toTopOf="@+id/tvNamePromocion" />
 
