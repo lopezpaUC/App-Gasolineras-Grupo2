@@ -1,6 +1,7 @@
 package es.unican.is.appgasolineras.activities.promotion;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.List;
+import java.util.Locale;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.CombustibleType;
@@ -83,7 +85,8 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
 
     private void name(Promocion promocion, View convertView){
         TextView tv = convertView.findViewById(R.id.tvNamePromocion);
-        tv.setText(promocion.getId());
+        tv.setText(promocion.getId().toUpperCase());
+        tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
     }
 
 

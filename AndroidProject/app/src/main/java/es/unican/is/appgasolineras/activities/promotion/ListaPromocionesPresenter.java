@@ -49,20 +49,26 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
         }
     }
 
+
+    public void promocionAEnsenhar(Promocion promocion){
+        if(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).size()>1){
+            listaNombreGasolineras.add("Varias");
+            listaImagenPromocion.add("composicion");
+        } else {
+            listaNombreGasolineras.add(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).get(0).getRotulo());
+            listaImagenPromocion.add(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).get(0).getRotulo().toLowerCase());
+        }
+    }
+
     /**
      * Muestra contenido despues de intentar haber recibido el actualizado de internet.
      */
     private void doSyncInit() {
 
         List<Promocion> data = repositoryPromociones.getPromociones();
+
         for(Promocion promocion: data){
-            if(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).size()>1){
-                listaNombreGasolineras.add("Varias");
-                listaImagenPromocion.add("composicion");
-            } else {
-                listaNombreGasolineras.add(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).get(0).getRotulo());
-                listaImagenPromocion.add(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).get(0).getRotulo().toLowerCase());
-            }
+            promocionAEnsenhar(promocion);
         }
 
 

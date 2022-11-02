@@ -47,6 +47,47 @@ public interface PromocionDao {
     void deleteRelationGasolineraPromocion(String gasID, String promID);
 
     /**
+     * Elimina una relacion entre marca y promocion.
+     * @param marcaID ID Marca.
+     * @param promID ID Promocion.
+     */
+    @Query("DELETE FROM promocion_marca where marcaID = :marcaID and promocionID = :promID")
+    void deleteRelationMarcaPromocion(String marcaID, String promID);
+
+    /**
+     * Elimina todas las relaciones entre marca y promocion.
+     * @param promID ID Promocion
+     */
+    @Query("DELETE FROM promocion_marca where promocionID = :promID")
+    void deleteAllRelationsMarcaPromocion(String promID);
+
+    /**
+     * Elimina todas las relaciones entre gasolinera y promocion.
+     * @param promID ID Promocion
+     */
+    @Query("DELETE FROM gasolinera_promocion where promocionID = :promID")
+    void deleteAllRelationsGasolineraPromocion(String promID);
+
+    /**
+     * Elimina todas las relaciones entre todas las gasolineras y todas las promociones.
+     */
+    @Query("DELETE FROM gasolinera_promocion")
+    void deleteAllRelationsGasolineraPromocion();
+
+    /**
+     * Elimina todas las relaciones entre todas las marcas y todas las promociones.
+     */
+    @Query("DELETE FROM promocion_marca")
+    void deleteAllRelationsMarcaPromocion();
+
+    /**
+     * Elimina una promocion.
+     * @paaram promID ID Promocion
+     */
+    @Query("DELETE FROM promociones where id = :promID")
+    void deletePromocion(String promID);
+
+    /**
      * Devuelve las parejas Gasolinera-Promocion correspondientes a una promocion.
      * @param promID Promocion de la que interesa obtener las gasolineras a las que afecta.
      * @return lista de parejas IDGasolinera-IDPromocion, para la promocion indicada.

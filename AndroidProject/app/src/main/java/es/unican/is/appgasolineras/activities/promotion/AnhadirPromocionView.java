@@ -113,53 +113,8 @@ public class AnhadirPromocionView extends AppCompatActivity
             stringInfo.put("stringValueAllGas", getResources().getString(R.string.allA));
 
             // Determina el mensaje a mostrar segun el estado de la operacion
-            EstadoOperacionAnhadirPromocion estado = presenter.anhadirPromocion(listInfo, stringInfo);
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setPositiveButton(getResources().getString(R.string.accept),
-                    ((DialogInterface dialogInterface, int i) -> {
-                        dialogInterface.cancel();
-                        if (estado == EstadoOperacionAnhadirPromocion.EXITO) {
-                            launchMainActivity();
-                        }
-                    }));
+            presenter.onAnhadirClicked(listInfo, stringInfo);
 
-            switch (estado) {
-                case EXITO:
-                    builder.setTitle(getResources().getString(R.string.informacion));
-                    builder.setMessage(getResources().getString(R.string.promoExito));
-                    break;
-                case REPETIDA:
-                    builder.setTitle(getResources().getString(R.string.error));
-                    builder.setMessage(getResources().getString(R.string.promoRepe));
-                    break;
-                case SIN_COMB:
-                    builder.setTitle(getResources().getString(R.string.error));
-                    builder.setMessage(getResources().getString(R.string.promoSinComb));
-                    break;
-                case SIN_GASOLINERA:
-                    builder.setTitle(getResources().getString(R.string.error));
-                    builder.setMessage(getResources().getString(R.string.promoSinGas));
-                    break;
-                case SIN_DESC:
-                    builder.setTitle(getResources().getString(R.string.error));
-                    builder.setMessage(getResources().getString(R.string.promoSinDesc));
-                    break;
-                case PORC_NO_VALIDO:
-                    builder.setTitle(getResources().getString(R.string.error));
-                    builder.setMessage(getResources().getString(R.string.promoPorcErr));
-                    break;
-                case EURO_L_NO_VALIDO:
-                    builder.setTitle(getResources().getString(R.string.error));
-                    builder.setMessage(getResources().getString(R.string.promoEuroLErr));
-                    break;
-                default:
-                    builder.setTitle(getResources().getString(R.string.error));
-                    builder.setMessage(getResources().getString(R.string.promoBDErr));
-                    break;
-            }
-
-            AlertDialog ad = builder.create();
-            ad.show();
         });
 
         // Listener para el "spinner compuesto"
@@ -211,6 +166,57 @@ public class AnhadirPromocionView extends AppCompatActivity
     public IPromocionesRepository getPromocionRepository() {
         return new PromocionesRepository(this);
     }
+
+    @Override
+    public void showStatus(EstadoOperacionAnhadirPromocion status) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setPositiveButton(getResources().getString(R.string.accept),
+                ((DialogInterface dialogInterface, int i) -> {
+                    dialogInterface.cancel();
+                    if (status == EstadoOperacionAnhadirPromocion.EXITO) {
+                        launchMainActivity();
+                    }
+                }));
+
+        switch (status) {
+            case EXITO:
+                builder.setTitle(getResources().getString(R.string.informacion));
+                builder.setMessage(getResources().getString(R.string.promoExito));
+                break;
+            case REPETIDA:
+                builder.setTitle(getResources().getString(R.string.error));
+                builder.setMessage(getResources().getString(R.string.promoRepe));
+                break;
+            case SIN_COMB:
+                builder.setTitle(getResources().getString(R.string.error));
+                builder.setMessage(getResources().getString(R.string.promoSinComb));
+                break;
+            case SIN_GASOLINERA:
+                builder.setTitle(getResources().getString(R.string.error));
+                builder.setMessage(getResources().getString(R.string.promoSinGas));
+                break;
+            case SIN_DESC:
+                builder.setTitle(getResources().getString(R.string.error));
+                builder.setMessage(getResources().getString(R.string.promoSinDesc));
+                break;
+            case PORC_NO_VALIDO:
+                builder.setTitle(getResources().getString(R.string.error));
+                builder.setMessage(getResources().getString(R.string.promoPorcErr));
+                break;
+            case EURO_L_NO_VALIDO:
+                builder.setTitle(getResources().getString(R.string.error));
+                builder.setMessage(getResources().getString(R.string.promoEuroLErr));
+                break;
+            default:
+                builder.setTitle(getResources().getString(R.string.error));
+                builder.setMessage(getResources().getString(R.string.promoBDErr));
+                break;
+        }
+
+        AlertDialog ad = builder.create();
+        ad.show();
+    }
+
 
     /**
      * Inicializa un spinner de radio botones.

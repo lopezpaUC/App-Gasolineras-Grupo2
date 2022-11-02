@@ -89,4 +89,16 @@ public interface IPromocionesRepository {
      * @param p Promocion
      */
     void insertRelacionMarcaPromocion(Marca m, Promocion p);
+
+    /**
+     * Borra una promocion y todo lo relacionado con ella.
+     *
+     * @param p Promocion
+     */
+    void deletePromocion(Promocion p);
+
+    /**
+     * Borra todas las promociones y todo lo relacionado con ellas.
+     */
+    void deleteAllPromociones();
 }

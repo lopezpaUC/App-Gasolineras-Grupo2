@@ -126,12 +126,38 @@
                 android:id="@+id/tv95PrecioDet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="80dp"
+                android:layout_marginEnd="164dp"
                 android:textColor="#000000"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv95Det"
                 tools:text="1.671 €/L" />
+
+            <TextView
+                android:id="@+id/tvDiscounted95Price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="68dp"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@+id/tv95PrecioDet"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv95PrecioDet"
+                app:layout_constraintVertical_bias="0.0"
+                tools:text="1.571 €/L" />
+
+            <TextView
+                android:id="@+id/tvDiscountedDieselPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="68dp"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tvDieselAPrecioDet"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvDieselAPrecioDet"
+                tools:text="1.665 €/L" />
 
             <TextView
                 android:id="@+id/tvDieselADet"
@@ -189,6 +215,16 @@
                 app:layout_constraintStart_toStartOf="@+id/tvDieselAPrecioDet"
                 app:layout_constraintTop_toTopOf="@+id/tvSumarioDet"
                 tools:text="1.976 €/L" />
+
+            <TextView
+                android:id="@+id/tvDiscountedPrecioSumarioDet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:textStyle="normal"
+                app:layout_constraintStart_toStartOf="@+id/tvDiscountedDieselPrice"
+                app:layout_constraintTop_toTopOf="@+id/tvPrecioSumarioDet"
+                tools:text="1.602 €/L" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

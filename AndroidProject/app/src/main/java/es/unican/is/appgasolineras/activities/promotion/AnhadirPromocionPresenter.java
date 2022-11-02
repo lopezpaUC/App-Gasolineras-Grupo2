@@ -62,15 +62,15 @@ public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Pres
     }
 
     @Override
-    public EstadoOperacionAnhadirPromocion anhadirPromocion(Map<String, List<String>> infoList,
-                                                            Map<String, String> infoString) {
+    public void onAnhadirClicked(Map<String, List<String>> infoList, Map<String, String> infoString) {
 
         // Obtener ID de la promocion
         String idPromocion = infoString.get("idPromocion");
 
         // Comprobar si existe promocion con el mismo ID
         if (repPromociones.getPromocionById(idPromocion) != null) {
-            return EstadoOperacionAnhadirPromocion.REPETIDA;
+            view.showStatus(EstadoOperacionAnhadirPromocion.REPETIDA);
+            return;
         }
 
         // Obtener combustibles seleccionados como String
@@ -79,7 +79,8 @@ public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Pres
 
         // Comprobar que se seleccionaron combustibles
         if (combustiblesParsed == null) {
-            return EstadoOperacionAnhadirPromocion.SIN_COMB;
+            view.showStatus(EstadoOperacionAnhadirPromocion.SIN_COMB);
+            return;
         }
 
         // Obtener selecciones realizadas para una gasolinera o marcas.
@@ -94,13 +95,15 @@ public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Pres
         //noinspection ConstantConditions
         if (gasolineraParsed == null && marcasParsed.isEmpty() &&
                 !infoString.get("selectedCriterio").equals(infoString.get("stringValueAllGas"))) {
-            return EstadoOperacionAnhadirPromocion.SIN_GASOLINERA;
+            view.showStatus(EstadoOperacionAnhadirPromocion.SIN_GASOLINERA);
+            return;
         }
 
         // Comprobar que se ha introducido un descuento
         String descuento = infoString.get("descuento");
         if (descuento == null || descuento.equals("")) {
-            return EstadoOperacionAnhadirPromocion.SIN_DESC;
+            view.showStatus(EstadoOperacionAnhadirPromocion.SIN_DESC);
+            return;
         }
 
         // Obtiene el valor de los descuentos en formato numerico
@@ -123,15 +126,17 @@ public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Pres
         // Comprueba validez del descuento para el tipo escogido
         if (tipoDescuento.equals(DESCUENTO_PORCENTAJE) &&
                 !checkDescuentoPorcentual(descuentoPorcentual)) {
-            return EstadoOperacionAnhadirPromocion.PORC_NO_VALIDO;
+            view.showStatus(EstadoOperacionAnhadirPromocion.PORC_NO_VALIDO);
+            return;
         } else if (!checkDescuentoEuroLitro(descuentoEurosLitro)) {
-            return EstadoOperacionAnhadirPromocion.EURO_L_NO_VALIDO;
+            view.showStatus(EstadoOperacionAnhadirPromocion.EURO_L_NO_VALIDO);
+            return;
         }
 
         // Si los datos son correctos, persiste en base de datos
+        Promocion p = new Promocion(idPromocion, descuentoPorcentual, descuentoEurosLitro,
+                combustiblesParsed);
         try {
-            Promocion p = new Promocion(idPromocion, descuentoPorcentual, descuentoEurosLitro,
-                    combustiblesParsed);
             repPromociones.insertPromocion(p); // Registra promocion
 
             if (gasolineraParsed != null) { // Si es para una gasolinera especifica
@@ -139,14 +144,24 @@ public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Pres
 
             } else if (!marcasParsed.isEmpty()) { // Si es para un conjunto de marcas
                 insertMarcasPromocion(marcasParsed, p);
+                // Relacionar gasolineras correspondientes a las marcas
+                for (Gasolinera g:repGasolineras.getGasolineras()) {
+                    for (Marca m:marcasParsed) {
+                        if (m.getNombre().equals(g.getRotulo())) {
+                            repPromociones.insertRelacionGasolineraPromocion(g, p);
+                        }
+                    }
+                }
             } else { // Si es para todas las gasolineras
                 insertGasolinerasPromocion(p);
             }
         } catch (Exception e) {
-            return EstadoOperacionAnhadirPromocion.ERROR_BD;
+            repPromociones.deletePromocion(p);
+            view.showStatus(EstadoOperacionAnhadirPromocion.ERROR_BD);
+            return;
         }
 
-        return EstadoOperacionAnhadirPromocion.EXITO;
+        view.showStatus(EstadoOperacionAnhadirPromocion.EXITO);
     }
 
     /**
