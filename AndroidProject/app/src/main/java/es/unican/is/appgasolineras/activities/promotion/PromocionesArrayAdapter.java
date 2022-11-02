@@ -125,9 +125,9 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
     private void combustible(Promocion promocion, View convertView){
         TextView tv = convertView.findViewById(R.id.tvCombustible);
         if(promocion.getCombustibles().contains("-")){
-            tv.setText("Varios");
+            tv.setText("Varios combustibles");
         } else {
-            tv.setText(promocion.getCombustibles());
+            tv.setText("Combustible: " + promocion.getCombustibles());
         }
 
     }
