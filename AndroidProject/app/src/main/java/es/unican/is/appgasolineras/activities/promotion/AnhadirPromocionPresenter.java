@@ -3,6 +3,7 @@ package es.unican.is.appgasolineras.activities.promotion;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
@@ -128,7 +129,8 @@ public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Pres
                 !checkDescuentoPorcentual(descuentoPorcentual)) {
             view.showStatus(EstadoOperacionAnhadirPromocion.PORC_NO_VALIDO);
             return;
-        } else if (!checkDescuentoEuroLitro(descuentoEurosLitro)) {
+        } else if (tipoDescuento.equals(DESCUENTO_EUROS_LITRO) &&
+                !checkDescuentoEuroLitro(descuentoEurosLitro)) {
             view.showStatus(EstadoOperacionAnhadirPromocion.EURO_L_NO_VALIDO);
             return;
         }
@@ -147,7 +149,7 @@ public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Pres
                 // Relacionar gasolineras correspondientes a las marcas
                 for (Gasolinera g:repGasolineras.getGasolineras()) {
                     for (Marca m:marcasParsed) {
-                        if (m.getNombre().equals(g.getRotulo())) {
+                        if (m.getNombre().toUpperCase(Locale.ROOT).equals(g.getRotulo())) {
                             repPromociones.insertRelacionGasolineraPromocion(g, p);
                         }
                     }
