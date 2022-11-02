@@ -77,22 +77,5 @@ public class FiltrarPorTipoCombustibleUITest {
         gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
         gas.onChildView(withId(R.id.tv95)).check(matches(withText("1,839")));
         gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,879")));
-
-        gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(4);
-        gas.onChildView(withId(R.id.tvName)).check(matches(withText("COBO")));
-        gas.onChildView(withId(R.id.tvAddress)).check(matches(withText("POLIGONO INDUSTRIAL GUARNIZO PARCELA, 22")));
-        gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
-        gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
-        gas.onChildView(withId(R.id.tv95)).check(matches(withText("1,769")));
-        gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,929")));
-
-        gas = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(5);
-        gas.onChildView(withId(R.id.tvName)).check(matches(withText("REPSOL")));
-        gas.onChildView(withId(R.id.tvAddress)).check(matches(withText("AU A-8, 182")));
-        gas.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
-        gas.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
-        gas.onChildView(withId(R.id.tv95)).check(matches(withText("1,809")));
-        gas.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));
-
     }
 }
