@@ -8,6 +8,7 @@ import android.os.Build;
 
 import androidx.test.core.app.ApplicationProvider;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
+import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 @RunWith(RobolectricTestRunner.class)
@@ -55,6 +57,12 @@ public class FiltrarPorTipoCombustibleITest {
         r = new GasolinerasRepository(context);
         when(mockMainContractView.getGasolineraRepository()).thenReturn(r);
         sut.init();
+    }
+
+    @After
+    public void end() {
+        GasolineraDatabase db = GasolineraDatabase.getDB(ApplicationProvider.getApplicationContext());
+        db.close();
     }
 
     @Test
