@@ -7,7 +7,10 @@ import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -15,15 +18,13 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 import es.unican.is.appgasolineras.repository.PromocionesRepository;
+import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -31,14 +32,18 @@ import es.unican.is.appgasolineras.repository.PromocionesRepository;
 
 public class ListaPromocionesPresenterITest {
 
+    @BeforeClass
+    public static void setUp() {
+        GasolinerasServiceConstants.setStaticURL2();
+    }
 
-    private List<Promocion> promotionsList = new ArrayList<Promocion>();
+    @AfterClass
+    public static void clean() {
+        GasolinerasServiceConstants.setMinecoURL();
 
-    private Promocion promotion1 = new Promocion();
+    }
 
-    private List<Gasolinera> fuelStationsList = new ArrayList<>();
 
-    private Gasolinera fuelStation1 = new Gasolinera();
 
     private ListaPromocionesPresenter sut;
 
@@ -62,18 +67,35 @@ public class ListaPromocionesPresenterITest {
         promotionRepository = new PromocionesRepository(context);
         when(mockListaPromocionesView.getPromocionRepository()).thenReturn(promotionRepository);
 
-        Promocion promocion = new Promocion("Promocion",-1.0,0.20,"Diesel");
-        promotionRepository.insertPromocion(promocion);
+        promotionRepository.deleteAllPromociones();
+
+        Promocion promocion1 = new Promocion("Promocion1",-1.0,0.20,"Diesel");
+        Promocion promocion2 = new Promocion("Promocion2",0.20,-1.0,"Gasolina");
+        promotionRepository.insertPromocion(promocion2);
+        promotionRepository.insertPromocion(promocion1);
+        promotionRepository.insertRelacionGasolineraPromocion(fuelStationRepository.getGasolineras().get(0),promocion1);
+        promotionRepository.insertRelacionGasolineraPromocion(fuelStationRepository.getGasolineras().get(1),promocion2);
 
         sut.init();
     }
 
     @Test
     public void testListaPromociones(){
-        //assertEquals("Promocion", sut.getShownPromociones().get(0).getId());
-        //assertEquals("Diesel", sut.getShownPromociones().get(0).getCombustibles());
-        //assertTrue(0.20 == sut.getShownPromociones().get(0).getDescuentoEurosLitro());
-        //assertTrue(1 == sut.getShownPromociones().size());
+
+        // Caso válido: lista con varias promociones
+        assertEquals(2, promotionRepository.getPromociones().size());
+        assertEquals("Promocion1", sut.getShownPromociones().get(1).getId());
+        assertEquals("Diesel", sut.getShownPromociones().get(1).getCombustibles());
+        assertTrue(0.20 == sut.getShownPromociones().get(1).getDescuentoEurosLitro());
+        assertEquals("Promocion2", sut.getShownPromociones().get(0).getId());
+        assertEquals("Gasolina", sut.getShownPromociones().get(0).getCombustibles());
+        assertTrue(0.20 == sut.getShownPromociones().get(0).getDescuentoPorcentual());
+
+        //Elimina las promociones
+        promotionRepository.deleteAllPromociones();
+
+        // Caso válido: lista sin promociones
+        assertEquals(0,promotionRepository.getPromociones().size());
     }
 
 

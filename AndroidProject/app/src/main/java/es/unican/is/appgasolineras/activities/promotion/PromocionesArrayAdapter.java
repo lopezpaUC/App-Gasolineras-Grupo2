@@ -15,8 +15,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.CombustibleType;
@@ -118,8 +122,19 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
      */
     private void gasolinera(View convertView, String gasolinera){
 
-       TextView tv = convertView.findViewById(R.id.tvNameGasolinera);
-       tv.setText(gasolinera);
+        TextView tv = convertView.findViewById(R.id.tvGasolinerasAsociadas);
+        tv.setText("Gasolineras:");
+        tv.setTypeface(tv.getTypeface(), Typeface.ITALIC);
+        tv = convertView.findViewById(R.id.tvNameGasolinera);
+        gasolinera.toLowerCase();
+        StringBuffer strbf = new StringBuffer();
+        Matcher match = Pattern.compile("([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(gasolinera);
+        while(match.find())
+        {
+            match.appendReplacement(strbf, match.group(1).toUpperCase() + match.group(2).toLowerCase());
+        }
+        tv.setText(match.appendTail(strbf).toString());
+
     }
 
     /**
@@ -133,6 +148,8 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
             tv.setText(Double.toString(promocion.getDescuentoEurosLitro()) + "€/L");
         else
             tv.setText(Double.toString(promocion.getDescuentoPorcentual()) + "%");
+
+        tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
     }
 
     /**
@@ -141,13 +158,16 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
      * @param convertView Vista
      */
     private void combustible(Promocion promocion, View convertView){
-        TextView tv = convertView.findViewById(R.id.tvCombustible);
+
+        TextView tv = convertView.findViewById(R.id.tvCombustiblesAsociados);
+        tv.setText("Combustibles:");
+        tv.setTypeface(tv.getTypeface(), Typeface.ITALIC);
+        tv = convertView.findViewById(R.id.tvCombustible);
 
         if(promocion.getCombustibles().contains("-")){
-            tv.setText("Varios combustibles");
+            tv.setText("Varios");
         } else {
             tv.setText(promocion.getCombustibles());
         }
-
     }
 }

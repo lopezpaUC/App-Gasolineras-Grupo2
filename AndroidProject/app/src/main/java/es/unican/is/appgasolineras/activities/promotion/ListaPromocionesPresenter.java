@@ -56,10 +56,10 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
      */
     public void promocionAEnsenhar(Promocion promocion){
         if(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).size()>1){
-            listaNombreGasolineras.add("Varias gasolineras");
+            listaNombreGasolineras.add("Varias");
             listaImagenPromocion.add("composicion");
         } else {
-            listaNombreGasolineras.add("Gasolinera: " + repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).get(0).getRotulo());
+            listaNombreGasolineras.add(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).get(0).getRotulo());
             listaImagenPromocion.add(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).get(0).getRotulo().toLowerCase());
         }
     }
