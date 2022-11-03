@@ -92,13 +92,13 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
                 alertDialog.setTitle("Confirmación");
                 alertDialog.setMessage("¿Desea eliminar esta promoción?");
 
-                alertDialog.setButton("Cancelar", new DialogInterface.OnClickListener() {
+                alertDialog.setButton2("Cancelar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         alertDialog.dismiss();
                     }
                 });
 
-                alertDialog.setButton2("Aceptar", new DialogInterface.OnClickListener() {
+                alertDialog.setButton("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
                         String nombre = (String) bin.getTag();
