@@ -57,7 +57,7 @@ public class EliminarPromotionUITest {
     }
 
     @Test
-    public void testAnhadirPromocion() {
+    public void testEliminarPromocion() {
         // CASO 01
 
         // Abrir actividad para anhadir promocion
@@ -71,7 +71,7 @@ public class EliminarPromotionUITest {
         onView(withText(R.string.addPromotion)).perform(click());
 
         // Indicar el nombre de la promocion
-        onView(withId(R.id.etNombre)).perform(typeText("P01"), closeSoftKeyboard());
+        onView(withId(R.id.etNombre)).perform(typeText("P02"), closeSoftKeyboard());
 
         // Indicar el tipo de combustible
         onView(withId(R.id.spMultipleCombustibles)).perform(click());
