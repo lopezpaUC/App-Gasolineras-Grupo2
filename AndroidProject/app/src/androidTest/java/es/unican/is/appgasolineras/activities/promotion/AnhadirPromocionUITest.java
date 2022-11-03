@@ -97,7 +97,7 @@ public class AnhadirPromocionUITest {
         // Confirmar que se muestra el cuadro de dialogo correcto
         onView(withText(R.string.promoExito)).check(matches(isDisplayed()));
         onView(withId(android.R.id.button1)).perform(click());
-
+        //TODO: Ir a lista de promociones para ver que se ha añadido
         return;
     }
 

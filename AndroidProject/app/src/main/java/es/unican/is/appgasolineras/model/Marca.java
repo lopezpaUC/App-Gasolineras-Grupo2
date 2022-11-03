@@ -40,4 +40,9 @@ public class Marca {
             return ((Marca) o).nombre.equals(this.nombre);
         }
     }
+
+    @Override
+    public int hashCode() {
+        return this.nombre.hashCode();
+    }
 }

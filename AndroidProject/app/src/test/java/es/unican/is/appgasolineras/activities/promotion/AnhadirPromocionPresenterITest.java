@@ -1,5 +1,10 @@
 package es.unican.is.appgasolineras.activities.promotion;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -23,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
@@ -90,13 +96,55 @@ public class AnhadirPromocionPresenterITest {
 
     @Test
     public void testOnAnhadirClicked() {
+
+        // IT-1A
+        anhadirExitoPorcentualTodasGasolineras();
+
+        // IT-1B
+        anhadirExitoPorcentualGasolinera();
+
+        // IT-1C
+        anhadirExitoPorcentualMarcas();
+
+        // IT-1D
+        anhadirExitoEurosLitroTodasGasolineras();
+
+        // IT-1E
+        anhadirExitoEurosLitroGasolinera();
+
+        // IT-1F
+        anhadirExitoEurosLitroMarcas();
+
+        // IT-1G
+        anhadirPromocionRepetida();
+
+        // IT-1H
+        anhadirPromocionSinCombSeleccionado();
+
+        // IT-1I
+        anhadirPromocionSinGasolinerasSeleccionadas();
+
+        // IT-1J
+        anhadirPromocionSinDescuento();
+
+        // IT-1K & IT-1L
+        anhadirPromocionPorcentajeNoValido();
+
+        // IT-1M
+        anhadirPromocionEurosLitroNoValido();
+
+    }
+
+    /**
+     * Comprueba que se anhade correctamente una promocion con descuento porcentual para todas
+     * las gasolineras.
+     *
+     * IT-1A
+     */
+    private void anhadirExitoPorcentualTodasGasolineras() {
         List<String> combustibles = new ArrayList<>();
         List<String> marcas = new ArrayList<>();
 
-        /*Descuento porcentual en todas las gasolineras
-          CASO 1
-         */
-        // Preparar argumentos de entrada
         combustibles.add("Diésel");
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
@@ -111,11 +159,28 @@ public class AnhadirPromocionPresenterITest {
         sut.onAnhadirClicked(infoList, infoString);
         verify(mockView, times(1)).showStatus(EstadoOperacionAnhadirPromocion.EXITO);
 
-        /*
-          Descuento porcentual en una gasolinera especifica.
-          Caso 02
-         */
-        // Preparar argumentos de entrada
+        // Verifica persistencia en BD
+        Promocion p = new Promocion("P01", 5, -1.0, "Diésel");
+        assertEquals(p, repPromociones.getPromocionById("P01"));
+        assertTrue(repPromociones.getPromocionesRelacionadasConGasolinera("1039").contains(p));
+        assertTrue(repPromociones.getPromocionesRelacionadasConGasolinera("1048").contains(p));
+        assertTrue(repPromociones.getPromocionesRelacionadasConGasolinera("1036").contains(p));
+        assertTrue(repPromociones.getPromocionesRelacionadasConGasolinera("1080").contains(p));
+        assertTrue(repPromociones.getPromocionesRelacionadasConGasolinera("1095").contains(p));
+    }
+
+    /**
+     * Comprueba que se anhade correctamente una promocion con descuento porcentual para una
+     * gasolinera especifica.
+     *
+     * IT-1B
+     */
+    private void anhadirExitoPorcentualGasolinera() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
+        combustibles.add("Diésel");
+
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
 
@@ -130,12 +195,29 @@ public class AnhadirPromocionPresenterITest {
 
         verify(mockView, times(2)).showStatus(EstadoOperacionAnhadirPromocion.EXITO);
 
-        /*
-          Descuento porcentual por marca.
-          Caso 03
-         */
-        // Preparar argumentos de entrada
+        // Verifica persistencia en BD
+        Promocion p = new Promocion("P02", 5, -1.0, "Diésel");
+        assertEquals(p, repPromociones.getPromocionById("P02"));
+        assertTrue(repPromociones.getPromocionesRelacionadasConGasolinera("1039").contains(p));
+        assertFalse(repPromociones.getPromocionesRelacionadasConGasolinera("1048").contains(p));
+        assertFalse(repPromociones.getPromocionesRelacionadasConGasolinera("1036").contains(p));
+        assertFalse(repPromociones.getPromocionesRelacionadasConGasolinera("1080").contains(p));
+        assertFalse(repPromociones.getPromocionesRelacionadasConGasolinera("1095").contains(p));
+    }
+
+    /**
+     * Comprueba que se anhade correctamente una promocion con descuento porcentual para unas
+     * marcas determinadas.
+     *
+     * IT-1C
+     */
+    private void anhadirExitoPorcentualMarcas() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
+        combustibles.add("Diésel");
         combustibles.add("Gasolina");
+
         infoList.put("selectedCombustibles", combustibles);
         marcas.add("Cepsa");
         marcas.add("Repsol");
@@ -152,13 +234,30 @@ public class AnhadirPromocionPresenterITest {
 
         verify(mockView, times(3)).showStatus(EstadoOperacionAnhadirPromocion.EXITO);
 
-        /*Descuento €/L en todas las gasolineras
-          CASO 4
-         */
-        // Preparar argumentos de entrada
-        combustibles.remove("Diésel");
+        // Verifica persistencia en BD
+        Promocion p = new Promocion("P03", 10, -1.0, "Diésel-Gasolina");
+        assertEquals(p, repPromociones.getPromocionById("P03"));
+        assertTrue(repPromociones.getPromocionesRelacionadasConGasolinera("1039").contains(p));
+        assertTrue(repPromociones.getPromocionesRelacionadasConGasolinera("1048").contains(p));
+        assertFalse(repPromociones.getPromocionesRelacionadasConGasolinera("1036").contains(p));
+        assertFalse(repPromociones.getPromocionesRelacionadasConGasolinera("1080").contains(p));
+        assertFalse(repPromociones.getPromocionesRelacionadasConGasolinera("1095").contains(p));
+        assertTrue(repPromociones.getPromocionesRelacionadasConMarca("Cepsa").contains(p));
+        assertTrue(repPromociones.getPromocionesRelacionadasConMarca("Repsol").contains(p));
+    }
+
+    /**
+     * Comprueba que se anhade correctamente una promocion con descuento €/L para todas las
+     * gasolineras.
+     *
+     * IT-1D
+     */
+    private void anhadirExitoEurosLitroTodasGasolineras() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+        combustibles.add("Gasolina");
+
         infoList.put("selectedCombustibles", combustibles);
-        marcas.clear();
         infoList.put("selectedMarcas", marcas);
 
         infoString.put("idPromocion", "P04");
@@ -172,13 +271,28 @@ public class AnhadirPromocionPresenterITest {
 
         verify(mockView, times(4)).showStatus(EstadoOperacionAnhadirPromocion.EXITO);
 
-        /*
-          Descuento €/L en una gasolinera especifica.
-          Caso 05
-         */
-        // Preparar argumentos de entrada
+        // Verifica persistencia en BD
+        Promocion p = new Promocion("P04", -1.0, 0.2, "Gasolina");
+        assertEquals(p, repPromociones.getPromocionById("P04"));
+        assertTrue(repPromociones.getPromocionesRelacionadasConGasolinera("1039").contains(p));
+        assertTrue(repPromociones.getPromocionesRelacionadasConGasolinera("1048").contains(p));
+        assertTrue(repPromociones.getPromocionesRelacionadasConGasolinera("1036").contains(p));
+        assertTrue(repPromociones.getPromocionesRelacionadasConGasolinera("1080").contains(p));
+        assertTrue(repPromociones.getPromocionesRelacionadasConGasolinera("1095").contains(p));
+    }
+
+    /**
+     * Comprueba que se anhade correctamente una promocion con descuento €/L para una gasolinera
+     * determinada.
+     *
+     * IT-1E
+     */
+    private void anhadirExitoEurosLitroGasolinera() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
         combustibles.add("Diésel");
-        combustibles.remove("Gasolina");
+
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
 
@@ -193,13 +307,28 @@ public class AnhadirPromocionPresenterITest {
 
         verify(mockView, times(5)).showStatus(EstadoOperacionAnhadirPromocion.EXITO);
 
-        /*
-          Descuento €/L por marca.
-          Caso 06
-         */
-        // Preparar argumentos de entrada
+        // Verifica persistencia en BD
+        Promocion p = new Promocion("P05", -1.0, 0.25, "Diésel");
+        assertEquals(p, repPromociones.getPromocionById("P05"));
+        assertFalse(repPromociones.getPromocionesRelacionadasConGasolinera("1039").contains(p));
+        assertTrue(repPromociones.getPromocionesRelacionadasConGasolinera("1048").contains(p));
+        assertFalse(repPromociones.getPromocionesRelacionadasConGasolinera("1036").contains(p));
+        assertFalse(repPromociones.getPromocionesRelacionadasConGasolinera("1080").contains(p));
+        assertFalse(repPromociones.getPromocionesRelacionadasConGasolinera("1095").contains(p));
+    }
+
+    /**
+     * Comprueba que se anhade correctamente una promocion con descuento €/L para un conjunto
+     * de marcas.
+     *
+     * IT-1F
+     */
+    private void anhadirExitoEurosLitroMarcas() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
         combustibles.add("Gasolina");
-        combustibles.remove("Diésel");
+
         infoList.put("selectedCombustibles", combustibles);
         marcas.add("Cepsa");
         marcas.add("Repsol");
@@ -208,7 +337,7 @@ public class AnhadirPromocionPresenterITest {
         infoString.put("idPromocion", "P06");
         infoString.put("selectedCriterio", "Por marca");
         infoString.put("selectedGasolinera", "-");
-        infoString.put("descuento", "10");
+        infoString.put("descuento", "0.25");
         infoString.put("selectedDescuentoTipo", "€/L");
         infoString.put("stringValueAllGas", "Todas");
 
@@ -216,19 +345,36 @@ public class AnhadirPromocionPresenterITest {
 
         verify(mockView, times(6)).showStatus(EstadoOperacionAnhadirPromocion.EXITO);
 
-        /*
-          Promocion repetida
-          Caso 07-G
-         */
-        // Preparar argumentos de entrada
+        // Verifica persistencia en BD
+        Promocion p = new Promocion("P06", -1.0, 0.25, "Gasolina");
+        assertEquals(p, repPromociones.getPromocionById("P06"));
+        assertTrue(repPromociones.getPromocionesRelacionadasConGasolinera("1039").contains(p));
+        assertTrue(repPromociones.getPromocionesRelacionadasConGasolinera("1048").contains(p));
+        assertFalse(repPromociones.getPromocionesRelacionadasConGasolinera("1036").contains(p));
+        assertFalse(repPromociones.getPromocionesRelacionadasConGasolinera("1080").contains(p));
+        assertFalse(repPromociones.getPromocionesRelacionadasConGasolinera("1095").contains(p));
+        assertTrue(repPromociones.getPromocionesRelacionadasConMarca("Cepsa").contains(p));
+        assertTrue(repPromociones.getPromocionesRelacionadasConMarca("Repsol").contains(p));
+    }
+
+    /**
+     * Comprueba que no se anhade una promocion cuando esta repetida.
+     *
+     * IT-1G
+     */
+    private void anhadirPromocionRepetida() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
+        combustibles.add("Gasolina");
+
         infoList.put("selectedCombustibles", combustibles);
-        marcas.clear();
         infoList.put("selectedMarcas", marcas);
 
         infoString.put("idPromocion", "P01");
         infoString.put("selectedCriterio", "Todas");
         infoString.put("selectedGasolinera", "-");
-        infoString.put("descuento", "5");
+        infoString.put("descuento", "10");
         infoString.put("selectedDescuentoTipo", "%");
         infoString.put("stringValueAllGas", "Todas");
 
@@ -236,12 +382,20 @@ public class AnhadirPromocionPresenterITest {
 
         verify(mockView, times(1)).showStatus(EstadoOperacionAnhadirPromocion.REPETIDA);
 
-        /*
-          Sin combustible indicado
-          Caso 08-H
-         */
-        // Preparar argumentos de entrada
-        combustibles.clear();
+        // Verifica persistencia en BD
+        Promocion p = new Promocion("P01", 5, -1.0, "Diésel");
+        assertEquals(p, repPromociones.getPromocionById("P01")); // Misma promocion que la inicial
+    }
+
+    /**
+     * Comprueba que no se anhade una promocion cuando no se ha indicado un combustible.
+     *
+     * IT-1H
+     */
+    private void anhadirPromocionSinCombSeleccionado() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
 
@@ -256,13 +410,22 @@ public class AnhadirPromocionPresenterITest {
 
         verify(mockView, times(1)).showStatus(EstadoOperacionAnhadirPromocion.SIN_COMB);
 
-        /*
-          Sin gasolineras indicadas
-          Caso 09-I
-         */
-        // Preparar argumentos de entrada
+        assertNull(repPromociones.getPromocionById("P08"));
+    }
+
+    /**
+     * Comprueba que no se anhade una promocion si no se indica una marca al seleccionar
+     * gasolineras por marca.
+     *
+     * IT-1I
+     */
+    private void anhadirPromocionSinGasolinerasSeleccionadas() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
         combustibles.add("Gasolina");
         combustibles.add("Diésel");
+
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
 
@@ -277,12 +440,20 @@ public class AnhadirPromocionPresenterITest {
 
         verify(mockView, times(1)).showStatus(EstadoOperacionAnhadirPromocion.SIN_GASOLINERA);
 
-        /*
-          Sin descuento indicado
-          Caso 10-J
-         */
-        // Preparar argumentos de entrada
-        combustibles.remove("Gasolina");
+        assertNull(repPromociones.getPromocionById("P09"));
+    }
+
+    /**
+     * Comprueba que no se anhade una promocion si no se indica un valor de descuento.
+     *
+     * IT-1J
+     */
+    private void anhadirPromocionSinDescuento() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
+        combustibles.add("Diésel");
+
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
 
@@ -297,12 +468,24 @@ public class AnhadirPromocionPresenterITest {
 
         verify(mockView, times(1)).showStatus(EstadoOperacionAnhadirPromocion.SIN_DESC);
 
-        /*
-          Porcentaje no valido
-          Caso 11-K
-         */
-        combustibles.remove("Diésel");
+        assertNull(repPromociones.getPromocionById("P10"));
+    }
+
+    /**
+     * Comprueba que no se anhade una promocion si no se indica un valor de descuento porcentual
+     * valido.
+     *
+     * IT-1K & IT-1L
+     */
+    private void anhadirPromocionPorcentajeNoValido() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
         combustibles.add("Gasolina");
+
+        /*
+        IT-1K
+         */
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
 
@@ -317,9 +500,10 @@ public class AnhadirPromocionPresenterITest {
 
         verify(mockView, times(1)).showStatus(EstadoOperacionAnhadirPromocion.PORC_NO_VALIDO);
 
+        assertNull(repPromociones.getPromocionById("P11"));
+
         /*
-          Porcentaje no valido
-          Caso 11-L
+        IT-1L
          */
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
@@ -335,10 +519,21 @@ public class AnhadirPromocionPresenterITest {
 
         verify(mockView, times(2)).showStatus(EstadoOperacionAnhadirPromocion.PORC_NO_VALIDO);
 
-        /*
-          Porcentaje no valido
-          Caso 12-M
-         */
+        assertNull(repPromociones.getPromocionById("P07"));
+    }
+
+    /**
+     * Comprueba que no se anhade una promocion si no se indica un valor de descuento euros/litro
+     * valido.
+     *
+     * IT-1M
+     */
+    private void anhadirPromocionEurosLitroNoValido() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
+        combustibles.add("Gasolina");
+
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
 
@@ -353,7 +548,7 @@ public class AnhadirPromocionPresenterITest {
 
         verify(mockView, times(1)).showStatus(EstadoOperacionAnhadirPromocion.EURO_L_NO_VALIDO);
 
+        assertNull(repPromociones.getPromocionById("P12"));
     }
-
 
 }

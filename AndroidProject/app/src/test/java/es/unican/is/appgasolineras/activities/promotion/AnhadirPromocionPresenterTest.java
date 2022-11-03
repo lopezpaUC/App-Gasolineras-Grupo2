@@ -96,13 +96,56 @@ public class AnhadirPromocionPresenterTest {
 
     @Test
     public void testOnAnhadirClicked() {
+        // UT-1A
+        anhadirExitoPorcentualTodasGasolineras();
+
+        // UT-1B
+        anhadirExitoPorcentualGasolinera();
+
+        // UT-1C
+        anhadirExitoPorcentualMarcas();
+
+        // UT-1D
+        anhadirExitoEurosLitroTodasGasolineras();
+
+        // UT-1E
+        anhadirExitoEurosLitroGasolinera();
+
+        // UT-1F
+        anhadirExitoEurosLitroMarcas();
+
+        // UT-1G
+        anhadirPromocionRepetida();
+
+        // UT-1H
+        anhadirPromocionSinCombSeleccionado();
+
+        // UT-1I
+        anhadirPromocionSinGasolinerasSeleccionadas();
+
+        // UT-1J
+        anhadirPromocionSinDescuento();
+
+        // UT-1K & UT-1L
+        anhadirPromocionPorcentajeNoValido();
+
+        // UT-1M
+        anhadirPromocionEurosLitroNoValido();
+
+        // UT-1N
+        anhadirPromocionBDError();
+    }
+
+    /**
+     * Comprueba que se anhade correctamente una promocion con descuento porcentual para todas
+     * las gasolineras.
+     *
+     * UT-1A
+     */
+    private void anhadirExitoPorcentualTodasGasolineras() {
         List<String> combustibles = new ArrayList<>();
         List<String> marcas = new ArrayList<>();
 
-        /*Descuento porcentual en todas las gasolineras
-          CASO 1-A
-         */
-        // Preparar argumentos de entrada
         combustibles.add("Diésel");
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
@@ -127,12 +170,20 @@ public class AnhadirPromocionPresenterTest {
         verify(mockPromocionesRepository, times(5)).insertRelacionGasolineraPromocion(any(), any());
 
         verify(mockGasolinerasRepository, times(1)).getGasolineras();
+    }
 
-        /*
-          Descuento porcentual en una gasolinera especifica.
-          Caso 02
-         */
-        // Preparar argumentos de entrada
+    /**
+     * Comprueba que se anhade correctamente una promocion con descuento porcentual para una
+     * gasolinera especifica.
+     *
+     * UT-1B
+     */
+    private void anhadirExitoPorcentualGasolinera() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
+        combustibles.add("Diésel");
+
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
 
@@ -150,20 +201,28 @@ public class AnhadirPromocionPresenterTest {
 
         verify(mockView, times(2)).showStatus(EstadoOperacionAnhadirPromocion.EXITO);
 
-        p = new Promocion("P02", 5.0, -1.0, "Diésel");
+        Promocion p = new Promocion("P02", 5.0, -1.0, "Diésel");
         verify(mockPromocionesRepository, times(1)).getPromocionById("P02");
         verify(mockPromocionesRepository, times(1)).insertPromocion(p);
         verify(mockPromocionesRepository, times(1)).insertRelacionGasolineraPromocion(gasolineras.get(0),
                 p);
         verify(mockGasolinerasRepository, times(1)).getGasolineraByNameDirLocalidad("CEPSA",
                 "CARRETERA 6316 KM. 10,5", "Alfoz de Lloredo");
+    }
 
-        /*
-          Descuento porcentual por marca.
-          Caso 03
-         */
-        // Preparar argumentos de entrada
+    /**
+     * Comprueba que se anhade correctamente una promocion con descuento porcentual para unas
+     * marcas determinadas.
+     *
+     * UT-1C
+     */
+    private void anhadirExitoPorcentualMarcas() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
+        combustibles.add("Diésel");
         combustibles.add("Gasolina");
+
         infoList.put("selectedCombustibles", combustibles);
         marcas.add("Cepsa");
         marcas.add("Repsol");
@@ -183,7 +242,7 @@ public class AnhadirPromocionPresenterTest {
 
         verify(mockView, times(3)).showStatus(EstadoOperacionAnhadirPromocion.EXITO);
 
-        p = new Promocion("P03", 10.0, -1.0, "Diésel-Gasolina");
+        Promocion p = new Promocion("P03", 10.0, -1.0, "Diésel-Gasolina");
         verify(mockPromocionesRepository, times(1)).getPromocionById("P03");
         verify(mockPromocionesRepository, times(1)).insertPromocion(p);
         verify(mockPromocionesRepository, times(8)).insertRelacionGasolineraPromocion(any(), any());
@@ -193,14 +252,20 @@ public class AnhadirPromocionPresenterTest {
                 p);
 
         verify(mockGasolinerasRepository, times(2)).getGasolineras();
+    }
 
-        /*Descuento €/L en todas las gasolineras
-          CASO 4
-         */
-        // Preparar argumentos de entrada
-        combustibles.remove("Diésel");
+    /**
+     * Comprueba que se anhade correctamente una promocion con descuento €/L para todas las
+     * gasolineras.
+     *
+     * UT-1D
+     */
+    private void anhadirExitoEurosLitroTodasGasolineras() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+        combustibles.add("Gasolina");
+
         infoList.put("selectedCombustibles", combustibles);
-        marcas.clear();
         infoList.put("selectedMarcas", marcas);
 
         infoString.put("idPromocion", "P04");
@@ -217,21 +282,26 @@ public class AnhadirPromocionPresenterTest {
 
         verify(mockView, times(4)).showStatus(EstadoOperacionAnhadirPromocion.EXITO);
 
-        p = new Promocion("P04", -1.0, 0.2, "Gasolina");
+        Promocion p = new Promocion("P04", -1.0, 0.2, "Gasolina");
         verify(mockPromocionesRepository, times(1)).getPromocionById("P04");
         verify(mockPromocionesRepository, times(1)).insertPromocion(p);
         verify(mockPromocionesRepository, times(13)).insertRelacionGasolineraPromocion(any(), any());
 
         verify(mockGasolinerasRepository, times(3)).getGasolineras();
+    }
 
+    /**
+     * Comprueba que se anhade correctamente una promocion con descuento €/L para una gasolinera
+     * determinada.
+     *
+     * UT-1E
+     */
+    private void anhadirExitoEurosLitroGasolinera() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
 
-        /*
-          Descuento €/L en una gasolinera especifica.
-          Caso 05
-         */
-        // Preparar argumentos de entrada
         combustibles.add("Diésel");
-        combustibles.remove("Gasolina");
+
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
 
@@ -249,21 +319,27 @@ public class AnhadirPromocionPresenterTest {
 
         verify(mockView, times(5)).showStatus(EstadoOperacionAnhadirPromocion.EXITO);
 
-        p = new Promocion("P05", -1.0, 0.25, "Diésel");
+        Promocion p = new Promocion("P05", -1.0, 0.25, "Diésel");
         verify(mockPromocionesRepository, times(1)).getPromocionById("P05");
         verify(mockPromocionesRepository, times(1)).insertPromocion(p);
         verify(mockPromocionesRepository, times(1)).insertRelacionGasolineraPromocion(gasolineras.get(1),
                 p);
         verify(mockGasolinerasRepository, times(1)).getGasolineraByNameDirLocalidad("REPSOL",
                 "CR N-629 79,7", "Ampuero");
+    }
 
-        /*
-          Descuento €/L por marca.
-          Caso 06
-         */
-        // Preparar argumentos de entrada
+    /**
+     * Comprueba que se anhade correctamente una promocion con descuento €/L para un conjunto
+     * de marcas.
+     *
+     * UT-1F
+     */
+    private void anhadirExitoEurosLitroMarcas() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
         combustibles.add("Gasolina");
-        combustibles.remove("Diésel");
+
         infoList.put("selectedCombustibles", combustibles);
         marcas.add("Cepsa");
         marcas.add("Repsol");
@@ -272,7 +348,7 @@ public class AnhadirPromocionPresenterTest {
         infoString.put("idPromocion", "P06");
         infoString.put("selectedCriterio", "Por marca");
         infoString.put("selectedGasolinera", "-");
-        infoString.put("descuento", "10");
+        infoString.put("descuento", "0.25");
         infoString.put("selectedDescuentoTipo", "€/L");
         infoString.put("stringValueAllGas", "Todas");
 
@@ -283,7 +359,7 @@ public class AnhadirPromocionPresenterTest {
 
         verify(mockView, times(6)).showStatus(EstadoOperacionAnhadirPromocion.EXITO);
 
-        p = new Promocion("P06", -1.0, 10, "Gasolina");
+        Promocion p = new Promocion("P06", -1.0, 0.25, "Gasolina");
         verify(mockPromocionesRepository, times(1)).getPromocionById("P06");
         verify(mockPromocionesRepository, times(1)).insertPromocion(p);
         verify(mockPromocionesRepository, times(16)).insertRelacionGasolineraPromocion(any(), any());
@@ -293,21 +369,26 @@ public class AnhadirPromocionPresenterTest {
                 p);
 
         verify(mockGasolinerasRepository, times(4)).getGasolineras();
+    }
 
+    /**
+     * Comprueba que no se anhade una promocion cuando esta repetida.
+     *
+     * UT-1G
+     */
+    private void anhadirPromocionRepetida() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
 
-        /*
-          Promocion repetida
-          Caso 07-G
-         */
-        // Preparar argumentos de entrada
+        combustibles.add("Gasolina");
+
         infoList.put("selectedCombustibles", combustibles);
-        marcas.clear();
         infoList.put("selectedMarcas", marcas);
 
         infoString.put("idPromocion", "P01");
         infoString.put("selectedCriterio", "Todas");
         infoString.put("selectedGasolinera", "-");
-        infoString.put("descuento", "5");
+        infoString.put("descuento", "10");
         infoString.put("selectedDescuentoTipo", "%");
         infoString.put("stringValueAllGas", "Todas");
 
@@ -319,13 +400,17 @@ public class AnhadirPromocionPresenterTest {
 
         verify(mockView, times(1)).showStatus(EstadoOperacionAnhadirPromocion.REPETIDA);
         verify(mockPromocionesRepository, times(2)).getPromocionById("P01");
+    }
 
-        /*
-          Sin combustible indicado
-          Caso 08-H
-         */
-        // Preparar argumentos de entrada
-        combustibles.clear();
+    /**
+     * Comprueba que no se anhade una promocion cuando no se ha indicado un combustible.
+     *
+     * UT-1H
+     */
+    private void anhadirPromocionSinCombSeleccionado() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
 
@@ -344,12 +429,18 @@ public class AnhadirPromocionPresenterTest {
         verify(mockView, times(1)).showStatus(EstadoOperacionAnhadirPromocion.SIN_COMB);
 
         verify(mockPromocionesRepository, times(1)).getPromocionById("P08");
+    }
 
-        /*
-          Sin gasolineras indicadas
-          Caso 09-I
-         */
-        // Preparar argumentos de entrada
+    /**
+     * Comprueba que no se anhade una promocion si no se indica una marca al seleccionar
+     * gasolineras por marca.
+     *
+     * UT-1I
+     */
+    private void anhadirPromocionSinGasolinerasSeleccionadas() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
         combustibles.add("Gasolina");
         combustibles.add("Diésel");
         infoList.put("selectedCombustibles", combustibles);
@@ -370,13 +461,19 @@ public class AnhadirPromocionPresenterTest {
         verify(mockView, times(1)).showStatus(EstadoOperacionAnhadirPromocion.SIN_GASOLINERA);
 
         verify(mockPromocionesRepository, times(1)).getPromocionById("P09");
+    }
 
-        /*
-          Sin descuento indicado
-          Caso 10-J
-         */
-        // Preparar argumentos de entrada
-        combustibles.remove("Gasolina");
+    /**
+     * Comprueba que no se anhade una promocion si no se indica un valor de descuento.
+     *
+     * UT-1J
+     */
+    private void anhadirPromocionSinDescuento() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
+        combustibles.add("Diésel");
+
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
 
@@ -395,13 +492,23 @@ public class AnhadirPromocionPresenterTest {
         verify(mockView, times(1)).showStatus(EstadoOperacionAnhadirPromocion.SIN_DESC);
 
         verify(mockPromocionesRepository, times(1)).getPromocionById("P10");
+    }
+
+    /**
+     * Comprueba que no se anhade una promocion si no se indica un valor de descuento porcentual
+     * valido.
+     *
+     * UT-1K & UT-1L
+     */
+    private void anhadirPromocionPorcentajeNoValido() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
+        combustibles.add("Gasolina");
 
         /*
-          Porcentaje no valido
-          Caso 11-K
+        UT-1K
          */
-        combustibles.remove("Diésel");
-        combustibles.add("Gasolina");
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
 
@@ -422,8 +529,7 @@ public class AnhadirPromocionPresenterTest {
         verify(mockPromocionesRepository, times(1)).getPromocionById("P11");
 
         /*
-          Porcentaje no valido
-          Caso 11-L
+        UT-1L
          */
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
@@ -443,11 +549,20 @@ public class AnhadirPromocionPresenterTest {
         verify(mockView, times(2)).showStatus(EstadoOperacionAnhadirPromocion.PORC_NO_VALIDO);
 
         verify(mockPromocionesRepository, times(1)).getPromocionById("P07");
+    }
 
-        /*
-          Porcentaje no valido
-          Caso 12-M
-         */
+    /**
+     * Comprueba que no se anhade una promocion si no se indica un valor de descuento euros/litro
+     * valido.
+     *
+     * UT-1M
+     */
+    private void anhadirPromocionEurosLitroNoValido() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
+        combustibles.add("Gasolina");
+
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
 
@@ -466,12 +581,17 @@ public class AnhadirPromocionPresenterTest {
         verify(mockView, times(1)).showStatus(EstadoOperacionAnhadirPromocion.EURO_L_NO_VALIDO);
 
         verify(mockPromocionesRepository, times(1)).getPromocionById("P12");
+    }
 
-        /*
-          Porcentaje no valido
-          Caso 13-N
-         */
-        combustibles.remove("Gasolina");
+    /**
+     * Comprueba que no se anhade una promocion si ocurre un error con la Base de Datos.
+     *
+     * UT-1N
+     */
+    private void anhadirPromocionBDError() {
+        List<String> combustibles = new ArrayList<>();
+        List<String> marcas = new ArrayList<>();
+
         combustibles.add("Diésel");
 
         infoList.put("selectedCombustibles", combustibles);
@@ -486,7 +606,7 @@ public class AnhadirPromocionPresenterTest {
 
         // Definir comportamiento del mock "Promociones Repository"
         when(mockPromocionesRepository.getPromocionById("P13")).thenReturn(null);
-        p = new Promocion("P13", 20, -1.0, "Diésel");
+        Promocion p = new Promocion("P13", 20, -1.0, "Diésel");
         doThrow(new SQLiteException()).when(mockPromocionesRepository).insertRelacionGasolineraPromocion(
                 gasolineras.get(0), p); // Excepcion a la hora de añadir una gasolinera determinada
 
@@ -496,8 +616,5 @@ public class AnhadirPromocionPresenterTest {
 
         verify(mockPromocionesRepository, times(1)).getPromocionById("P13");
         verify(mockPromocionesRepository, times(1)).deletePromocion(p);
-
-        return;
     }
-
 }
