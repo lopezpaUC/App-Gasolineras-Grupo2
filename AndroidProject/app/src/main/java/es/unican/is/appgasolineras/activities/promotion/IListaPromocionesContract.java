@@ -11,7 +11,7 @@ import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 public interface IListaPromocionesContract {
 
     /**
-     * Un presentador para la actividad Detalle debe implementar esta funcionalidad.
+     * Un presentador para la actividad Promocion debe implementar esta funcionalidad.
      */
     interface Presenter {
         /**
@@ -26,9 +26,10 @@ public interface IListaPromocionesContract {
     }
 
     /**
-     * Una vista para la actividad Detalle debe implementar esta funcionalidad.
+     * Una vista para la actividad Promocion debe implementar esta funcionalidad.
      */
     interface View {
+
         /**
          * Metodo de inicializacion.
          */
@@ -45,7 +46,7 @@ public interface IListaPromocionesContract {
         IPromocionesRepository getPromocionRepository();
 
         /**
-         * Returns the Gasolineras Repository object.
+         * Returns the Gasolinera Repository object.
          * This object can be used to access promotions from
          * different sources (REST API, persisted DB, etc.)
          * This method is in the View because it generally requires access to the
@@ -57,6 +58,8 @@ public interface IListaPromocionesContract {
         /**
          * The View is requested to show a list of promotions
          * @param promociones the list of promotions
+         * @param lista list of strings with the name of fuel stations
+         * @param rotulos list of strings with the rotulos to show
          */
         void showPromociones(List<Promocion> promociones, List<String> lista, List<String> rotulos);
 
