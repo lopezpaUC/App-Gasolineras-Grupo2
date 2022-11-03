@@ -3,13 +3,12 @@ package es.unican.is.appgasolineras.activities.promotion;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
+
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -79,8 +78,9 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
         list.setAdapter(adapter);
     }
 
+
     @Override
-    public void deletePromocionSeleccionada(View v) {
+    public void deletePromotionSelected(View v) {
 
         ImageView bin = (ImageView) v.findViewById(R.id.ivBin);
 
@@ -91,18 +91,23 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
                 alertDialog.setTitle("Confirmación");
                 alertDialog.setMessage("¿Desea eliminar esta promoción?");
 
+                alertDialog.setButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        alertDialog.dismiss();
+                    }
+                });
+
                 alertDialog.setButton2("Aceptar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
-                        TextView campo = (TextView) findViewById(R.id.tvNamePromocion);
-                        String nombre = campo.getText().toString();
+                        String nombre = (String) bin.getTag();
 
-                        presenter.deletePromocion(nombre);
+                        presenter.deletePromotion(nombre);
 
                         alertDialog.dismiss();
 
 
-                        if(presenter.tamanhoListaPromociones()){
+                        if(presenter.listaPromocionesVacia()){
                             setContentView(R.layout.activity_promotions_list);
                         }else{
                             presenter.init();
@@ -111,11 +116,6 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
                     }
                 });
 
-                alertDialog.setButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        alertDialog.dismiss();
-                    }
-                });
 
                 alertDialog.show();
             }

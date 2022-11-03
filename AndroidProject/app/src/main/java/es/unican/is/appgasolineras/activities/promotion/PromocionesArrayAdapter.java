@@ -61,13 +61,22 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
         // combustible
         combustible(promocion, convertView);
 
-
+        //bin
+        bin(promocion,convertView);
 
         return convertView;
     }
 
 
-
+    /**
+     * Papelera para eliminar
+     * @param convertView Vista
+     * @param promocion Promocion
+     */
+    private void bin(Promocion promocion, View convertView){
+        ImageView bin = convertView.findViewById(R.id.ivBin);
+        bin.setTag(promocion.getId());
+    }
 
     /**
      * Logo de la gasolinera que tiene aplicada la promocion

@@ -96,12 +96,12 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
 
 
     @Override
-    public void deletePromocion(String nombre) {
+    public void deletePromotion(String nombre) {
         repositoryPromociones.deletePromocion(repositoryPromociones.getPromocionById(nombre));
     }
 
     @Override
-    public boolean tamanhoListaPromociones(){
+    public boolean listaPromocionesVacia(){
         if (repositoryPromociones.getPromociones().size() == 0){
             return true;
         }
