@@ -134,7 +134,7 @@ public class MainPresenterTest extends TestCase {
         sut.filterByCombustible(CombustibleType.DIESEL);
         assertEquals("111", sut.getShownGasolineras().get(0).getId());
         assertEquals("333", sut.getShownGasolineras().get(1).getId());
-        assertTrue(2 == sut.getShownGasolineras().size());
+        assertEquals(2, sut.getShownGasolineras().size());
 
 
         // Filtrar por gasolina
@@ -142,7 +142,7 @@ public class MainPresenterTest extends TestCase {
         sut.filterByCombustible(CombustibleType.GASOLINA);
         assertEquals("111", sut.getShownGasolineras().get(0).getId());
         assertEquals("222", sut.getShownGasolineras().get(1).getId());
-        assertTrue(2 == sut.getShownGasolineras().size());
+        assertEquals(2, sut.getShownGasolineras().size());
 
 
         // Filtrar por todos
@@ -152,7 +152,7 @@ public class MainPresenterTest extends TestCase {
         assertEquals("222", sut.getShownGasolineras().get(1).getId());
         assertEquals("333", sut.getShownGasolineras().get(2).getId());
         assertEquals("444", sut.getShownGasolineras().get(3).getId());
-        assertTrue(4 == sut.getShownGasolineras().size());
+        assertEquals(4, sut.getShownGasolineras().size());
 
         // Lista de gasolineras vacía
         fuelStationsList.clear();

@@ -19,12 +19,14 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
     // Repositorio de gasolineras
     private IGasolinerasRepository repositoryGasolineras;
 
+
     // Lista de promociones a mostrar
     private List<Promocion> shownPromociones;
 
     // Lista con los strings de las gasolineras
     private List<String> listaNombreGasolineras = new ArrayList<>();
 
+    // Lista con los rotulos que debe mostrar la promocion
     private List<String> listaImagenPromocion = new ArrayList<>();
 
     /**
@@ -38,6 +40,7 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
 
     @Override
     public void init() {
+
         if (repositoryPromociones == null) { // Si no consta repositorio asignado
             repositoryPromociones = view.getPromocionRepository();
             repositoryGasolineras = view.getGasolineraRepository();
@@ -47,7 +50,10 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
         }
     }
 
-
+    /**
+     * Promocion a enseñar, de la cuál obtener las gasolineras y rótulo que tiene asociados
+     * @param promocion Promocion
+     */
     public void promocionAEnsenhar(Promocion promocion){
         if(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).size()>1){
             listaNombreGasolineras.add("Varias");
@@ -59,14 +65,15 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
     }
 
     /**
-     * Muestra contenido despues de intentar haber recibido el actualizado de internet.
+     * Muestra contenido.
      */
     private void doSyncInit() {
-        List<Promocion> data = repositoryPromociones.getPromociones();
 
+        List<Promocion> data = repositoryPromociones.getPromociones();
         for(Promocion promocion: data){
             promocionAEnsenhar(promocion);
         }
+
 
         if (!data.isEmpty()) { // Si se obtiene una lista con promociones
             // Muestra promociones
@@ -86,4 +93,21 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
     public List<Promocion> getShownPromociones() {
         return this.shownPromociones;
     }
+
+
+    @Override
+    public void deletePromotion(String nombre) {
+        repositoryPromociones.deletePromocion(repositoryPromociones.getPromocionById(nombre));
+    }
+
+    @Override
+    public boolean listaPromocionesVacia(){
+        if (repositoryPromociones.getPromociones().size() == 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
 }
