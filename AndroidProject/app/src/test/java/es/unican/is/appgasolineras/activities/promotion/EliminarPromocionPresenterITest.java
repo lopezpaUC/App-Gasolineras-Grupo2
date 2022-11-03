@@ -5,7 +5,10 @@ import static org.mockito.Mockito.when;
 
 import junit.framework.TestCase;
 
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -28,6 +31,9 @@ import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 import es.unican.is.appgasolineras.repository.PromocionesRepository;
+import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
+import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
+import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EliminarPromocionPresenterITest extends TestCase{
@@ -36,6 +42,9 @@ public class EliminarPromocionPresenterITest extends TestCase{
     private Gasolinera fuelStation1 = new Gasolinera();
 
     private ListaPromocionesPresenter sut;
+
+
+
     @Mock
     private IListaPromocionesContract.View mockMainView;
     @Mock
@@ -44,6 +53,9 @@ public class EliminarPromocionPresenterITest extends TestCase{
     private IPromocionesRepository mockPromocionesRepository;
 
     Promocion promocion;
+
+
+
     @Before
     public void start() {
 
@@ -79,6 +91,7 @@ public class EliminarPromocionPresenterITest extends TestCase{
         sut.init();
 
     }
+
 
     @Test
     public void testEliminar() {

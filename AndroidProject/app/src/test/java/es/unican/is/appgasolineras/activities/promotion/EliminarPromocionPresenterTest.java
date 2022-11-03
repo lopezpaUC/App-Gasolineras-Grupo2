@@ -8,6 +8,7 @@ import android.content.Context;
 
 import androidx.test.core.app.ApplicationProvider;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -26,6 +27,8 @@ import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 import es.unican.is.appgasolineras.repository.PromocionesRepository;
+import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
+import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 @RunWith(RobolectricTestRunner.class)
@@ -34,9 +37,10 @@ import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 public class EliminarPromocionPresenterTest {
     Promocion promocion;
 
+
     @BeforeClass
-    public static void setUp() {
-        GasolinerasServiceConstants.setStaticURL2();
+    public static void init() {
+        GasolinerasServiceConstants.setStaticURL3();
     }
 
     @AfterClass
@@ -79,6 +83,20 @@ public class EliminarPromocionPresenterTest {
 
         sut.init();
 
+    }
+
+
+    @After
+    public void cleanDatabase() {
+        promocionesRepository.deleteAllPromociones();
+        GasolineraDatabase db = GasolineraDatabase.getDB(ApplicationProvider.getApplicationContext());
+        db.close();
+    }
+
+    @AfterClass
+    public static void end() {
+        GasolinerasService.resetAPI();
+        GasolinerasServiceConstants.setMinecoURL();
     }
 
     @Test
