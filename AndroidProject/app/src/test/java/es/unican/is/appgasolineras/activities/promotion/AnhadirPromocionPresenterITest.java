@@ -27,6 +27,7 @@ import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 import es.unican.is.appgasolineras.repository.PromocionesRepository;
+import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
@@ -77,6 +78,8 @@ public class AnhadirPromocionPresenterITest {
     @After
     public void cleanDatabase() {
         repPromociones.deleteAllPromociones();
+        GasolineraDatabase db = GasolineraDatabase.getDB(ApplicationProvider.getApplicationContext());
+        db.close();
     }
 
     @AfterClass
