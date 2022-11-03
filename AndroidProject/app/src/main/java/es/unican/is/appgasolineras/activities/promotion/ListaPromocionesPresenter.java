@@ -56,10 +56,10 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
      */
     public void promocionAEnsenhar(Promocion promocion){
         if(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).size()>1){
-            listaNombreGasolineras.add("Varias gasolineras");
+            listaNombreGasolineras.add("Varias");
             listaImagenPromocion.add("composicion");
         } else {
-            listaNombreGasolineras.add("Gasolinera: " + repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).get(0).getRotulo());
+            listaNombreGasolineras.add(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).get(0).getRotulo());
             listaImagenPromocion.add(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).get(0).getRotulo().toLowerCase());
         }
     }
@@ -96,12 +96,14 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
 
 
     @Override
-    public Promocion deletePromocion(String nombre) {
+
+    public Promocion deletePromotion(String nombre) {
         return repositoryPromociones.deletePromocion(repositoryPromociones.getPromocionById(nombre));
+
     }
 
     @Override
-    public boolean tamanhoListaPromociones(){
+    public boolean listaPromocionesVacia(){
         if (repositoryPromociones.getPromociones().size() == 0){
             return true;
         }

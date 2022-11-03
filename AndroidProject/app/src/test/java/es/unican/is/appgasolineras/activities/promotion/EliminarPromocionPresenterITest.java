@@ -83,7 +83,7 @@ public class EliminarPromocionPresenterITest extends TestCase{
     @Test
     public void testEliminar() {
         //Caso válido: Eliminación exitosa
-        assertEquals(promocion.getId(), sut.deletePromocion("Promocion").getId());
+        assertEquals(promocion.getId(), sut.deletePromotion("Promocion").getId());
 
     }
 }

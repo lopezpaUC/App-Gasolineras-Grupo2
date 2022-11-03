@@ -84,7 +84,7 @@ public class EliminarPromocionPresenterTest {
     @Test
     public void testEliminar() {
         //Caso válido: Eliminación exitosa
-        assertEquals(promocion, sut.deletePromocion("Promocion"));
+        assertEquals(promocion, sut.deletePromotion("Promocion"));
 
     }
 }

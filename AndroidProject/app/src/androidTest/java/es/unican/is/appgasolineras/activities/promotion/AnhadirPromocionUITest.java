@@ -11,16 +11,15 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.anything;
 
-import androidx.test.espresso.DataInteraction;
+import static org.hamcrest.Matchers.anything;
+
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -30,13 +29,14 @@ import org.junit.runner.RunWith;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.MainView;
-import es.unican.is.appgasolineras.repository.rest.GasolinerasAPI;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
+/**
+ * Prueba de interfaz para la historia de usuario: Anhadir Promocion.
+ */
 @RunWith(AndroidJUnit4.class)
-
-public class EliminarPromotionUITest {
+public class AnhadirPromocionUITest {
     @Rule
     public ActivityScenarioRule<MainView> activityRule = new ActivityScenarioRule<>(MainView.class);
 
@@ -80,40 +80,25 @@ public class EliminarPromotionUITest {
 
         // Indicar el criterio de aplicacion a gasolineras
         onView(withId(R.id.spCriterioGasolineras)).perform(click());
-        onData(Matchers.anything()).atPosition(0).perform(click());
-
+        onData(anything()).atPosition(0).perform(click());
+        onView(withId(R.id.spCriterioGasolineras)).check(matches(withSpinnerText(R.string.allA)));
 
         // Indicar la cantidad en porcentaje a descontar
         onView(withId(R.id.etDescuento)).perform(typeText("5"), closeSoftKeyboard());
 
         // Indicar que el tipo de descuento es por porcentaje
         onView(withId(R.id.spTipoDescuento)).perform(click());
-        onData(Matchers.anything()).atPosition(1).perform(click());
-
+        onData(anything()).atPosition(1).perform(click());
+        onView(withId(R.id.spTipoDescuento)).check(matches(withSpinnerText(R.string.Porcentajelabel)));
 
         // Clickar en anhadir
         onView(withId(R.id.btnAnhadir)).perform(click());
 
         // Confirmar que se muestra el cuadro de dialogo correcto
+        onView(withText(R.string.promoExito)).check(matches(isDisplayed()));
         onView(withId(android.R.id.button1)).perform(click());
-
-        // Abrir actividad para anhadir promocion
-        try {
-            onView(withId(R.id.menuPromotion)).perform(click());
-        } catch (NoMatchingViewException e) { // Si la pantalla es pequenha y no se accede por icono
-            openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().
-                    getTargetContext());
-            onView(withText(R.string.promotion)).perform(click());
-        }
-        onView(withText(R.string.listPromotions)).perform(click());
-        DataInteraction elementoLista = onData(anything()).inAdapterView(withId(R.id.lvPromociones)).atPosition(0);
-        elementoLista.onChildView(withId(R.id.ivBin)).perform(click());
-        elementoLista.onChildView(withId(R.id.ivBin)).perform(click());
-
-        //Comprobar que se muestra el cuado de dialogo correcto
-        onView(withText("Aceptar")).perform(click());
-
 
         return;
     }
+
 }

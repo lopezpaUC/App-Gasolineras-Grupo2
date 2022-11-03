@@ -30,9 +30,15 @@ public interface IListaPromocionesContract {
          * Borra la promocion.
          * @param nombre de la promocion.
          */
-        Promocion deletePromocion(String nombre);
 
-        boolean tamanhoListaPromociones();
+        Promocion deletePromotion(String nombre);
+
+
+        /**
+         * Devuelve TRUE si el tamanho de la lista es 0
+         * y FALSE si no lo es.
+         */
+        boolean listaPromocionesVacia();
     }
 
     /**
@@ -86,7 +92,9 @@ public interface IListaPromocionesContract {
          */
         void showLoadError();
 
-
-        void deletePromocionSeleccionada(android.view.View v);
+        /**
+         * Borra la promocion seleccionada, y muestra una alerta de confirmacion para el borrado.
+         */
+        void deletePromotionSelected(android.view.View v);
     }
 }
