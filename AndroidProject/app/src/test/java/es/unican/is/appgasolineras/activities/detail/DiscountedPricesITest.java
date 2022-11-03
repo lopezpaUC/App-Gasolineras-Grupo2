@@ -175,6 +175,48 @@ public class DiscountedPricesITest {
         Assert.assertEquals("2,13", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("1,00", sut.getDiscountedDieselPriceStr());
         Assert.assertEquals("2,70", sut.getDiscounted95OctanesPriceStr());
+
+        // XXX: UT.1h - discount on both fuels higher than regular price
+        promotion = new Promocion();
+        promotion.setDescuentoEurosLitro(4);
+        promotion.setDescuentoPorcentual(-1);
+        promotion.setCombustibles("Diésel-Gasolina");
+        promotions.clear();
+        promotions.add(promotion);
+
+        updatePromocionesRepository();
+
+        Assert.assertEquals("-", sut.getDiscountedSummaryPriceStr());
+        Assert.assertEquals("-", sut.getDiscountedDieselPriceStr());
+        Assert.assertEquals("-", sut.getDiscounted95OctanesPriceStr());
+
+        // XXX: UT.1i - discount on diesel higher than regular price
+        promotion = new Promocion();
+        promotion.setDescuentoEurosLitro(4);
+        promotion.setDescuentoPorcentual(-1);
+        promotion.setCombustibles("Diésel");
+        promotions.clear();
+        promotions.add(promotion);
+
+        updatePromocionesRepository();
+
+        Assert.assertEquals("3,00", sut.getDiscountedSummaryPriceStr());
+        Assert.assertEquals("-", sut.getDiscountedDieselPriceStr());
+        Assert.assertEquals("3,00", sut.getDiscounted95OctanesPriceStr());
+
+        // XXX: UT.1j - discount on 95-octanes higher than regular price
+        promotion = new Promocion();
+        promotion.setDescuentoEurosLitro(4);
+        promotion.setDescuentoPorcentual(-1);
+        promotion.setCombustibles("Gasolina");
+        promotions.clear();
+        promotions.add(promotion);
+
+        updatePromocionesRepository();
+
+        Assert.assertEquals("1,00", sut.getDiscountedSummaryPriceStr());
+        Assert.assertEquals("1,00", sut.getDiscountedDieselPriceStr());
+        Assert.assertEquals("-", sut.getDiscounted95OctanesPriceStr());
     }
 
     /**
