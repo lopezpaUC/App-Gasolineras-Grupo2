@@ -27,8 +27,10 @@ import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 import es.unican.is.appgasolineras.repository.PromocionesRepository;
 
+/**
+ * Pruebas unitarias para la clase AnhadirPromocionPresenter.
+ */
 @RunWith(MockitoJUnitRunner.class)
-
 public class AnhadirPromocionPresenterTest {
 
     // Objetos Mock
@@ -42,9 +44,9 @@ public class AnhadirPromocionPresenterTest {
     // Lista de gasolineras de prueba
     private List<Gasolinera> gasolineras;
 
-    // Mapas con argumentos que deberia haber pasado la vista
-    private Map<String, List<String>> infoList;
-    private Map<String, String> infoString;
+    // Mapas con argumentos que deberia haber pasado la vista con los datos del formulario
+    private Map<String, List<String>> infoList; // Mapa para selecciones multiples
+    private Map<String, String> infoString; // Mapa para selecciones individuales o inserciones
 
     @Before
     public void inicializa() {
@@ -96,12 +98,12 @@ public class AnhadirPromocionPresenterTest {
     public void testOnAnhadirClicked() {
         List<String> combustibles = new ArrayList<>();
         List<String> marcas = new ArrayList<>();
-        combustibles.add("Diésel");
 
         /*Descuento porcentual en todas las gasolineras
-          CASO 1
+          CASO 1-A
          */
         // Preparar argumentos de entrada
+        combustibles.add("Diésel");
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
 
@@ -151,13 +153,10 @@ public class AnhadirPromocionPresenterTest {
         p = new Promocion("P02", 5.0, -1.0, "Diésel");
         verify(mockPromocionesRepository, times(1)).getPromocionById("P02");
         verify(mockPromocionesRepository, times(1)).insertPromocion(p);
-        verify(mockPromocionesRepository, times(6)).insertRelacionGasolineraPromocion(any(), any());
-
+        verify(mockPromocionesRepository, times(1)).insertRelacionGasolineraPromocion(gasolineras.get(0),
+                p);
         verify(mockGasolinerasRepository, times(1)).getGasolineraByNameDirLocalidad("CEPSA",
                 "CARRETERA 6316 KM. 10,5", "Alfoz de Lloredo");
-        verify(mockGasolinerasRepository, times(1)).getGasolineras();
-        verify(mockPromocionesRepository, times(1)).insertRelacionGasolineraPromocion(gasolineras.get(0),
-                p); // Comprobacion especifica entre gasolinera y promocion
 
         /*
           Descuento porcentual por marca.
@@ -188,12 +187,12 @@ public class AnhadirPromocionPresenterTest {
         verify(mockPromocionesRepository, times(1)).getPromocionById("P03");
         verify(mockPromocionesRepository, times(1)).insertPromocion(p);
         verify(mockPromocionesRepository, times(8)).insertRelacionGasolineraPromocion(any(), any());
-
-        verify(mockGasolinerasRepository, times(2)).getGasolineras();
         verify(mockPromocionesRepository, times(1)).insertRelacionMarcaPromocion(new Marca("Cepsa"),
                 p);
         verify(mockPromocionesRepository, times(1)).insertRelacionMarcaPromocion(new Marca("Repsol"),
                 p);
+
+        verify(mockGasolinerasRepository, times(2)).getGasolineras();
 
         /*Descuento €/L en todas las gasolineras
           CASO 4
@@ -255,7 +254,6 @@ public class AnhadirPromocionPresenterTest {
         verify(mockPromocionesRepository, times(1)).insertPromocion(p);
         verify(mockPromocionesRepository, times(1)).insertRelacionGasolineraPromocion(gasolineras.get(1),
                 p);
-
         verify(mockGasolinerasRepository, times(1)).getGasolineraByNameDirLocalidad("REPSOL",
                 "CR N-629 79,7", "Ampuero");
 
@@ -289,12 +287,13 @@ public class AnhadirPromocionPresenterTest {
         verify(mockPromocionesRepository, times(1)).getPromocionById("P06");
         verify(mockPromocionesRepository, times(1)).insertPromocion(p);
         verify(mockPromocionesRepository, times(16)).insertRelacionGasolineraPromocion(any(), any());
-
-        verify(mockGasolinerasRepository, times(4)).getGasolineras();
         verify(mockPromocionesRepository, times(1)).insertRelacionMarcaPromocion(new Marca("Cepsa"),
                 p);
         verify(mockPromocionesRepository, times(1)).insertRelacionMarcaPromocion(new Marca("Repsol"),
                 p);
+
+        verify(mockGasolinerasRepository, times(4)).getGasolineras();
+
 
         /*
           Promocion repetida
@@ -489,7 +488,7 @@ public class AnhadirPromocionPresenterTest {
         when(mockPromocionesRepository.getPromocionById("P13")).thenReturn(null);
         p = new Promocion("P13", 20, -1.0, "Diésel");
         doThrow(new SQLiteException()).when(mockPromocionesRepository).insertRelacionGasolineraPromocion(
-                gasolineras.get(0), p); // Excepcion a la hora de añadir una gasolinera
+                gasolineras.get(0), p); // Excepcion a la hora de añadir una gasolinera determinada
 
         sut.onAnhadirClicked(infoList, infoString);
 
@@ -497,6 +496,8 @@ public class AnhadirPromocionPresenterTest {
 
         verify(mockPromocionesRepository, times(1)).getPromocionById("P13");
         verify(mockPromocionesRepository, times(1)).deletePromocion(p);
+
+        return;
     }
 
 }

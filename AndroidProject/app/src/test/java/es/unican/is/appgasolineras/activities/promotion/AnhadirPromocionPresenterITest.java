@@ -1,16 +1,11 @@
 package es.unican.is.appgasolineras.activities.promotion;
 
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteException;
-import android.os.Build;
 
 import androidx.test.core.app.ApplicationProvider;
 
@@ -28,8 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import es.unican.is.appgasolineras.model.Marca;
-import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
@@ -37,9 +30,11 @@ import es.unican.is.appgasolineras.repository.PromocionesRepository;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
+/**
+ * Pruebas de integracion para la clase AnhadirPromocionPresenter.
+ */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest=Config.NONE)
-
 public class AnhadirPromocionPresenterITest {
     // Objetos Mock
     private IAnhadirPromocionContract.View mockView;
@@ -51,7 +46,7 @@ public class AnhadirPromocionPresenterITest {
     // SUT
     private IAnhadirPromocionContract.Presenter sut;
 
-    // Mapas con argumentos que deberia haber pasado la vista
+    // Mapas con argumentos que deberia haber pasado la vista como argumento
     private Map<String, List<String>> infoList;
     private Map<String, String> infoString;
 
@@ -64,6 +59,7 @@ public class AnhadirPromocionPresenterITest {
     public void inicializaAtributos() {
         Context context = ApplicationProvider.getApplicationContext();
 
+        // Utiliza objetos repositorio reales
         repGasolineras = new GasolinerasRepository(context);
         repPromociones = new PromocionesRepository(context);
 
@@ -93,12 +89,12 @@ public class AnhadirPromocionPresenterITest {
     public void testOnAnhadirClicked() {
         List<String> combustibles = new ArrayList<>();
         List<String> marcas = new ArrayList<>();
-        combustibles.add("Diésel");
 
         /*Descuento porcentual en todas las gasolineras
           CASO 1
          */
         // Preparar argumentos de entrada
+        combustibles.add("Diésel");
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
 
