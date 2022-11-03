@@ -1,5 +1,7 @@
 package es.unican.is.appgasolineras.activities.detail;
 
+import android.util.Log;
+
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.HashMap;
@@ -40,7 +42,7 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         this.view = view;
         this.gasolinera = gasolinera;
 
-        repPromotions = new PromocionesRepository(view.getContext());
+        repPromotions = view.getPromocionesRepository();
     }
 
     @Override
@@ -115,7 +117,6 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         // Obtains the list of promotions assigned to the gas station
         List<Promocion> promotions = repPromotions.getPromocionesRelacionadasConGasolinera
                 (gasolinera.getId());
-
         // Prices in numerical format
         double dieselPrice;
         double precioGasolina;
@@ -281,7 +282,7 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         if (euros > 0) {
             return price - euros;
         } else {
-            return price * (100 - promotion.getDescuentoPorcentual());
+            return price * (100 - promotion.getDescuentoPorcentual()) / 100;
         }
     }
 
@@ -291,16 +292,17 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
      * @param promotions a list of promotions
      * @return the best promotion
      */
-    private Promocion bestPromotion(double price, List<Promocion> promotions, String fuel) {
+    public Promocion bestPromotion(double price, List<Promocion> promotions, String fuel) {
         Promocion bestPromotion = null;
         double bestPrice = Double.POSITIVE_INFINITY;
 
         // Loops all promotions
         for (Promocion promotion : promotions) {
             // Checks for type of fuel assigned to the promotion
-            if (promotion.getCombustibles().contains(fuel) || fuel.contains(promotion.getCombustibles())) {
-                // Calculates the lowest price for the promotion
-                double discountedPrice = calculateDiscountedPrice(price, bestPromotion);
+            if (promotion.getCombustibles().contains(fuel) ||
+                    fuel.contains(promotion.getCombustibles())) {
+                // Calculates the price for the promotion
+                double discountedPrice = calculateDiscountedPrice(price, promotion);
 
                 // Updates the best price and the best promotion
                 if (discountedPrice < bestPrice) {
