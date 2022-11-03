@@ -25,6 +25,7 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
     // Lista con los strings de las gasolineras
     private List<String> listaNombreGasolineras = new ArrayList<>();
 
+    // Lista con los rotulos que debe mostrar la promocion
     private List<String> listaImagenPromocion = new ArrayList<>();
 
     /**
@@ -47,7 +48,10 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
         }
     }
 
-
+    /**
+     * Promocion a enseñar, de la cuál obtener las gasolineras y rótulo que tiene asociados
+     * @param promocion Promocion
+     */
     public void promocionAEnsenhar(Promocion promocion){
         if(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).size()>1){
             listaNombreGasolineras.add("Varias");
@@ -59,11 +63,10 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
     }
 
     /**
-     * Muestra contenido despues de intentar haber recibido el actualizado de internet.
+     * Muestra contenido.
      */
     private void doSyncInit() {
         List<Promocion> data = repositoryPromociones.getPromociones();
-
         for(Promocion promocion: data){
             promocionAEnsenhar(promocion);
         }
