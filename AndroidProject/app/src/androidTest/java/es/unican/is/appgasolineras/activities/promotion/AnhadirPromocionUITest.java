@@ -14,6 +14,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.Matchers.anything;
 
+import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -42,6 +43,8 @@ public class AnhadirPromocionUITest {
 
     @BeforeClass
     public static void init() {
+        // Por precaucion
+        InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase("gasolineras-database");
         GasolinerasServiceConstants.setStaticURL3();
     }
 
@@ -98,7 +101,22 @@ public class AnhadirPromocionUITest {
         onView(withText(R.string.promoExito)).check(matches(isDisplayed()));
         onView(withId(android.R.id.button1)).perform(click());
 
-        return;
+        // Abrir actividad para ver promociones
+        try {
+            onView(withId(R.id.menuPromotion)).perform(click());
+        } catch (NoMatchingViewException e) { // Si la pantalla es pequenha y no se accede por icono
+            openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().
+                    getTargetContext());
+            onView(withText(R.string.promotion)).perform(click());
+        }
+        onView(withText(R.string.listPromotions)).perform(click());
+
+        DataInteraction p = onData(anything()).inAdapterView(withId(R.id.lvPromociones)).
+                atPosition(0);
+        p.onChildView(withId(R.id.tvNamePromocion)).check(matches(withText("P01")));
+        p.onChildView(withId(R.id.tvNameGasolinera)).check(matches(withText(R.string.varias)));
+        p.onChildView(withId(R.id.tvDescuento)).check(matches(withText("5.0%")));
+        p.onChildView(withId(R.id.tvCombustible)).check(matches(withText(R.string.dieselAlabel)));
     }
 
 }

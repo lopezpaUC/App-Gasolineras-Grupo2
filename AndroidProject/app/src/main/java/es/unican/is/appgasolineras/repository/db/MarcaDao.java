@@ -16,10 +16,10 @@ public interface MarcaDao {
     @Query("SELECT * FROM marcas")
     List<Marca> getMarcas();
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     void insertAll(Marca... marcas);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     void insert(Marca marca);
 
     @Query("DELETE FROM marcas")
@@ -30,7 +30,7 @@ public interface MarcaDao {
      * @param marcaID ID Gasolinera
      * @param promID ID Promocion
      */
-    @Query("INSERT INTO promocion_marca values(:marcaID, :promID)")
+    @Query("INSERT INTO promocion_marca values(:promID, :marcaID)")
     void insertRelationMarcaPromocion(String marcaID, String promID);
 
     /**

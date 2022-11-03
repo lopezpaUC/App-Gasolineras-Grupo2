@@ -75,7 +75,9 @@ public class PromocionesRepository implements IPromocionesRepository {
     public void insertMarca (Marca data) {
         GasolineraDatabase db = GasolineraDatabase.getDB(context);
         MarcaDao marcasDao = db.marcaDao();
-        marcasDao.insert(data);
+        if (!getMarcas().contains(data)) {
+            marcasDao.insert(data);
+        }
     }
 
     @Override
