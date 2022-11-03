@@ -87,8 +87,8 @@ public class EliminarPromotionUITest {
         onView(withId(R.id.etDescuento)).perform(typeText("5"), closeSoftKeyboard());
 
         // Indicar que el tipo de descuento es por porcentaje
-        onView(withId(R.id.spTipoDescuento)).perform(click());
-        onData(Matchers.anything()).atPosition(1).perform(click());
+        //onView(withId(R.id.spTipoDescuento)).perform(click());
+        //onData(Matchers.anything()).atPosition(1).perform(click());
 
 
         // Clickar en anhadir
