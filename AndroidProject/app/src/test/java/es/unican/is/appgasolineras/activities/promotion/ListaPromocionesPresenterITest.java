@@ -8,6 +8,7 @@ import androidx.test.core.app.ApplicationProvider;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -24,6 +25,7 @@ import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 import es.unican.is.appgasolineras.repository.PromocionesRepository;
+import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 
@@ -40,10 +42,14 @@ public class ListaPromocionesPresenterITest {
     @AfterClass
     public static void clean() {
         GasolinerasServiceConstants.setMinecoURL();
-
     }
 
-
+    @After
+    public void cleanDatabase() {
+        promotionRepository.deleteAllPromociones();
+        GasolineraDatabase db = GasolineraDatabase.getDB(ApplicationProvider.getApplicationContext());
+        db.close();
+    }
 
     private ListaPromocionesPresenter sut;
 
@@ -83,7 +89,7 @@ public class ListaPromocionesPresenterITest {
     public void testListaPromociones(){
 
         // Caso válido: lista con varias promociones
-        assertEquals(2, promotionRepository.getPromociones().size());
+        assertEquals(2, sut.getShownPromociones().size());
         assertEquals("Promocion1", sut.getShownPromociones().get(1).getId());
         assertEquals("Diesel", sut.getShownPromociones().get(1).getCombustibles());
         assertTrue(0.20 == sut.getShownPromociones().get(1).getDescuentoEurosLitro());

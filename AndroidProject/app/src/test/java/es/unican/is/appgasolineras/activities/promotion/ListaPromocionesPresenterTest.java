@@ -1,7 +1,6 @@
 package es.unican.is.appgasolineras.activities.promotion;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
 import static org.mockito.Mockito.when;
 
 import junit.framework.TestCase;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import es.unican.is.appgasolineras.activities.main.CombustibleType;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
@@ -28,8 +26,8 @@ import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 public class ListaPromocionesPresenterTest extends TestCase {
 
 
-    private List<Promocion> promotionsList = new ArrayList<Promocion>();
-    private List<Promocion> promotionsListEmpty = new ArrayList<Promocion>();
+    private List<Promocion> promotionsList = new ArrayList<>();
+    private List<Promocion> promotionsListEmpty = new ArrayList<>();
 
     private Promocion promotion1 = new Promocion();
     private Promocion promotion2 = new Promocion();
