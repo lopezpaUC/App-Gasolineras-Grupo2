@@ -3,6 +3,7 @@ package es.unican.is.appgasolineras.activities.detail;
 import android.content.Context;
 import android.os.Build;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,6 +26,7 @@ import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 import es.unican.is.appgasolineras.repository.PromocionesRepository;
+import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 @RunWith(RobolectricTestRunner.class)
@@ -38,9 +40,8 @@ public class DiscountedPricesITest {
     private Gasolinera gasStation;
     private Context context;
     private List<Promocion> promotions;
+    private Promocion promotion;
     private GasolineraDetailPresenter sut;
-
-
 
     @BeforeClass
     public static void setUpClass() {
@@ -78,6 +79,13 @@ public class DiscountedPricesITest {
         sut.init();
     }
 
+    @After
+    public void cleanDatabase() {
+        promocionesRepository.deleteAllPromociones();
+        GasolineraDatabase db = GasolineraDatabase.getDB(ApplicationProvider.getApplicationContext());
+        db.close();
+    }
+
     @Test
     public void calculateDiscountedSummaryPriceTest() {
         // XXX: UT.1a - no promotion applied
@@ -86,15 +94,13 @@ public class DiscountedPricesITest {
         Assert.assertEquals("3,00", sut.getDiscounted95OctanesPriceStr());
 
         // XXX: UT.1b - 20-cent promotion for all fuels
-        Promocion promotion = new Promocion();
+        promotion = new Promocion();
         promotion.setDescuentoEurosLitro(0.2);
         promotion.setDescuentoPorcentual(-1);
         promotion.setCombustibles("Diésel-Gasolina");
         promotions.add(promotion);
 
-        promocionesRepository.deleteAllPromociones();
-        promocionesRepository.insertPromocion(promotion);
-        when(mockDetailView.getPromocionesRepository()).thenReturn(promocionesRepository);
+        updatePromocionesRepository();
 
         Assert.assertEquals("2,13", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("0,80", sut.getDiscountedDieselPriceStr());
@@ -108,6 +114,8 @@ public class DiscountedPricesITest {
         promotions.clear();
         promotions.add(promotion);
 
+        updatePromocionesRepository();
+
         Assert.assertEquals("2,27", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("0,80", sut.getDiscountedDieselPriceStr());
         Assert.assertEquals("3,00", sut.getDiscounted95OctanesPriceStr());
@@ -119,6 +127,8 @@ public class DiscountedPricesITest {
         promotion.setCombustibles("Gasolina");
         promotions.clear();
         promotions.add(promotion);
+
+        updatePromocionesRepository();
 
         Assert.assertEquals("2,20", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("1,00", sut.getDiscountedDieselPriceStr());
@@ -132,6 +142,8 @@ public class DiscountedPricesITest {
         promotions.clear();
         promotions.add(promotion);
 
+        updatePromocionesRepository();
+
         Assert.assertEquals("2,10", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("0,90", sut.getDiscountedDieselPriceStr());
         Assert.assertEquals("2,70", sut.getDiscounted95OctanesPriceStr());
@@ -143,6 +155,8 @@ public class DiscountedPricesITest {
         promotion.setCombustibles("Diésel");
         promotions.clear();
         promotions.add(promotion);
+
+        updatePromocionesRepository();
 
         Assert.assertEquals("2,30", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("0,90", sut.getDiscountedDieselPriceStr());
@@ -156,9 +170,22 @@ public class DiscountedPricesITest {
         promotions.clear();
         promotions.add(promotion);
 
+        updatePromocionesRepository();
+
         Assert.assertEquals("2,13", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("1,00", sut.getDiscountedDieselPriceStr());
         Assert.assertEquals("2,70", sut.getDiscounted95OctanesPriceStr());
+    }
+
+    /**
+     * Restores the promotions repository, inserts a new promotion and programmes the view to
+     * return the updated repository
+     */
+    private void updatePromocionesRepository() {
+        promocionesRepository.deleteAllPromociones();
+        promocionesRepository.insertPromocion(promotion);
+        promocionesRepository.insertRelacionGasolineraPromocion(gasStation, promotion);
+        when(mockDetailView.getPromocionesRepository()).thenReturn(promocionesRepository);
     }
 
 }
