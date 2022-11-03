@@ -8,6 +8,7 @@ import androidx.test.core.app.ApplicationProvider;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -24,6 +25,7 @@ import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 import es.unican.is.appgasolineras.repository.PromocionesRepository;
+import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 
@@ -43,6 +45,12 @@ public class ListaPromocionesPresenterITest {
 
     }
 
+    @After
+    public void cleanDatabase() {
+        promotionRepository.deleteAllPromociones();
+        GasolineraDatabase db = GasolineraDatabase.getDB(ApplicationProvider.getApplicationContext());
+        db.close();
+    }
 
 
     private ListaPromocionesPresenter sut;
