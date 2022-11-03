@@ -1,6 +1,8 @@
 package es.unican.is.appgasolineras.activities.promotion;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,8 +15,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.CombustibleType;
@@ -37,8 +43,6 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        System.out.println("Prueba");
-
         Promocion promocion = getItem(position);
 
         if (convertView == null) {
@@ -47,13 +51,13 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
         }
 
         // logo
-        logo(promocion, convertView, listaImagen.get(position));
+        logo(convertView, listaImagen.get(position));
 
-        // namePromocion
+        // nombrePromocion
         name(promocion, convertView);
 
-        // nameGasolinera
-        gasolinera(promocion, convertView, listaGasolineras.get(position));
+        // nombreGasolinera
+        gasolinera(convertView, listaGasolineras.get(position));
 
         // descuento
         descuento(promocion, convertView);
@@ -61,18 +65,34 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
         // combustible
         combustible(promocion, convertView);
 
+        //bin
+        bin(promocion,convertView);
+
         return convertView;
     }
 
-    private void logo(Promocion promocion, View convertView, String rotulo){
+
+    /**
+     * Papelera para eliminar
+     * @param convertView Vista
+     * @param promocion Promocion
+     */
+    private void bin(Promocion promocion, View convertView){
+        ImageView bin = convertView.findViewById(R.id.ivBin);
+        bin.setTag(promocion.getId());
+    }
+
+    /**
+     * Logo de la gasolinera que tiene aplicada la promocion
+     * @param convertView Vista
+     * @param rotulo Rotulo
+     */
+    private void logo(View convertView, String rotulo){
         ImageView iv = convertView.findViewById(R.id.ivLogoPromocion);
         
-        int imageID = imageID = getContext().getResources()
+        int imageID = getContext().getResources()
                 .getIdentifier(rotulo, "drawable", getContext().getPackageName());
 
-        // Si el rotulo son sólo numeros, el método getIdentifier simplemente devuelve
-        // como imageID esos números, pero eso va a fallar porque no tendré ningún recurso
-        // que coincida con esos números
         if (imageID == 0 || TextUtils.isDigitsOnly(rotulo)) {
             imageID = getContext().getResources()
                     .getIdentifier("generic", "drawable", getContext().getPackageName());
@@ -83,32 +103,71 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
         }
     }
 
+    /**
+     * Nombre de la promocion
+     * @param promocion Promocion
+     * @param convertView Vista
+     */
     private void name(Promocion promocion, View convertView){
         TextView tv = convertView.findViewById(R.id.tvNamePromocion);
-        tv.setText(promocion.getId().toUpperCase());
+        tv.setText(promocion.getId());
         tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
     }
 
-    private void gasolinera(Promocion promocion, View convertView, String gasolinera){
-       TextView tv = convertView.findViewById(R.id.tvNameGasolinera);
-       tv.setText(gasolinera);
+
+    /**
+     * Nombre de la gasolinera que tiene la promocion aplicada
+     * @param convertView Vista
+     * @param gasolinera Gasolinera
+     */
+    private void gasolinera(View convertView, String gasolinera){
+
+        TextView tv = convertView.findViewById(R.id.tvGasolinerasAsociadas);
+        tv.setText("Gasolineras:");
+        tv.setTypeface(tv.getTypeface(), Typeface.ITALIC);
+        tv = convertView.findViewById(R.id.tvNameGasolinera);
+        gasolinera.toLowerCase();
+        StringBuffer strbf = new StringBuffer();
+        Matcher match = Pattern.compile("([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(gasolinera);
+        while(match.find())
+        {
+            match.appendReplacement(strbf, match.group(1).toUpperCase() + match.group(2).toLowerCase());
+        }
+        tv.setText(match.appendTail(strbf).toString());
+
     }
 
+    /**
+     * Descuento que aplica la promoción
+     * @param promocion Promocion
+     * @param convertView Vista
+     */
     private void descuento(Promocion promocion, View convertView){
         TextView tv = convertView.findViewById(R.id.tvDescuento);
         if (promocion.getDescuentoEurosLitro() > 0)
             tv.setText(Double.toString(promocion.getDescuentoEurosLitro()) + "€/L");
         else
             tv.setText(Double.toString(promocion.getDescuentoPorcentual()) + "%");
+
+        tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
     }
 
+    /**
+     * Combustible al cual aplica la promocion
+     * @param promocion Promocion
+     * @param convertView Vista
+     */
     private void combustible(Promocion promocion, View convertView){
-        TextView tv = convertView.findViewById(R.id.tvCombustible);
+
+        TextView tv = convertView.findViewById(R.id.tvCombustiblesAsociados);
+        tv.setText("Combustibles:");
+        tv.setTypeface(tv.getTypeface(), Typeface.ITALIC);
+        tv = convertView.findViewById(R.id.tvCombustible);
+
         if(promocion.getCombustibles().contains("-")){
             tv.setText("Varios");
         } else {
             tv.setText(promocion.getCombustibles());
         }
-
     }
 }
