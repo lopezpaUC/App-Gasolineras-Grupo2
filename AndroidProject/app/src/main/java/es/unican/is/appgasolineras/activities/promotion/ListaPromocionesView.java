@@ -82,7 +82,7 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
     @Override
     public void deletePromocionSeleccionada(View v) {
 
-        /**ImageView bin = (ImageView) v.findViewById(R.id.ivBin);
+        ImageView bin = (ImageView) v.findViewById(R.id.ivBin);
 
         bin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -120,7 +120,7 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
                 alertDialog.show();
             }
 
-        });*/
+        });
     }
 
 

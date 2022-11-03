@@ -94,8 +94,9 @@ public interface IPromocionesRepository {
      * Borra una promocion y todo lo relacionado con ella.
      *
      * @param p Promocion
+     * @return
      */
-    void deletePromocion(Promocion p);
+    Promocion deletePromocion(Promocion p);
 
     /**
      * Borra todas las promociones y todo lo relacionado con ellas.

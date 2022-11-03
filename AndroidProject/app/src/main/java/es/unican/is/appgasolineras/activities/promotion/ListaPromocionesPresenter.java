@@ -96,8 +96,8 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
 
 
     @Override
-    public void deletePromocion(String nombre) {
-        repositoryPromociones.deletePromocion(repositoryPromociones.getPromocionById(nombre));
+    public Promocion deletePromocion(String nombre) {
+        return repositoryPromociones.deletePromocion(repositoryPromociones.getPromocionById(nombre));
     }
 
     @Override

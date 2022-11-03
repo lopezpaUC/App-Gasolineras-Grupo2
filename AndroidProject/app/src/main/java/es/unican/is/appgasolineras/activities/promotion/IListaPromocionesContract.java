@@ -30,7 +30,7 @@ public interface IListaPromocionesContract {
          * Borra la promocion.
          * @param nombre de la promocion.
          */
-        void deletePromocion(String nombre);
+        Promocion deletePromocion(String nombre);
 
         boolean tamanhoListaPromociones();
     }

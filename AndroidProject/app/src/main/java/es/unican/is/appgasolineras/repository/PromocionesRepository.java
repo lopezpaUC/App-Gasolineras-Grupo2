@@ -113,12 +113,13 @@ public class PromocionesRepository implements IPromocionesRepository {
     }
 
     @Override
-    public void deletePromocion(Promocion p) {
+    public Promocion deletePromocion(Promocion p) {
         GasolineraDatabase db = GasolineraDatabase.getDB(context);
         PromocionDao promocionesDao = db.promocionDao();
         promocionesDao.deleteAllRelationsMarcaPromocion(p.getId());
         promocionesDao.deleteAllRelationsGasolineraPromocion(p.getId());
         promocionesDao.deletePromocion(p.getId());
+        return p;
     }
 
     @Override
