@@ -97,7 +97,6 @@ public class ListaPromocionesUITest {
 
         onView(withId(android.R.id.button1)).perform(click());
 
-
         /* Se hace click sobre el boton de ver lista promociones en el menu de promociones.*/
         try {
             onView(withId(R.id.menuPromotion)).perform(click());
