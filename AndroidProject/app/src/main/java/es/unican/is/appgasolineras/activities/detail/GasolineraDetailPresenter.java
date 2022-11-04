@@ -157,7 +157,6 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
 
         // Calculates the summary price according to the validity of the fuel's prices
         discountedSummary = calculateSummary(dieselDiscountedPrice, unleaded95DiscountedPrice);
-        discountedSummaryPriceStr = precioSumarioToStr(discountedSummary);
 
         return discountedSummary;
     }
