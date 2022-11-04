@@ -32,7 +32,8 @@ public class ListaPromocionesUITest {
 
     @BeforeClass
     public static void setUp() {
-
+        // Por precaucion
+        InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase("gasolineras-database");
         GasolinerasServiceConstants.setStaticURL2();
     }
 
