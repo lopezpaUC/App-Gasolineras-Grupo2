@@ -1,7 +1,6 @@
 package es.unican.is.appgasolineras.activities.promotion;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
 import static org.mockito.Mockito.when;
 
 import junit.framework.TestCase;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import es.unican.is.appgasolineras.activities.main.CombustibleType;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
@@ -28,8 +26,8 @@ import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 public class ListaPromocionesPresenterTest extends TestCase {
 
 
-    private List<Promocion> promotionsList = new ArrayList<Promocion>();
-    private List<Promocion> promotionsListEmpty = new ArrayList<Promocion>();
+    private List<Promocion> promotionsList = new ArrayList<>();
+    private List<Promocion> promotionsListEmpty = new ArrayList<>();
 
     private Promocion promotion1 = new Promocion();
     private Promocion promotion2 = new Promocion();
@@ -93,10 +91,10 @@ public class ListaPromocionesPresenterTest extends TestCase {
         assertEquals(2, sut.getShownPromociones().size());
         assertEquals("Promocion1", sut.getShownPromociones().get(0).getId());
         assertEquals("Diesel", sut.getShownPromociones().get(0).getCombustibles());
-        assertTrue(0.20 == sut.getShownPromociones().get(0).getDescuentoEurosLitro());
+        assertEquals(0.20, sut.getShownPromociones().get(0).getDescuentoEurosLitro(), 0.001);
         assertEquals("Promocion2",sut.getShownPromociones().get(1).getId());
         assertEquals("Gasolina", sut.getShownPromociones().get(1).getCombustibles());
-        assertTrue(0.20 == sut.getShownPromociones().get(1).getDescuentoEurosLitro());
+        assertEquals(0.20,sut.getShownPromociones().get(1).getDescuentoEurosLitro(), 0.001);
 
         // Caso válido: lista sin promociones
         assertEquals(0,promotionsListEmpty.size());

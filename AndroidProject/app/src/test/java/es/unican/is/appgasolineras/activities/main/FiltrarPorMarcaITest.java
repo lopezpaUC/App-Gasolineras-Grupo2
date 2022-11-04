@@ -27,9 +27,9 @@ import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
-@RunWith(RobolectricTestRunner.class)
 @Config(manifest=Config.NONE)
 
+@RunWith(RobolectricTestRunner.class)
 public class FiltrarPorMarcaITest {
 
     @BeforeClass

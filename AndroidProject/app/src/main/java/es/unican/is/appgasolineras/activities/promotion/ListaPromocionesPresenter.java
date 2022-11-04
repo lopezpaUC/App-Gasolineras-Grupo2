@@ -2,7 +2,6 @@ package es.unican.is.appgasolineras.activities.promotion;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
@@ -104,12 +103,6 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
 
     @Override
     public boolean listaPromocionesVacia(){
-        if (repositoryPromociones.getPromociones().size() == 0){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return repositoryPromociones.getPromociones().isEmpty();
     }
-
 }

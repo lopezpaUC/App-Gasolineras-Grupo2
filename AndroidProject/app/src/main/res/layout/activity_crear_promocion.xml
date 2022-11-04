@@ -81,8 +81,11 @@
         android:id="@+id/btnCancelar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
         android:backgroundTint="#FA4848"
         android:text="@string/cancel"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/etDescuento"
         app:layout_constraintTop_toTopOf="@+id/btnAnhadir" />
 
@@ -91,10 +94,11 @@
         android:id="@+id/btnAnhadir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="32dp"
         android:backgroundTint="#279F2A"
         android:text="@string/anhadir"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spTipoDescuento" />
 

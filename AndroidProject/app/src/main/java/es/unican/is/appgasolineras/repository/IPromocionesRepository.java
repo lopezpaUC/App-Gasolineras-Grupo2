@@ -91,7 +91,7 @@ public interface IPromocionesRepository {
     void insertRelacionMarcaPromocion(Marca m, Promocion p);
 
     /**
-     * Borra una promocion y todo lo relacionado con ella.
+     * Borra una promocion y lo relacionado con ella.
      *
      * @param p Promocion
      * @return
@@ -99,7 +99,7 @@ public interface IPromocionesRepository {
     Promocion deletePromocion(Promocion p);
 
     /**
-     * Borra todas las promociones y todo lo relacionado con ellas.
+     * Borra todas las promociones y lo relacionado con ellas.
      */
     void deleteAllPromociones();
 }

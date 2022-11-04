@@ -1,8 +1,6 @@
 package es.unican.is.appgasolineras.activities.promotion;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -15,18 +13,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import es.unican.is.appgasolineras.R;
-import es.unican.is.appgasolineras.activities.main.CombustibleType;
-import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
-import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 
 public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
 
@@ -126,7 +118,6 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
         tv.setText("Gasolineras:");
         tv.setTypeface(tv.getTypeface(), Typeface.ITALIC);
         tv = convertView.findViewById(R.id.tvNameGasolinera);
-        gasolinera.toLowerCase();
         StringBuffer strbf = new StringBuffer();
         Matcher match = Pattern.compile("([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(gasolinera);
         while(match.find())
