@@ -13,11 +13,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.time.Instant;
 import java.util.List;
 
 import es.unican.is.appgasolineras.R;
-import es.unican.is.appgasolineras.common.prefs.Prefs;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;

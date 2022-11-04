@@ -150,7 +150,9 @@ public class GasolineraDetailView extends AppCompatActivity
     }
 
     private void applyDiscount() {
-        String discountedDieselPrice, discounted95OctanesPrice, discountedSummaryPrice;
+        String discountedDieselPrice;
+        String discounted95OctanesPrice;
+        String discountedSummaryPrice;
 
         discountedSummaryPrice = presenter.getDiscountedSummaryPriceStr() + PRICE_UNITS;
         discounted95OctanesPrice = presenter.getDiscounted95OctanesPriceStr() + PRICE_UNITS;
