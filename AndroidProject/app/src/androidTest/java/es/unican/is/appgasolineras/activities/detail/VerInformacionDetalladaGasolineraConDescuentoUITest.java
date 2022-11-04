@@ -63,7 +63,6 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
     @Test
     public void VerInformacionDetalladaGasolineraConDescuentoTest() {
-
         addPromotions();
 
         /** UIT.1a - Correct data, no discount **/
