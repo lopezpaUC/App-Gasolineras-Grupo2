@@ -124,5 +124,4 @@ public class AnhadirPromocionUITest {
         p.onChildView(withId(R.id.tvDescuento)).check(matches(withText("5.0%")));
         p.onChildView(withId(R.id.tvCombustible)).check(matches(withText(R.string.dieselAlabel)));
     }
-
 }
