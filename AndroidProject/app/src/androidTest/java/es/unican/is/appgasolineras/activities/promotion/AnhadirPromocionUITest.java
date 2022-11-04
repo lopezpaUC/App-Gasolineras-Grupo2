@@ -92,22 +92,12 @@ public class AnhadirPromocionUITest {
         onView(withId(R.id.etDescuento)).perform(typeText("5"), closeSoftKeyboard());
 
         // Indicar que el tipo de descuento es por porcentaje
-        try {
-            sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         onView(withId(R.id.spTipoDescuento)).perform(click());
         onData(anything()).atPosition(1).perform(click());
         onView(withId(R.id.spTipoDescuento)).check(matches(withSpinnerText(R.string.Porcentajelabel)));
 
         // Clickar en anhadir
         onView(withId(R.id.btnAnhadir)).perform(click());
-        try {
-            sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         // Confirmar que se muestra el cuadro de dialogo correcto
         onView(withText(R.string.promoExito)).check(matches(isDisplayed()));

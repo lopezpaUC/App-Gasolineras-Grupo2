@@ -81,9 +81,7 @@ public class ListaPromocionesUITest {
         onView(withId(R.id.etDescuento)).perform(typeText("5"), closeSoftKeyboard());
 
         // Indicar que el tipo de descuento es por porcentaje
-        onView(withId(R.id.spTipoDescuento)).perform(click());
-        onData(anything()).atPosition(1).perform(click());
-
+        // Por defecto
 
         // Clickar en anhadir
         onView(withId(R.id.btnAnhadir)).perform(click());
