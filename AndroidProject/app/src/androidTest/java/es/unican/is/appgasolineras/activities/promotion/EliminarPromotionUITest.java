@@ -47,6 +47,7 @@ public class EliminarPromotionUITest {
     @BeforeClass
     public static void init() {
         // Por precaucion
+        InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase("gasolineras-database");
         GasolinerasServiceConstants.setStaticURL3();
     }
 
