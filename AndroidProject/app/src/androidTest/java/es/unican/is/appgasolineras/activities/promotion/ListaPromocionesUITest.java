@@ -65,7 +65,7 @@ public class ListaPromocionesUITest {
         onView(withText(R.string.addPromotion)).perform(click());
 
         // Indicar el nombre de la promocion
-        onView(withId(R.id.etNombre)).perform(typeText("Promocion"), closeSoftKeyboard());
+        onView(withId(R.id.etNombre)).perform(typeText("P01"), closeSoftKeyboard());
 
         // Indicar el tipo de combustible
         onView(withId(R.id.spMultipleCombustibles)).perform(click());
@@ -103,7 +103,7 @@ public class ListaPromocionesUITest {
 
         /* Comprobamos los datos de una promocion, los cuáles deberían ser los esperados.*/
         DataInteraction promocion = onData(anything()).inAdapterView(withId(R.id.lvPromociones)).atPosition(0);
-        promocion.onChildView(withId(R.id.tvNamePromocion)).check(matches(withText("Promocion")));
+        promocion.onChildView(withId(R.id.tvNamePromocion)).check(matches(withText("P01")));
         promocion.onChildView(withId(R.id.tvNameGasolinera)).check(matches(withText("Varias")));
         promocion.onChildView(withId(R.id.tvDescuento)).check(matches(withText("5.0%")));
         promocion.onChildView(withId(R.id.tvCombustible)).check(matches(withText("Diésel")));
