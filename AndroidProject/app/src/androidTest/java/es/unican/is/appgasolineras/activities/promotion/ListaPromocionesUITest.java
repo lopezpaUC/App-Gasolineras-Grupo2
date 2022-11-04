@@ -91,7 +91,7 @@ public class ListaPromocionesUITest {
         onData(anything()).atPosition(1).perform(scrollTo(), click());
 
         // Clickar en anhadir
-        onView(withId(R.id.btnAnhadir)).perform(scrollTo(), click());
+        onData(withId(R.id.btnAnhadir)).perform(scrollTo(), click());
 
         onView(withId(android.R.id.button1)).perform(click());
 
