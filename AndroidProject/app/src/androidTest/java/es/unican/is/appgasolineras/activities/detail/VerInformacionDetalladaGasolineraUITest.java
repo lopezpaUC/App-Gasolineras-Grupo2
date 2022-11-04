@@ -36,7 +36,7 @@ public class VerInformacionDetalladaGasolineraUITest {
     public static void clean() {
         GasolinerasServiceConstants.setMinecoURL();
     }
-
+ 
     @Test
     public void VerInformacionDetalladaGasolineraTest() {
 
