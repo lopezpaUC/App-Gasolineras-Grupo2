@@ -8,6 +8,7 @@ import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
 
@@ -89,6 +90,7 @@ public class ListaPromocionesUITest {
         // Indicar que el tipo de descuento es por porcentaje
         onView(withId(R.id.spTipoDescuento)).perform(scrollTo(), click());
         onData(anything()).atPosition(1).perform(scrollTo(), click());
+        onView(withId(R.id.spTipoDescuento)).check(matches(withSpinnerText(R.string.Porcentajelabel)));
 
         // Clickar en anhadir
         onView(withId(R.id.btnAnhadir)).perform(scrollTo(), click());
