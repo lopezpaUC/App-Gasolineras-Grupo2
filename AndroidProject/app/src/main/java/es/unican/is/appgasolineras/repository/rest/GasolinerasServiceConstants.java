@@ -16,6 +16,9 @@ public class GasolinerasServiceConstants {
     private static final String STATIC_API_URL3 =
             "https://raw.githubusercontent.com/isunican/App-Gasolineras-Grupo2/feature/454095-AnhadirPromociones/StaticREST/ServiciosRESTCarburantes/PrecioCarburantes_SP02_Anhadir/";
 
+    private static final String STATIC_API_URL_VIEW_PROMOTION_IN_GAS_STATION =
+            "https://raw.githubusercontent.com/isunican/App-Gasolineras-Grupo2/feature/464976-MostrarPromocionEnGasolinera/StaticREST/ServiciosRESTCarburantes/PrecioCarburantes_SP02_VerPromocionGasolinera/";
+
     private static String API_URL = MINECO_API_URL;
 
     public static void setStaticURL() {
@@ -27,6 +30,10 @@ public class GasolinerasServiceConstants {
     }
 
     public static void setStaticURL3() {API_URL = STATIC_API_URL3;}
+
+    public static void setStaticURLMostrarPromocionEnGasolinera() {
+        API_URL = STATIC_API_URL_VIEW_PROMOTION_IN_GAS_STATION;
+    }
 
     public static void setMinecoURL() {
         API_URL = MINECO_API_URL;
