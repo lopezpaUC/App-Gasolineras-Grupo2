@@ -8,6 +8,7 @@ import android.content.Context;
 
 import androidx.test.core.app.ApplicationProvider;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -23,11 +24,12 @@ import java.util.List;
 
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
+import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
-@RunWith(RobolectricTestRunner.class)
 @Config(manifest=Config.NONE)
 
+@RunWith(RobolectricTestRunner.class)
 public class FiltrarPorMarcaITest {
 
     @BeforeClass
@@ -63,6 +65,12 @@ public class FiltrarPorMarcaITest {
         brandsList.add("REPSOL");
         brandsList.add("CEPSA");
         wrongBrandList.add("REPSOLITO");
+    }
+
+    @After
+    public void end() {
+        GasolineraDatabase db = GasolineraDatabase.getDB(ApplicationProvider.getApplicationContext());
+        db.close();
     }
 
     @Test

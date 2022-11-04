@@ -60,8 +60,6 @@ public class VerInformacionDetalladaGasolineraUITest {
         onView(withId(R.id.tvDieselAPrecioDet)).check(matches(withText("1,97 €/L")));
         onView(withId(R.id.tvPrecioSumarioDet)).check(matches(withText("1,97 €/L")));
         onView(withId(R.id.tvHorarioDet)).check(matches(withText("L-V: 09:00-19:00")));
-
-
     }
 
 }

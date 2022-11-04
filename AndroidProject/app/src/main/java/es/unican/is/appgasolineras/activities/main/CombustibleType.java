@@ -28,4 +28,27 @@ public enum CombustibleType {
 
         return typeEnum;
     }
+
+    /**
+     * Permite la conversion de un string a un tipo de combustible.
+     *
+     * @param type String que representa un tipo de combustible.
+     * @return Tipo de combustible.
+     */
+    public static CombustibleType getCombTypeFromString(String type) {
+        CombustibleType typeEnum;
+        switch (type) {
+            case "Diésel":
+                typeEnum = DIESEL;
+                break;
+            case "Gasolina":
+                typeEnum = GASOLINA;
+                break;
+            default: // Cualquier otro valor, representa todos los combustibles en conjunto
+                typeEnum = ALL_COMB;
+                break;
+        }
+
+        return typeEnum;
+    }
 }

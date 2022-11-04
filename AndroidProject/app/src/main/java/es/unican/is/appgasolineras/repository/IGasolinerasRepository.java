@@ -28,6 +28,23 @@ public interface IGasolinerasRepository {
     List<Gasolinera> getGasolineras();
 
     /**
+     * Retorna gasolinera que se corresponda con los parametros indicados.
+     * @param name Nombre / Rotulo
+     * @param dir Direccion
+     * @param municipio Municipio
+     * @return la gasolinera coincidente, o null si esta no existe.
+     */
+    Gasolinera getGasolineraByNameDirLocalidad(String name, String dir, String municipio);
+
+    /**
+     * Retorna lista de gasolineras que posean la promocion indicada.
+     *
+     * @param promID ID Promocion
+     * @return lista de gasolinera relacionadas con la promocion indicada.
+     */
+    List<Gasolinera> getGasolinerasRelacionadasConPromocion(String promID);
+
+    /**
      * Request how the gas stations were loaded.
      */
     int getLoadingMethod();

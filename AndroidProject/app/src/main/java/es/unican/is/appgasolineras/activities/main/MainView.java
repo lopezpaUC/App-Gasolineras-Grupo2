@@ -22,12 +22,13 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
-import java.time.Instant;
 import java.util.List;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.detail.GasolineraDetailView;
 import es.unican.is.appgasolineras.activities.info.InfoView;
+import es.unican.is.appgasolineras.activities.promotion.AnhadirPromocionView;
+import es.unican.is.appgasolineras.activities.promotion.ListaPromocionesView;
 import es.unican.is.appgasolineras.common.prefs.Prefs;
 import es.unican.is.appgasolineras.common.utils.MultipleSpinner;
 import es.unican.is.appgasolineras.model.Gasolinera;
@@ -105,6 +106,12 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             case R.id.menuFilter:
                 presenter.onFilterClicked();
                 return true;
+            case R.id.menuAnahdirPromocion:
+                presenter.onAddPromotionClicked();
+                return true;
+            case R.id.menuListaPromociones:
+                presenter.onListPromotionsClicked();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -179,6 +186,18 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     }
 
     @Override
+    public void openAnhadirPromocionView() {
+        Intent intent = new Intent(this, AnhadirPromocionView.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void openListaPromocionesView() {
+        Intent intent = new Intent(this, ListaPromocionesView.class);
+        startActivity(intent);
+    }
+
+    @Override
     public void openFilterDialog() {
         Dialog dialogFilter = new Dialog(MainView.this);
 
@@ -247,7 +266,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
      * @param spinnerMarcas Spinner con las opciones de marcas.
      */
     private void initializeSpinnerMarcas(MultipleSpinner spinnerMarcas) {
-        // Bucle para crear y añadir las marcas al array de marcas
         String[] marcas = getResources().getStringArray(R.array.brands_types_array);
         spinnerMarcas.setElementos(marcas, getResources().getString(R.string.varias), "-");
         spinnerMarcas.setSelectedStrings(checkedBrandBoxes);

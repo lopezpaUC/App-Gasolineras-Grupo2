@@ -15,7 +15,7 @@ public interface IMainContract {
      * A Presenter for the Main Activity must implement this functionality
      * These methods (excluding init), are meant to be used by the View.
      */
-    public interface Presenter {
+    interface Presenter {
         /**
          * Initialization method
          */
@@ -46,6 +46,17 @@ public interface IMainContract {
          */
         void onFilterClicked();
 
+        /**
+         * This method should be used by the View to notifiy the Presenter that the
+         * Promocion button has been clicked
+         */
+        void onAddPromotionClicked();
+
+        /**
+         * This method should be used by the View to notifiy the Presenter that the
+         * Promocion button has been clicked
+         */
+        void onListPromotionsClicked();
 
         /**
          * Obtiene la lista de gasolineras que debe mostrar la vista.
@@ -65,7 +76,7 @@ public interface IMainContract {
      * A View for the Main Activity must implement this functionality
      * These methods (excluding init), are meant to be used by the Presenter.
      */
-    public interface View {
+    interface View {
 
         /**
          * Initialization method
@@ -126,10 +137,19 @@ public interface IMainContract {
         void openInfoView();
 
         /**
+         * Se requiere abrir la vista Anhadir Promocion
+         */
+        void openAnhadirPromocionView();
+
+        /**
+         * Se requiere abrir la vista Lista Promociones
+         */
+        void openListaPromocionesView();
+
+        /**
          * The View is requested to open the Filter dialog
          */
         void openFilterDialog();
-
     }
 
 }
