@@ -15,8 +15,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static org.hamcrest.Matchers.anything;
 
-import static java.lang.Thread.sleep;
-
 import android.content.Context;
 
 import androidx.test.espresso.DataInteraction;
@@ -82,28 +80,28 @@ public class AnhadirPromocionUITest {
         onView(withText(R.string.addPromotion)).perform(click());
 
         // Indicar el nombre de la promocion
-        onView(withId(R.id.etNombre)).perform(typeText("P01"), closeSoftKeyboard());
+        onView(withId(R.id.etNombre)).perform(scrollTo(), typeText("P01"), closeSoftKeyboard());
 
         // Indicar el tipo de combustible
-        onView(withId(R.id.spMultipleCombustibles)).perform(click());
+        onView(withId(R.id.spMultipleCombustibles)).perform(scrollTo(), click());
         onView(withText(R.string.dieselAlabel)).inRoot(RootMatchers.isDialog()).perform(click());
         onView(withText("OK")).perform(click());
 
         // Indicar el criterio de aplicacion a gasolineras
-        onView(withId(R.id.spCriterioGasolineras)).perform(click());
-        onData(anything()).atPosition(0).perform(click());
+        onView(withId(R.id.spCriterioGasolineras)).perform(scrollTo(), click());
+        onData(anything()).atPosition(0).perform(scrollTo(), click());
         onView(withId(R.id.spCriterioGasolineras)).check(matches(withSpinnerText(R.string.allA)));
 
         // Indicar la cantidad en porcentaje a descontar
-        onView(withId(R.id.etDescuento)).perform(typeText("5"), closeSoftKeyboard());
+        onView(withId(R.id.etDescuento)).perform(scrollTo(), typeText("5"), closeSoftKeyboard());
 
         // Indicar que el tipo de descuento es por porcentaje
-        onView(withId(R.id.spTipoDescuento)).perform(click());
-        onData(anything()).atPosition(1).perform(click());
+        onView(withId(R.id.spTipoDescuento)).perform(scrollTo(), click());
+        onData(anything()).atPosition(1).perform(scrollTo(), click());
         onView(withId(R.id.spTipoDescuento)).check(matches(withSpinnerText(R.string.Porcentajelabel)));
 
         // Clickar en anhadir
-        onView(withId(R.id.btnAnhadir)).perform(click());
+        onView(withId(R.id.btnAnhadir)).perform(scrollTo(), click());
 
         // Confirmar que se muestra el cuadro de dialogo correcto
         onView(withText(R.string.promoExito)).check(matches(isDisplayed()));

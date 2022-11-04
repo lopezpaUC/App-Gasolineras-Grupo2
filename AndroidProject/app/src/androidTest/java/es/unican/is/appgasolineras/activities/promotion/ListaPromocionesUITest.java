@@ -74,24 +74,24 @@ public class ListaPromocionesUITest {
         onView(withId(R.id.etNombre)).perform(typeText("P01"), closeSoftKeyboard());
 
         // Indicar el tipo de combustible
-        onView(withId(R.id.spMultipleCombustibles)).perform(click());
+        onView(withId(R.id.spMultipleCombustibles)).perform(scrollTo(), click());
         onView(withText(R.string.dieselAlabel)).inRoot(RootMatchers.isDialog()).perform(click());
         onView(withText("OK")).perform(click());
 
         // Indicar el criterio de aplicacion a gasolineras
-        onView(withId(R.id.spCriterioGasolineras)).perform(click());
-        onData(anything()).atPosition(0).perform(click());
+        onView(withId(R.id.spCriterioGasolineras)).perform(scrollTo(), click());
+        onData(anything()).atPosition(0).perform(scrollTo(), click());
 
 
         // Indicar la cantidad en porcentaje a descontar
-        onView(withId(R.id.etDescuento)).perform(typeText("5"), closeSoftKeyboard());
+        onView(withId(R.id.etDescuento)).perform(scrollTo(), typeText("5"), closeSoftKeyboard());
 
         // Indicar que el tipo de descuento es por porcentaje
-        onView(withId(R.id.spTipoDescuento)).perform(click());
-        onData(anything()).atPosition(1).perform(click());
+        onView(withId(R.id.spTipoDescuento)).perform(scrollTo(), click());
+        onData(anything()).atPosition(1).perform(scrollTo(), click());
 
         // Clickar en anhadir
-        onView(withId(R.id.btnAnhadir)).perform(click());
+        onView(withId(R.id.btnAnhadir)).perform(scrollTo(), click());
 
         onView(withId(android.R.id.button1)).perform(click());
 

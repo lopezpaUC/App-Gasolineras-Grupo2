@@ -5,6 +5,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
@@ -239,11 +240,11 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
     private static void addPromotions() {
 
         /*** Promotion 1 - UIT.1b ***/
-        clickAdd();onView(withId(R.id.etNombre)).perform(typeText("50centRepsol"),
+        clickAdd();onView(withId(R.id.etNombre)).perform(scrollTo(), typeText("50centRepsol"),
                 closeSoftKeyboard()); // Name
 
         // Fuels
-        onView(withId(R.id.spMultipleCombustibles)).perform(click());
+        onView(withId(R.id.spMultipleCombustibles)).perform(scrollTo(), click());
         onView(withText(R.string.dieselAlabel)).inRoot(RootMatchers.isDialog()).perform(click());
         onView(withText(R.string.gasolina95label)).inRoot(RootMatchers.isDialog()).perform(click());
         onView(withText("OK")).perform(click());
@@ -258,10 +259,10 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onView(withText("OK")).perform(click());
 
         // Euros / liter
-        onView(withId(R.id.etDescuento)).perform(typeText("0.5"), closeSoftKeyboard());
+        onView(withId(R.id.etDescuento)).perform(scrollTo(), typeText("0.5"), closeSoftKeyboard());
 
         // Click on add
-        onView(withId(R.id.btnAnhadir)).perform(click());
+        onView(withId(R.id.btnAnhadir)).perform(scrollTo(), click());
 
         // Accept button
         onView(withId(android.R.id.button1)).perform(click());
@@ -285,10 +286,10 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onView(withText("OK")).perform(click());
 
         // Euros / liter
-        onView(withId(R.id.etDescuento)).perform(typeText("0.2"), closeSoftKeyboard());
+        onView(withId(R.id.etDescuento)).perform(scrollTo(), typeText("0.2"), closeSoftKeyboard());
 
         // Click on add
-        onView(withId(R.id.btnAnhadir)).perform(click());
+        onView(withId(R.id.btnAnhadir)).perform(scrollTo(), click());
 
         // Accept button
         onView(withId(android.R.id.button1)).perform(click());
@@ -311,10 +312,10 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onData(anything()).atPosition(3).perform(click());
 
         // Euros / liter
-        onView(withId(R.id.etDescuento)).perform(typeText("0.2"), closeSoftKeyboard());
+        onView(withId(R.id.etDescuento)).perform(scrollTo(), typeText("0.2"), closeSoftKeyboard());
 
         // Click on add
-        onView(withId(R.id.btnAnhadir)).perform(click());
+        onView(withId(R.id.btnAnhadir)).perform(scrollTo(), click());
 
         // Accept button
         onView(withId(android.R.id.button1)).perform(click());
@@ -340,12 +341,12 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
 
         // %
-        onView(withId(R.id.spTipoDescuento)).perform(click());
-        onData(anything()).atPosition(1).perform(click());
-        onView(withId(R.id.etDescuento)).perform(typeText("10"), closeSoftKeyboard());
+        onView(withId(R.id.spTipoDescuento)).perform(scrollTo(), click());
+        onData(anything()).atPosition(1).perform(scrollTo(), click());
+        onView(withId(R.id.etDescuento)).perform(scrollTo(), typeText("10"), closeSoftKeyboard());
 
         // Click on add
-        onView(withId(R.id.btnAnhadir)).perform(click());
+        onView(withId(R.id.btnAnhadir)).perform(scrollTo(), click());
 
         // Accept button
         onView(withId(android.R.id.button1)).perform(click());
@@ -369,12 +370,12 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onView(withText("OK")).perform(click());
 
         // %
-        onView(withId(R.id.spTipoDescuento)).perform(click());
-        onData(anything()).atPosition(1).perform(click());
-        onView(withId(R.id.etDescuento)).perform(typeText("10"), closeSoftKeyboard());
+        onView(withId(R.id.spTipoDescuento)).perform(scrollTo(), click());
+        onData(anything()).atPosition(1).perform(scrollTo(), click());
+        onView(withId(R.id.etDescuento)).perform(scrollTo(), typeText("10"), closeSoftKeyboard());
 
         // Click on add
-        onView(withId(R.id.btnAnhadir)).perform(click());
+        onView(withId(R.id.btnAnhadir)).perform(scrollTo(), click());
 
         // Accept button
         onView(withId(android.R.id.button1)).perform(click());
@@ -397,12 +398,12 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onData(anything()).atPosition(6).perform(click());
 
         // %
-        onView(withId(R.id.spTipoDescuento)).perform(click());
-        onData(anything()).atPosition(1).perform(click());
-        onView(withId(R.id.etDescuento)).perform(typeText("10"), closeSoftKeyboard());
+        onView(withId(R.id.spTipoDescuento)).perform(scrollTo(), click());
+        onData(anything()).atPosition(1).perform(scrollTo(), click());
+        onView(withId(R.id.etDescuento)).perform(scrollTo(), typeText("10"), closeSoftKeyboard());
 
         // Click on add
-        onView(withId(R.id.btnAnhadir)).perform(click());
+        onView(withId(R.id.btnAnhadir)).perform(scrollTo(), click());
 
         // Accept button
         onView(withId(android.R.id.button1)).perform(click());
@@ -427,12 +428,12 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onData(anything()).atPosition(7).perform(click());
 
         // Euros / Liter
-        onView(withId(R.id.spTipoDescuento)).perform(click());
-        onData(anything()).atPosition(0).perform(click());
-        onView(withId(R.id.etDescuento)).perform(typeText("4"), closeSoftKeyboard());
+        onView(withId(R.id.spTipoDescuento)).perform(scrollTo(), click());
+        onData(anything()).atPosition(0).perform(scrollTo(), click());
+        onView(withId(R.id.etDescuento)).perform(scrollTo(), typeText("4"), closeSoftKeyboard());
 
         // Click on add
-        onView(withId(R.id.btnAnhadir)).perform(click());
+        onView(withId(R.id.btnAnhadir)).perform(scrollTo(), click());
 
         // Accept button
         onView(withId(android.R.id.button1)).perform(click());
@@ -456,12 +457,12 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onView(withText("OK")).perform(click());
 
         // Euros / Liter
-        onView(withId(R.id.spTipoDescuento)).perform(click());
-        onData(anything()).atPosition(0).perform(click());
-        onView(withId(R.id.etDescuento)).perform(typeText("4"), closeSoftKeyboard());
+        onView(withId(R.id.spTipoDescuento)).perform(scrollTo(), click());
+        onData(anything()).atPosition(0).perform(scrollTo(), click());
+        onView(withId(R.id.etDescuento)).perform(scrollTo(), typeText("4"), closeSoftKeyboard());
 
         // Click on add
-        onView(withId(R.id.btnAnhadir)).perform(click());
+        onView(withId(R.id.btnAnhadir)).perform(scrollTo(), click());
 
         // Accept button
         onView(withId(android.R.id.button1)).perform(click());
@@ -485,12 +486,12 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onData(anything()).atPosition(9).perform(click());
 
         // Euros / Liter
-        onView(withId(R.id.spTipoDescuento)).perform(click());
-        onData(anything()).atPosition(0).perform(click());
-        onView(withId(R.id.etDescuento)).perform(typeText("4"), closeSoftKeyboard());
+        onView(withId(R.id.spTipoDescuento)).perform(scrollTo(), click());
+        onData(anything()).atPosition(0).perform(scrollTo(), click());
+        onView(withId(R.id.etDescuento)).perform(scrollTo(), typeText("4"), closeSoftKeyboard());
 
         // Click on add
-        onView(withId(R.id.btnAnhadir)).perform(click());
+        onView(withId(R.id.btnAnhadir)).perform(scrollTo(), click());
 
         // Accept button
         onView(withId(android.R.id.button1)).perform(click());
