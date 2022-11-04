@@ -214,7 +214,7 @@ public class AnhadirPromocionPresenterTest {
      * Comprueba que se anhade correctamente una promocion con descuento porcentual para unas
      * marcas determinadas.
      *
-     * UT-1C
+     * UT-1C 
      */
     private void anhadirExitoPorcentualMarcas() {
         List<String> combustibles = new ArrayList<>();
