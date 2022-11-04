@@ -69,6 +69,19 @@ public class GasolinerasRepository implements IGasolinerasRepository {
     }
 
     @Override
+    public Gasolinera getGasolineraByNameDirLocalidad(String name, String dir, String municipio) {
+        GasolineraDatabase db = GasolineraDatabase.getDB(context);
+        GasolineraDao gasolinerasDao = db.gasolineraDao();
+        return gasolinerasDao.getByNameDirLocalidad(name, dir, municipio);
+    }
+
+    public List<Gasolinera> getGasolinerasRelacionadasConPromocion(String promID) {
+        GasolineraDatabase db = GasolineraDatabase.getDB(context);
+        GasolineraDao gasolinerasDao = db.gasolineraDao();
+        return gasolinerasDao.buscaGasolinerasRelacionadasConPromocion(promID);
+    }
+
+    @Override
     public int getLoadingMethod() {
         return loadingMethod;
     }
@@ -100,7 +113,7 @@ public class GasolinerasRepository implements IGasolinerasRepository {
      * @param minutes
      * @return true if the data currently stored in the local DB is older than the specified
      * amount of minutes
-     */
+
     private boolean lastDownloadOlderThan(int minutes) {
         Instant lastDownloaded = Prefs.from(context).getInstant(KEY_LAST_SAVED);
         if (lastDownloaded == null) {
@@ -110,6 +123,6 @@ public class GasolinerasRepository implements IGasolinerasRepository {
             long sinceLastDownloaded = ChronoUnit.MINUTES.between(lastDownloaded, now);  // minutes
             return (sinceLastDownloaded > minutes) ? true : false;
         }
-    }
+    }*/ // No usado por el momento
 
 }

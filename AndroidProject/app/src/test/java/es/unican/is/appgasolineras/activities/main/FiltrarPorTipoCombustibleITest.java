@@ -8,6 +8,7 @@ import android.os.Build;
 
 import androidx.test.core.app.ApplicationProvider;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
+import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 @RunWith(RobolectricTestRunner.class)
@@ -57,6 +59,12 @@ public class FiltrarPorTipoCombustibleITest {
         sut.init();
     }
 
+    @After
+    public void end() {
+        GasolineraDatabase db = GasolineraDatabase.getDB(ApplicationProvider.getApplicationContext());
+        db.close();
+    }
+
     @Test
     public void testFilterByCombustible() {
 
@@ -68,7 +76,6 @@ public class FiltrarPorTipoCombustibleITest {
         assertEquals("E.S. CARBURANTES DE ARNUERO S.L.", sut.getShownGasolineras().get(2).getRotulo());
         assertEquals("G2", sut.getShownGasolineras().get(3).getRotulo());
         assertEquals("COBO", sut.getShownGasolineras().get(4).getRotulo());
-        assertEquals("REPSOL", sut.getShownGasolineras().get(5).getRotulo());
 
 
         // Filtrar por gasolina
@@ -81,7 +88,6 @@ public class FiltrarPorTipoCombustibleITest {
         assertEquals("AREA DE SERVICIO LA PALMERA", sut.getShownGasolineras().get(4).getRotulo());
         assertEquals("COBO", sut.getShownGasolineras().get(5).getRotulo());
         assertEquals("GALP", sut.getShownGasolineras().get(6).getRotulo());
-        assertEquals("REPSOL", sut.getShownGasolineras().get(7).getRotulo());
 
 
 
@@ -97,7 +103,6 @@ public class FiltrarPorTipoCombustibleITest {
         assertEquals("AREA DE SERVICIO LA PALMERA", sut.getShownGasolineras().get(6).getRotulo());
         assertEquals("COBO", sut.getShownGasolineras().get(7).getRotulo());
         assertEquals("GALP", sut.getShownGasolineras().get(8).getRotulo());
-        assertEquals("REPSOL", sut.getShownGasolineras().get(9).getRotulo());
 
     }
 
