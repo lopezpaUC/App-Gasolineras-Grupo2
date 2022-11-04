@@ -13,6 +13,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.anything;
 
+import android.content.Context;
+
 import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.matcher.RootMatchers;
@@ -30,6 +32,7 @@ import org.junit.runner.RunWith;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.MainView;
+import es.unican.is.appgasolineras.repository.PromocionesRepository;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasAPI;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
@@ -43,13 +46,14 @@ public class EliminarPromotionUITest {
     @BeforeClass
     public static void init() {
         // Por precaucion
-        InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase("gasolineras-database");
         GasolinerasServiceConstants.setStaticURL3();
     }
 
     @After
     public void cleanDatabase() {
-        InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase("gasolineras-database");
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        PromocionesRepository repPromociones = new PromocionesRepository(context);
+        repPromociones.deleteAllPromociones();
     }
 
     @AfterClass
@@ -89,14 +93,14 @@ public class EliminarPromotionUITest {
         onView(withId(R.id.etDescuento)).perform(typeText("5"), closeSoftKeyboard());
 
         // Indicar que el tipo de descuento es por porcentaje
-        //onView(withId(R.id.spTipoDescuento)).perform(click());
-        //onData(Matchers.anything()).atPosition(1).perform(click());
-
+        onView(withId(R.id.spTipoDescuento)).perform(click());
+        onData(Matchers.anything()).atPosition(1).perform(click());
 
         // Clickar en anhadir
         onView(withId(R.id.btnAnhadir)).perform(click());
 
         // Confirmar que se muestra el cuadro de dialogo correcto
+        onView(withText(R.string.promoExito)).check(matches(isDisplayed()));
         onView(withId(android.R.id.button1)).perform(click());
 
         // Abrir actividad para anhadir promocion

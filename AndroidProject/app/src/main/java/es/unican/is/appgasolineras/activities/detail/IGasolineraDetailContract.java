@@ -5,7 +5,6 @@ import android.content.Context;
 import java.util.Map;
 
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
-import es.unican.is.appgasolineras.repository.PromocionesRepository;
 
 /**
  * La actividad Detalle esta compuesta por un presentador y una vista, que deben presentar

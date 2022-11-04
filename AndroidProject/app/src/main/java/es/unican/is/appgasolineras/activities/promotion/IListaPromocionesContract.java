@@ -1,11 +1,7 @@
 package es.unican.is.appgasolineras.activities.promotion;
 
-import android.view.View;
-
 import java.util.List;
-import java.util.Map;
 
-import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
@@ -45,11 +41,6 @@ public interface IListaPromocionesContract {
      * Una vista para la actividad Promocion debe implementar esta funcionalidad.
      */
     interface View {
-
-        /**
-         * Metodo de inicializacion.
-         */
-        void init();
 
         /**
          * Returns the Promociones Repository object.

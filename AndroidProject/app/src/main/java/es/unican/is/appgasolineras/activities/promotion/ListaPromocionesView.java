@@ -39,13 +39,7 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
         presenter = new ListaPromocionesPresenter(this);
 
         // Inicializa
-        this.init();
         presenter.init();
-    }
-
-    @Override
-    public void init() {
-
     }
 
     @Override
@@ -61,7 +55,6 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
     @Override
     public void showLoadCorrect(int promocionesCount) {
         String text = getResources().getString(R.string.loadCorrectPromociones);
-        Instant lastDownloaded = Prefs.from(this).getInstant("KEY_LAST_SAVED");
         Toast.makeText(this, String.format(text, promocionesCount), Toast.LENGTH_SHORT).show();
     }
 
@@ -85,42 +78,31 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
 
         ImageView bin = (ImageView) v.findViewById(R.id.ivBin);
 
-        bin.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
+        bin.setOnClickListener((View view) -> {
 
-                AlertDialog alertDialog = new AlertDialog.Builder(ListaPromocionesView.this).create(); //Read Update
-                alertDialog.setTitle("Confirmación");
-                alertDialog.setMessage("¿Desea eliminar esta promoción?");
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setPositiveButton(R.string.accept, ((DialogInterface dialogInterface, int i) -> {
+                    String nombre = (String) bin.getTag();
 
-                alertDialog.setButton2("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        alertDialog.dismiss();
+                    presenter.deletePromotion(nombre);
+
+                    dialogInterface.cancel();
+
+                    if(presenter.listaPromocionesVacia()){
+                        setContentView(R.layout.activity_promotions_list);
+                    }else{
+                        presenter.init();
                     }
-                });
+                }));
 
-                alertDialog.setButton("Aceptar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                builder.setNegativeButton(R.string.cancel, ((DialogInterface dialogInterface, int i) ->
+                            dialogInterface.cancel()
+                        ));
 
-                        String nombre = (String) bin.getTag();
-
-                        presenter.deletePromotion(nombre);
-
-                        alertDialog.dismiss();
-
-
-                        if(presenter.listaPromocionesVacia()){
-                            setContentView(R.layout.activity_promotions_list);
-                        }else{
-                            presenter.init();
-                        }
-
-                    }
-                });
-
-
+                builder.setTitle("Confirmación");
+                builder.setMessage("¿Desea eliminar esta promoción?");
+                AlertDialog alertDialog = builder.create();
                 alertDialog.show();
-            }
-
         });
     }
 

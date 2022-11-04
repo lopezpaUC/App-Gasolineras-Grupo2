@@ -5,24 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.CombinedVibration;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.w3c.dom.Text;
-
-import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import es.unican.is.appgasolineras.R;
-import es.unican.is.appgasolineras.activities.main.CombustibleType;
 import es.unican.is.appgasolineras.activities.main.MainView;
-import es.unican.is.appgasolineras.model.Gasolinera;
-import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.PromocionesRepository;
 
 /**

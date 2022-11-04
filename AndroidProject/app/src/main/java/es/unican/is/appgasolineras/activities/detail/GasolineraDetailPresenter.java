@@ -1,7 +1,5 @@
 package es.unican.is.appgasolineras.activities.detail;
 
-import android.util.Log;
-
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.HashMap;
@@ -12,7 +10,6 @@ import java.util.Map;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
-import es.unican.is.appgasolineras.repository.PromocionesRepository;
 
 /**
  * Presenter para la actividad relacionada con la muestra de información detallada de una
@@ -27,7 +24,6 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
     private final IGasolineraDetailContract.View view;   // Vista encargada de mostrar informacion
     private final Gasolinera gasolinera;                 // Gasolinera a mostrar
     private String precioSumarioStr;                     // Precio sumario de la gasolinera
-    private String discountedSummaryPriceStr;
     private String discountedDieselPriceStr;
     private String discounted95OctanesPriceStr;
     private IPromocionesRepository repPromotions;          // Promotions repository
@@ -112,7 +108,6 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
      * prices
      * @return the discounted summary price
      */
-    //TODO: refactor with calculateSummaryPrice
     private double calculateDiscountedSummaryPrice() {
         // Obtains the list of promotions assigned to the gas station
         List<Promocion> promotions = repPromotions.getPromocionesRelacionadasConGasolinera
@@ -157,7 +152,6 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
 
         // Calculates the summary price according to the validity of the fuel's prices
         discountedSummary = calculateSummary(dieselDiscountedPrice, unleaded95DiscountedPrice);
-        discountedSummaryPriceStr = precioSumarioToStr(discountedSummary);
 
         return discountedSummary;
     }

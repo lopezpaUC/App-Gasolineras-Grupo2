@@ -16,6 +16,8 @@ import static org.hamcrest.Matchers.anything;
 
 import static java.lang.Thread.sleep;
 
+import android.content.Context;
+
 import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.matcher.RootMatchers;
@@ -32,6 +34,7 @@ import org.junit.runner.RunWith;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.MainView;
+import es.unican.is.appgasolineras.repository.PromocionesRepository;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
@@ -52,7 +55,9 @@ public class AnhadirPromocionUITest {
 
     @After
     public void cleanDatabase() {
-        InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase("gasolineras-database");
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        PromocionesRepository repPromociones = new PromocionesRepository(context);
+        repPromociones.deleteAllPromociones();
     }
 
     @AfterClass

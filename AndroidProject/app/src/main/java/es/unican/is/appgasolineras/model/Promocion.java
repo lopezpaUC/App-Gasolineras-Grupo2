@@ -5,8 +5,6 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import es.unican.is.appgasolineras.activities.main.CombustibleType;
-
 /**
  * Clase que representa una promocion registrada para gasolineras, registrada por un usuario.
  */
@@ -93,5 +91,10 @@ public class Promocion {
         } else {
             return((Promocion) o).id.equals(this.id);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id.hashCode();
     }
 }

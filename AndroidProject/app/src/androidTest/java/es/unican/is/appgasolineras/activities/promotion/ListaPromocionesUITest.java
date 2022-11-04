@@ -7,9 +7,11 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
+
+import android.content.Context;
+
 import androidx.test.espresso.DataInteraction;
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.matcher.RootMatchers;
@@ -25,6 +27,7 @@ import org.junit.Test;
 import es.unican.is.appgasolineras.R;
 
 import es.unican.is.appgasolineras.activities.main.MainView;
+import es.unican.is.appgasolineras.repository.PromocionesRepository;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
@@ -39,7 +42,9 @@ public class ListaPromocionesUITest {
 
     @After
     public void cleanDatabase() {
-        InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase("gasolineras-database");
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        PromocionesRepository repPromociones = new PromocionesRepository(context);
+        repPromociones.deleteAllPromociones();
     }
 
     @AfterClass
@@ -81,7 +86,8 @@ public class ListaPromocionesUITest {
         onView(withId(R.id.etDescuento)).perform(typeText("5"), closeSoftKeyboard());
 
         // Indicar que el tipo de descuento es por porcentaje
-        // Por defecto
+        onView(withId(R.id.spTipoDescuento)).perform(click());
+        onData(anything()).atPosition(1).perform(click());
 
         // Clickar en anhadir
         onView(withId(R.id.btnAnhadir)).perform(click());

@@ -91,10 +91,10 @@ public class ListaPromocionesPresenterTest extends TestCase {
         assertEquals(2, sut.getShownPromociones().size());
         assertEquals("Promocion1", sut.getShownPromociones().get(0).getId());
         assertEquals("Diesel", sut.getShownPromociones().get(0).getCombustibles());
-        assertTrue(0.20 == sut.getShownPromociones().get(0).getDescuentoEurosLitro());
+        assertEquals(0.20, sut.getShownPromociones().get(0).getDescuentoEurosLitro(), 0.001);
         assertEquals("Promocion2",sut.getShownPromociones().get(1).getId());
         assertEquals("Gasolina", sut.getShownPromociones().get(1).getCombustibles());
-        assertTrue(0.20 == sut.getShownPromociones().get(1).getDescuentoEurosLitro());
+        assertEquals(0.20,sut.getShownPromociones().get(1).getDescuentoEurosLitro(), 0.001);
 
         // Caso válido: lista sin promociones
         assertEquals(0,promotionsListEmpty.size());
