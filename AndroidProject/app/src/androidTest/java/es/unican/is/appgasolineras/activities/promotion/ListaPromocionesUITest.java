@@ -4,6 +4,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -86,10 +87,12 @@ public class ListaPromocionesUITest {
         onView(withId(R.id.etDescuento)).perform(typeText("5"), closeSoftKeyboard());
 
         // Indicar que el tipo de descuento es por porcentaje
+        onView(withId(R.id.spTipoDescuento)).perform(scrollTo()).perform(click()); //*
         onView(withId(R.id.spTipoDescuento)).perform(click());
         onData(anything()).atPosition(1).perform(click());
 
         // Clickar en anhadir
+        onView(withId(R.id.btnAnhadir)).perform(scrollTo()).perform(click()); //*
         onView(withId(R.id.btnAnhadir)).perform(click());
 
         onView(withId(android.R.id.button1)).perform(click());
