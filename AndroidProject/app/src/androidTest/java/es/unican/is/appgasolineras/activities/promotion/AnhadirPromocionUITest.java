@@ -109,13 +109,13 @@ public class AnhadirPromocionUITest {
 
         // Abrir actividad para ver promociones
         try {
-            onView(withId(R.id.menuPromotion)).perform(scrollTo(), click());
+            onView(withId(R.id.menuPromotion)).perform(click());
         } catch (NoMatchingViewException e) { // Si la pantalla es pequenha y no se accede por icono
             openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().
                     getTargetContext());
-            onView(withText(R.string.promotion)).perform(scrollTo(), click());
+            onView(withText(R.string.promotion)).perform(click());
         }
-        onView(withText(R.string.listPromotions)).perform(scrollTo(), click());
+        onView(withText(R.string.listPromotions)).perform(click());
 
         DataInteraction p = onData(anything()).inAdapterView(withId(R.id.lvPromociones)).
                 atPosition(0);
