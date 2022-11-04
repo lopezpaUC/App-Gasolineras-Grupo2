@@ -81,9 +81,11 @@
         android:id="@+id/btnCancelar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
         android:backgroundTint="#FA4848"
         android:text="@string/cancel"
         android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/etDescuento"
         app:layout_constraintTop_toTopOf="@+id/btnAnhadir" />
 

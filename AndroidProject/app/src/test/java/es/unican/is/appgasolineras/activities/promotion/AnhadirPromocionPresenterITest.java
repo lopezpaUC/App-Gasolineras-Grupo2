@@ -358,7 +358,7 @@ public class AnhadirPromocionPresenterITest {
     }
 
     /**
-     * Comprueba que no se anhade una promocion cuando esta repetida.
+     * Comprueba que no se anhade una promocion cuando esta repetida (repetida si tienen mismo ID).
      *
      * IT-1G
      */

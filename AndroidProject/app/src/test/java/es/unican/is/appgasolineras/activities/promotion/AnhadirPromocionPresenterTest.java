@@ -443,6 +443,7 @@ public class AnhadirPromocionPresenterTest {
 
         combustibles.add("Gasolina");
         combustibles.add("Diésel");
+
         infoList.put("selectedCombustibles", combustibles);
         infoList.put("selectedMarcas", marcas);
 
