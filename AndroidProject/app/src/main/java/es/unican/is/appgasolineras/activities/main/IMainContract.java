@@ -15,7 +15,7 @@ public interface IMainContract {
      * A Presenter for the Main Activity must implement this functionality
      * These methods (excluding init), are meant to be used by the View.
      */
-    public interface Presenter {
+    interface Presenter {
         /**
          * Initialization method
          */
@@ -39,13 +39,44 @@ public interface IMainContract {
          * Refresh button has been clicked
          */
         void onRefreshClicked();
+
+        /**
+         * This method should be used by the View to notify the Presenter that the
+         * Filter button has been clicked
+         */
+        void onFilterClicked();
+
+        /**
+         * This method should be used by the View to notifiy the Presenter that the
+         * Promocion button has been clicked
+         */
+        void onAddPromotionClicked();
+
+        /**
+         * This method should be used by the View to notifiy the Presenter that the
+         * Promocion button has been clicked
+         */
+        void onListPromotionsClicked();
+
+        /**
+         * Obtiene la lista de gasolineras que debe mostrar la vista.
+         * @return lista de gasolineras que debe mostrar la vista.
+         */
+        List<Gasolinera> getShownGasolineras();
+
+        /**
+         * Filtra gasolineras a mostrar en funcion de los parametros especificados.
+         * @param combustibleType Tipo de combustible.
+         * @param brands Mara o listado de marcas.
+         */
+        void filter(CombustibleType combustibleType, List<String> brands);
     }
 
     /**
      * A View for the Main Activity must implement this functionality
      * These methods (excluding init), are meant to be used by the Presenter.
      */
-    public interface View {
+    interface View {
 
         /**
          * Initialization method
@@ -70,16 +101,29 @@ public interface IMainContract {
 
         /**
          * The View is requested to show an alert informing that the gas stations were loaded
-         * correctly
+         * correctly from online repository.
          * @param gasolinerasCount the number of gas stations that were loaded
          */
-        void showLoadCorrect(int gasolinerasCount);
+        void showLoadCorrectOnline(int gasolinerasCount);
+
+        /**
+         * The View is requested to show an alert informing that the gas stations were loaded
+         * correctly from DB.
+         * @param gasolinerasCount the number of gas stations that were loaded
+         */
+        void showLoadCorrectOffline(int gasolinerasCount);
 
         /**
          * The View is requested to show an alert informing that there was an error while
          * loading the gas stations
          */
         void showLoadError();
+
+        /**
+         * The View is requested to show an alert informing that there are not compatible gas
+         * stations after filtering.
+         */
+        void showLoadEmpty();
 
         /**
          * The View is requested to open a Details view on the given gas station
@@ -91,6 +135,21 @@ public interface IMainContract {
          * The View is requested to open the Info view
          */
         void openInfoView();
+
+        /**
+         * Se requiere abrir la vista Anhadir Promocion
+         */
+        void openAnhadirPromocionView();
+
+        /**
+         * Se requiere abrir la vista Lista Promociones
+         */
+        void openListaPromocionesView();
+
+        /**
+         * The View is requested to open the Filter dialog
+         */
+        void openFilterDialog();
     }
 
 }

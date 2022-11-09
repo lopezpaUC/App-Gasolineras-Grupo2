@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menuFilter"
+        android:icon="@drawable/filter_gas"
+        android:title="@string/filter"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menuPromotion"
+        android:icon="@drawable/descuento"
+        android:title="@string/promotion"
+        app:showAsAction="ifRoom" >
+        <!-- "file" submenu -->
+        <menu>
+            <item android:id="@+id/menuAnahdirPromocion"
+                android:title="@string/addPromotion" />
+            <item android:id="@+id/menuListaPromociones"
+                android:title="@string/listPromotions" />
+        </menu>
+    </item>
     <item
         android:id="@+id/menuInfo"
         android:title="@string/info" />

@@ -1,6 +1,7 @@
 package es.unican.is.appgasolineras.activities.main;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,15 +13,25 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.model.Gasolinera;
 
 public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
+    private String precioDestacar;
 
     public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects) {
         super(context, 0, objects);
+        precioDestacar = null;
+    }
+
+    public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects,
+                                   String precioDestacar) {
+        super(context, 0, objects);
+        this.precioDestacar = precioDestacar;
     }
 
     @NonNull
@@ -87,7 +98,32 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         tvLabel.setText(label + ":");
 
         TextView tv = convertView.findViewById(R.id.tv95);
-        tv.setText(gasolinera.getNormal95());
+        Double precioDouble = -1.0;
+        String precioString = "-";
+
+        // Convierte el precio a formato Double
+        NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
+
+        try {
+            Number number = format.parse(gasolinera.getNormal95());
+            precioDouble = number.doubleValue();
+        } catch (Exception e) {
+            precioString = "-";
+        }
+
+        // Comprueba si el precio no es valido
+        if (precioDouble < 0.0) {
+            tv.setText(precioString);
+        } else {
+            precioString = gasolinera.getNormal95();
+        }
+
+        tv.setText(precioString);
+
+        if (precioDestacar != null && precioDestacar.equals(getContext().getResources().getString(R.string.gasolina95label))) {
+            tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.BOLD);
+            tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
+        }
     }
 
     private void prizeDiesel(Gasolinera gasolinera, View convertView){
@@ -96,6 +132,31 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         tvLabel.setText(label + ":");
 
         TextView tv = convertView.findViewById(R.id.tvDieselA);
-        tv.setText(gasolinera.getDieselA());
+        Double precioDouble = -1.0;
+        String precioString = "-";
+
+        // Convierte el precio a formato Double
+        NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
+
+        try {
+            Number number = format.parse(gasolinera.getDieselA());
+            precioDouble = number.doubleValue();
+        } catch (Exception e) {
+            precioString = "-";
+        }
+
+        // Comprueba si el precio no es valido
+        if (precioDouble < 0.0) {
+            tv.setText(precioString);
+        } else {
+            precioString = gasolinera.getDieselA();
+        }
+
+        tv.setText(precioString);
+
+        if (precioDestacar != null && precioDestacar.equals(getContext().getResources().getString(R.string.dieselAlabel))) {
+            tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.BOLD);
+            tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
+        }
     }
 }

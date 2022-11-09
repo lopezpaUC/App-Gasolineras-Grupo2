@@ -1,17 +1,13 @@
 package es.unican.is.appgasolineras.repository.rest;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import es.unican.is.appgasolineras.common.Callback;
-import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.GasolinerasResponse;
 import es.unican.is.appgasolineras.model.IDCCAAs;
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -25,6 +21,8 @@ public class GasolinerasService {
 
     private static GasolinerasAPI api;
 
+    private GasolinerasService() {}
+
     private static GasolinerasAPI getAPI() {
         if (api == null) {
             Retrofit retrofit = new Retrofit.Builder()
@@ -34,6 +32,10 @@ public class GasolinerasService {
             api = retrofit.create(GasolinerasAPI.class);
         }
         return api;
+    }
+
+    public static GasolinerasAPI resetAPI(){
+        return api = null;
     }
 
     /**
@@ -52,7 +54,6 @@ public class GasolinerasService {
     public static GasolinerasResponse getGasolineras() {
         final Call<GasolinerasResponse> call = getAPI().gasolineras(IDCCAAs.CANTABRIA.id);
 
-        List<Gasolinera> gasolineras;
         ExecutorService executor = Executors.newFixedThreadPool(1);
         CallRunnable<GasolinerasResponse> runnable = new CallRunnable<>(call);
         executor.execute(runnable);
@@ -67,8 +68,7 @@ public class GasolinerasService {
         }
 
         // if there was some problem, response is null
-        GasolinerasResponse response = runnable.response;
-        return response;
+        return runnable.response;
     }
 
 }

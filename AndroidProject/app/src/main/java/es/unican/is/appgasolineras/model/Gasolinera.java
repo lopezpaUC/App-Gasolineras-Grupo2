@@ -42,6 +42,18 @@ public class Gasolinera implements Parcelable {
         normal95 = "";
     }
 
+    public Gasolinera(String id, String rotulo, String cp, String direccion, String municipio,
+                      String horario, String dieselA, String normal95) {
+        this.id = id;
+        this.rotulo = rotulo;
+        this.cp = cp;
+        this.direccion = direccion;
+        this.municipio = municipio;
+        this.horario = horario;
+        this.dieselA = dieselA;
+        this.normal95 = normal95;
+    }
+
     @NonNull
     public String getId() {
         return id;
@@ -91,21 +103,13 @@ public class Gasolinera implements Parcelable {
         this.horario = horario;
     }
 
-    public String getDieselA() {
-        return dieselA;
-    }
+    public String getDieselA() { return dieselA; }
 
-    public void setDieselA(String dieselA) {
-        this.dieselA = dieselA;
-    }
+    public void setDieselA(String dieselA) { this.dieselA = dieselA; }
 
-    public String getNormal95() {
-        return normal95;
-    }
+    public String getNormal95() { return normal95; }
 
-    public void setNormal95(String normal95) {
-        this.normal95 = normal95;
-    }
+    public void setNormal95(String normal95) { this.normal95 = normal95; }
 
     /*
      * Methods for Parcelable interface. Needed to send this object in an Intent.
@@ -158,5 +162,21 @@ public class Gasolinera implements Parcelable {
     public String toString() {
         return rotulo + cp + direccion + municipio + horario + dieselA
                 + normal95;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        } else if (o.getClass() != this.getClass()) {
+            return false;
+        } else {
+            return ((Gasolinera) o).id.equals(this.id);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id.hashCode();
     }
 }

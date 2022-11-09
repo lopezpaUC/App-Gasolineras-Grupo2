@@ -6,10 +6,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.when;
-
-import es.unican.is.appgasolineras.activities.detail.GasolineraDetailPresenter;
-import es.unican.is.appgasolineras.activities.detail.IGasolineraDetailContract;
 import es.unican.is.appgasolineras.model.Gasolinera;
 
 
@@ -35,7 +31,7 @@ public class SumarioTest {
         GasolineraDetailPresenter sut = new GasolineraDetailPresenter(mockDetailContract, gasolinera);
         sut.init();
         String precioSumario = sut.getPrecioSumario();
-        Assert.assertEquals("2,333", precioSumario);
+        Assert.assertEquals("2,33", precioSumario);
 
         gasolinera.setDieselA("-1");
         gasolinera.setNormal95("-3,5");
@@ -46,13 +42,13 @@ public class SumarioTest {
         gasolinera.setNormal95("3.0");
         sut.init();
         precioSumario = sut.getPrecioSumario();
-        Assert.assertEquals("3,000", precioSumario);
+        Assert.assertEquals("3,00", precioSumario);
 
         gasolinera.setDieselA("5.0");
         gasolinera.setNormal95("0.0");
         sut.init();
         precioSumario = sut.getPrecioSumario();
-        Assert.assertEquals("5,000", precioSumario);
+        Assert.assertEquals("5,00", precioSumario);
     }
 }
 

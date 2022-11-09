@@ -1,18 +1,21 @@
 package es.unican.is.appgasolineras.activities.detail;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Locale;
 import java.util.Map;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.MainView;
+import es.unican.is.appgasolineras.repository.PromocionesRepository;
 
 /**
  * Vista para la actividad relacionada con la muestra de información detallada de una gasolinera.
@@ -25,6 +28,7 @@ public class GasolineraDetailView extends AppCompatActivity
 
     public static final String INTENT_GASOLINERA = "INTENT_GASOLINERA";
     private static final int NO_ECONTRADO = 0; // Logo no encontrado
+    private static final String PRICE_UNITS = " €/L";
 
     private IGasolineraDetailContract.Presenter presenter; // Presenter de la vista detallada
 
@@ -38,6 +42,9 @@ public class GasolineraDetailView extends AppCompatActivity
     private TextView tvDieselAPrecioDet;
     private TextView tvHorarioDet;
     private TextView tvPrecioSumarioDet;
+    private TextView tvDiscounted95Price;
+    private TextView tvDiscountedDieselPrice;
+    private TextView tvDiscountedPrecioSumarioDet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +73,9 @@ public class GasolineraDetailView extends AppCompatActivity
         tvDieselAPrecioDet = findViewById(R.id.tvDieselAPrecioDet);
         tvHorarioDet = findViewById(R.id.tvHorarioDet);
         tvPrecioSumarioDet = findViewById(R.id.tvPrecioSumarioDet);
+        tvDiscounted95Price = findViewById(R.id.tvDiscounted95Price);
+        tvDiscountedDieselPrice = findViewById(R.id.tvDiscountedDieselPrice);
+        tvDiscountedPrecioSumarioDet = findViewById(R.id.tvDiscountedPrecioSumarioDet);
     }
 
     @Override
@@ -86,6 +96,9 @@ public class GasolineraDetailView extends AppCompatActivity
             label = "generic";
         }
         ivRotulo.setImageResource(loadLogoID(label));
+
+        // Shows info with discounts
+        applyDiscount();
     }
 
     @Override
@@ -134,5 +147,40 @@ public class GasolineraDetailView extends AppCompatActivity
         }
 
         return imageID;
+    }
+
+    private void applyDiscount() {
+        String discountedDieselPrice;
+        String discounted95OctanesPrice;
+        String discountedSummaryPrice;
+
+        discountedSummaryPrice = presenter.getDiscountedSummaryPriceStr() + PRICE_UNITS;
+        discounted95OctanesPrice = presenter.getDiscounted95OctanesPriceStr() + PRICE_UNITS;
+        discountedDieselPrice = presenter.getDiscountedDieselPriceStr() + PRICE_UNITS;
+
+        comparePrices(discountedSummaryPrice, tvPrecioSumarioDet, tvDiscountedPrecioSumarioDet);
+        comparePrices(discounted95OctanesPrice, tv95PrecioDet, tvDiscounted95Price);
+        comparePrices(discountedDieselPrice, tvDieselAPrecioDet, tvDiscountedDieselPrice);
+    }
+
+    private void comparePrices(String discountedPrice, TextView tvOriginalPrice, TextView tvDiscountedPrice) {
+        if (!discountedPrice.equals(tvOriginalPrice.getText().toString())) {
+
+            // Crosses out the original summary price
+            tvOriginalPrice.setPaintFlags(tvOriginalPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+            // Sets discountedPrice
+            tvDiscountedPrice.setText(discountedPrice);
+        }
+    }
+
+    @Override
+    public Context getContext() {
+        return super.getApplicationContext();
+    }
+
+    @Override
+    public PromocionesRepository getPromocionesRepository() {
+        return new PromocionesRepository(this);
     }
 }
