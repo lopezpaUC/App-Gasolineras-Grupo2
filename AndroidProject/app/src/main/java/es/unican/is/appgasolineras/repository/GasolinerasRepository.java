@@ -10,6 +10,7 @@ import es.unican.is.appgasolineras.common.Callback;
 import es.unican.is.appgasolineras.common.prefs.Prefs;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.GasolinerasResponse;
+import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.db.GasolineraDao;
 import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
@@ -125,4 +126,40 @@ public class GasolinerasRepository implements IGasolinerasRepository {
         }
     }*/ // No usado por el momento
 
+    @Override
+    public Promocion bestPromotion(double price, List<Promocion> promotions, String fuel) {
+        Promocion bestPromotion = null;
+        double bestPrice = Double.POSITIVE_INFINITY;
+
+        // Loops all promotions
+        for (Promocion promotion : promotions) {
+            // Checks for type of fuel assigned to the promotion
+            if (promotion.getCombustibles().contains(fuel) ||
+                    fuel.contains(promotion.getCombustibles())) {
+                // Calculates the price for the promotion
+                double discountedPrice = calculateDiscountedPrice(price, promotion);
+
+                // Updates the best price and the best promotion
+                if (discountedPrice < bestPrice) {
+                    bestPrice = discountedPrice;
+                    bestPromotion = promotion;
+                }
+            }
+        }
+        return bestPromotion;
+    }
+
+    @Override
+    public double calculateDiscountedPrice(double price, Promocion promotion) {
+        if (promotion == null) {
+            return price;
+        }
+
+        double euros = promotion.getDescuentoEurosLitro();
+        if (euros > 0) {
+            return price - euros;
+        } else {
+            return price * (100 - promotion.getDescuentoPorcentual()) / 100;
+        }
+    }
 }

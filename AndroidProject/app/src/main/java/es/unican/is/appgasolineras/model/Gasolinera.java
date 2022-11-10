@@ -19,7 +19,8 @@ import com.google.gson.annotations.SerializedName;
  * defined in this class.
  */
 @Entity(tableName = "gasolineras")
-public class Gasolinera implements Parcelable {
+public class
+Gasolinera implements Parcelable {
 
     @SerializedName("IDEESS") @NonNull @PrimaryKey  private String id;
 
@@ -30,6 +31,11 @@ public class Gasolinera implements Parcelable {
     @SerializedName("Horario")                      private String horario;
     @SerializedName("Precio Gasoleo A")             private String dieselA;
     @SerializedName("Precio Gasolina 95 E5")        private String normal95;  // 95 octanes
+                                                    private String summaryPrice;
+
+                                                    private String discountedDiesel;
+                                                    private String discounted95;
+                                                    private String discountedSummaryPrice;
 
     public Gasolinera() {
         id = "";
@@ -40,6 +46,10 @@ public class Gasolinera implements Parcelable {
         horario = "";
         dieselA = "";
         normal95 = "";
+        summaryPrice = "";
+        discountedDiesel = "";
+        discounted95 = "";
+        discountedSummaryPrice = "";
     }
 
     public Gasolinera(String id, String rotulo, String cp, String direccion, String municipio,
@@ -52,6 +62,10 @@ public class Gasolinera implements Parcelable {
         this.horario = horario;
         this.dieselA = dieselA;
         this.normal95 = normal95;
+        this.summaryPrice = String.valueOf(getSummaryPrice());
+        this.discountedDiesel = dieselA;
+        this.discounted95 = normal95;
+        this.discountedSummaryPrice = summaryPrice;
     }
 
     @NonNull
@@ -111,6 +125,22 @@ public class Gasolinera implements Parcelable {
 
     public void setNormal95(String normal95) { this.normal95 = normal95; }
 
+    public String getDiscountedDiesel() {
+        return discountedDiesel;
+    }
+
+    public void setDiscountedDiesel(String discountedDiesel) {
+        this.discountedDiesel = discountedDiesel;
+    }
+
+    public String getDiscounted95() {
+        return discounted95;
+    }
+
+    public void setDiscounted95(String discounted95) {
+        this.discounted95 = discounted95;
+    }
+
     /*
      * Methods for Parcelable interface. Needed to send this object in an Intent.
      *
@@ -127,6 +157,13 @@ public class Gasolinera implements Parcelable {
         horario = in.readString();
         dieselA = in.readString();
         normal95 = in.readString();
+    }
+
+    public double getSummaryPrice() {
+        double dieselPrice = Double.parseDouble(dieselA);
+        double unleaded95Price = Double.parseDouble(normal95);
+
+        return (dieselPrice + unleaded95Price * 2) / 3;
     }
 
     public static final Creator<Gasolinera> CREATOR = new Creator<Gasolinera>() {

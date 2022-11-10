@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.unican.is.appgasolineras.common.Callback;
 import es.unican.is.appgasolineras.model.Gasolinera;
+import es.unican.is.appgasolineras.model.Promocion;
 
 /**
  * A Repository to access gas stations/
@@ -45,8 +46,23 @@ public interface IGasolinerasRepository {
     List<Gasolinera> getGasolinerasRelacionadasConPromocion(String promID);
 
     /**
-     * Request how the gas stations were loaded.
+     * Requests how the gas stations were loaded.
      */
     int getLoadingMethod();
 
+    /**
+     * Calculates the discounted price for a fuel based on its price and the promotion applied
+     * @param price the base price
+     * @param promotion the promotion which will be applied on the price
+     * @return the discounted price
+     */
+    double calculateDiscountedPrice(double price, Promocion promotion);
+
+    /**
+     * Obtains the best promotion from a list of promotions, according to the given price
+     * @param price the base price
+     * @param promotions a list of promotions
+     * @return the best promotion
+     */
+    Promocion bestPromotion(double price, List<Promocion> promotions, String fuel);
 }

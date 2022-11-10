@@ -9,6 +9,7 @@ import java.util.Map;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
+import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 
 /**
@@ -27,6 +28,7 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
     private String discountedDieselPriceStr;
     private String discounted95OctanesPriceStr;
     private IPromocionesRepository repPromotions;          // Promotions repository
+    private IGasolinerasRepository repGasolineras;         // Gas stations repository
 
     /**
      * Constructor del presenter.
@@ -138,16 +140,16 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         }
 
         // Gets the best promotion for both diesel and unleaded 95 octanes
-        Promocion bestPromotionDiesel = bestPromotion(dieselPrice, promotions, "Diésel");
-        Promocion bestPromotion95Octanes = bestPromotion(precioGasolina, promotions, "Gasolina");
+        Promocion bestPromotionDiesel = repGasolineras.bestPromotion(dieselPrice, promotions, "Diésel");
+        Promocion bestPromotion95Octanes = repGasolineras.bestPromotion(precioGasolina, promotions, "Gasolina");
 
         // Calculates the best price for both diesel and 95 octanes
-        double dieselDiscountedPrice = truncateFuelPrice(calculateDiscountedPrice(dieselPrice,
-                bestPromotionDiesel));
+        double dieselDiscountedPrice = truncateFuelPrice(repGasolineras.
+                calculateDiscountedPrice(dieselPrice, bestPromotionDiesel));
         discountedDieselPriceStr = precioSumarioToStr(dieselDiscountedPrice);
 
-        double unleaded95DiscountedPrice = truncateFuelPrice(calculateDiscountedPrice(precioGasolina,
-                bestPromotion95Octanes));
+        double unleaded95DiscountedPrice = truncateFuelPrice(repGasolineras.
+                calculateDiscountedPrice(precioGasolina, bestPromotion95Octanes));
         discounted95OctanesPriceStr = precioSumarioToStr(unleaded95DiscountedPrice);
 
         // Calculates the summary price according to the validity of the fuel's prices
@@ -261,52 +263,7 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         return correccion;
     }
 
-    /**
-     * Calculates the discounted price for a fuel based on its price and the promotion applied
-     * @param price the base price
-     * @param promotion the promotion which will be applied on the price
-     * @return the discounted price
-     */
-    public double calculateDiscountedPrice(double price, Promocion promotion) {
-        if (promotion == null) {
-            return price;
-        }
 
-        double euros = promotion.getDescuentoEurosLitro();
-        if (euros > 0) {
-            return price - euros;
-        } else {
-            return price * (100 - promotion.getDescuentoPorcentual()) / 100;
-        }
-    }
-
-    /**
-     * Obtains the best promotion from a list of promotions, according to the given price
-     * @param price the base price
-     * @param promotions a list of promotions
-     * @return the best promotion
-     */
-    public Promocion bestPromotion(double price, List<Promocion> promotions, String fuel) {
-        Promocion bestPromotion = null;
-        double bestPrice = Double.POSITIVE_INFINITY;
-
-        // Loops all promotions
-        for (Promocion promotion : promotions) {
-            // Checks for type of fuel assigned to the promotion
-            if (promotion.getCombustibles().contains(fuel) ||
-                    fuel.contains(promotion.getCombustibles())) {
-                // Calculates the price for the promotion
-                double discountedPrice = calculateDiscountedPrice(price, promotion);
-
-                // Updates the best price and the best promotion
-                if (discountedPrice < bestPrice) {
-                    bestPrice = discountedPrice;
-                    bestPromotion = promotion;
-                }
-            }
-        }
-        return bestPromotion;
-    }
     /**
      * Truncates price to 2 decimal places
      * @param price the price to be truncated
