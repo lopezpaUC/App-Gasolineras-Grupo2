@@ -2,6 +2,7 @@ package es.unican.is.appgasolineras.activities.main;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,12 +12,14 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.SimpleDateFormat;
@@ -245,6 +248,24 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         // Inicializacion checkbox
         CheckBox chckLowcost = dialogFilter.findViewById(R.id.chckLowcost);
 
+        // Listener para boton de informacion
+        ImageButton btnInfo = dialogFilter.findViewById(R.id.btnInfo);
+        btnInfo.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setPositiveButton(getResources().getString(R.string.accept),
+                    ((DialogInterface dialogInterface, int i) -> {
+                        dialogInterface.cancel();
+                    }));
+            builder.setTitle(getResources().getString(R.string.marcasLowcost));
+
+            StringBuilder sb = new StringBuilder();
+            for (String s:getResources().getStringArray(R.array.lowcost_array)) {
+                sb.append(s);
+            }
+            builder.setMessage(sb.toString());
+            AlertDialog ad = builder.create();
+            ad.show();
+        });
 
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {

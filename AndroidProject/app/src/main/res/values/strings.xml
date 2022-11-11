@@ -115,4 +115,6 @@
     <string name="lowcost">Mostrar solo low-cost</string>
     <string name="consideraLowcost">Gasolineras consideradas low-cost</string>
 
+    <string name="marcasLowcost">Marcas Low-cost</string>
+
 </resources>

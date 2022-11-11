@@ -3,15 +3,20 @@ package es.unican.is.appgasolineras.repository;
 import android.content.Context;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.common.Callback;
 import es.unican.is.appgasolineras.common.prefs.Prefs;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.GasolinerasResponse;
+import es.unican.is.appgasolineras.model.Marca;
 import es.unican.is.appgasolineras.repository.db.GasolineraDao;
 import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
+import es.unican.is.appgasolineras.repository.db.MarcaDao;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 
 /**
@@ -75,10 +80,45 @@ public class GasolinerasRepository implements IGasolinerasRepository {
         return gasolinerasDao.getByNameDirLocalidad(name, dir, municipio);
     }
 
+    @Override
     public List<Gasolinera> getGasolinerasRelacionadasConPromocion(String promID) {
         GasolineraDatabase db = GasolineraDatabase.getDB(context);
         GasolineraDao gasolinerasDao = db.gasolineraDao();
         return gasolinerasDao.buscaGasolinerasRelacionadasConPromocion(promID);
+    }
+
+    @Override
+    public List<Marca> getMarcasLowcost() {
+        if (getMarcasLowcost().isEmpty()) {
+
+        }
+
+        GasolineraDatabase db = GasolineraDatabase.getDB(context);
+        MarcaDao marcasDao = db.marcaDao();
+        return marcasDao.getMarcasLowcost();
+    }
+
+    public List<Gasolinera> getGasolinerasLowcost() {
+        GasolineraDatabase db = GasolineraDatabase.getDB(context);
+        GasolineraDao gasolinerasDao = db.gasolineraDao();
+
+        List<Marca> marcasLowcost = getMarcasLowcost();
+
+        if (marcasLowcost.isEmpty()) {
+            insertLowcost();
+            marcasLowcost = getMarcasLowcost();
+        }
+
+        List<Gasolinera> gasolinerasLowcost = new ArrayList<>();
+        for (Gasolinera g:gasolinerasDao.getAll()) {
+            for (Marca m : marcasLowcost) {
+                if (m.getNombre().toUpperCase(Locale.ROOT).equals(g.getRotulo())) {
+                    gasolinerasLowcost.add(g);
+                }
+            }
+        }
+
+        return gasolinerasLowcost;
     }
 
     @Override
@@ -104,6 +144,19 @@ public class GasolinerasRepository implements IGasolinerasRepository {
 
             // save the current time to the app preferences
             Prefs.from(context).putInstant(KEY_LAST_SAVED, Instant.now());
+        }
+    }
+
+    private void insertLowcost() {
+        GasolineraDatabase db = GasolineraDatabase.getDB(context);
+        MarcaDao marcasDao = db.marcaDao();
+
+        for (String s:context.getResources().getStringArray(R.array.lowcost_array)) {
+            if (marcasDao.getMarcaById(s) != null) {
+                marcasDao.updateMarcaToLowcost(s);
+            } else {
+                marcasDao.insert(new Marca(s, true));
+            }
         }
     }
 
