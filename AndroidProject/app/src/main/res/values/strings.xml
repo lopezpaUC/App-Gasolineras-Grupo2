@@ -1,4 +1,7 @@
 <resources>
+    <string name="type_price">Tipo de precio</string>
+    <string name="type_order">Tipo de ordenación</string>
+    <string name="order_by_precio">Ordenar por precio</string>
     <string name="app_name">App Gasolineras</string>
     <string name="gasolina95label">Gasolina</string>
     <string name="dieselAlabel">Diésel</string>
