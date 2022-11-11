@@ -246,9 +246,9 @@ public class AnhadirPromocionPresenterTest {
         verify(mockPromocionesRepository, times(1)).getPromocionById("P03");
         verify(mockPromocionesRepository, times(1)).insertPromocion(p);
         verify(mockPromocionesRepository, times(8)).insertRelacionGasolineraPromocion(any(), any());
-        verify(mockPromocionesRepository, times(1)).insertRelacionMarcaPromocion(new Marca("Cepsa"),
+        verify(mockPromocionesRepository, times(1)).insertRelacionMarcaPromocion(new Marca("Cepsa", false),
                 p);
-        verify(mockPromocionesRepository, times(1)).insertRelacionMarcaPromocion(new Marca("Repsol"),
+        verify(mockPromocionesRepository, times(1)).insertRelacionMarcaPromocion(new Marca("Repsol", false),
                 p);
 
         verify(mockGasolinerasRepository, times(2)).getGasolineras();
@@ -363,9 +363,9 @@ public class AnhadirPromocionPresenterTest {
         verify(mockPromocionesRepository, times(1)).getPromocionById("P06");
         verify(mockPromocionesRepository, times(1)).insertPromocion(p);
         verify(mockPromocionesRepository, times(16)).insertRelacionGasolineraPromocion(any(), any());
-        verify(mockPromocionesRepository, times(1)).insertRelacionMarcaPromocion(new Marca("Cepsa"),
+        verify(mockPromocionesRepository, times(1)).insertRelacionMarcaPromocion(new Marca("Cepsa", false),
                 p);
-        verify(mockPromocionesRepository, times(1)).insertRelacionMarcaPromocion(new Marca("Repsol"),
+        verify(mockPromocionesRepository, times(1)).insertRelacionMarcaPromocion(new Marca("Repsol", false),
                 p);
 
         verify(mockGasolinerasRepository, times(4)).getGasolineras();

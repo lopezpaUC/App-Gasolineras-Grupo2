@@ -136,14 +136,14 @@ public class MainPresenter implements IMainContract.Presenter {
     }
 
     @Override
-    public void filter(CombustibleType combustibleType, List<String> brands) {
+    public void filter(CombustibleType combustibleType, List<String> brands, boolean lowcost) {
         shownGasolineras = repository.getGasolineras(); // Lista Completa
 
         filterByCombustible(combustibleType);
         filterByBrand(brands);
 
         if (!shownGasolineras.isEmpty()) { // Si hay gasolineras a mostrar despues de filtrado
-            view.showGasolineras(shownGasolineras);
+            view.showGasolinerasAdvanced(shownGasolineras, combustibleType);
 
             // Muestra la informacion de la obtencion de las gasolineras
             if (loadMethod == LOAD_ONLINE) {
@@ -244,4 +244,5 @@ public class MainPresenter implements IMainContract.Presenter {
         }
         return compatibles;
     }
+
 }

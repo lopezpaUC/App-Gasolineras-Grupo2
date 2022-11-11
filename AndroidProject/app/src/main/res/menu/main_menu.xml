@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
+
     <item
         android:id="@+id/menuFilter"
         android:icon="@drawable/filter_gas"
@@ -10,13 +12,32 @@
         android:id="@+id/menuPromotion"
         android:icon="@drawable/descuento"
         android:title="@string/promotion"
-        app:showAsAction="ifRoom" >
+        app:showAsAction="ifRoom">
         <!-- "file" submenu -->
         <menu>
-            <item android:id="@+id/menuAnahdirPromocion"
+            <item
+                android:id="@+id/menuAnahdirPromocion"
                 android:title="@string/addPromotion" />
-            <item android:id="@+id/menuListaPromociones"
+            <item
+                android:id="@+id/menuListaPromociones"
                 android:title="@string/listPromotions" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/menuOrder"
+        android:icon="@drawable/order_by"
+        android:title="Ordenar por"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/menuOrdenarPorPrecio"
+                android:title="Ordenar por precio" />
+
+            <item
+                android:id="@+id/menuOrdenarPorDistancia"
+                android:title="Ordenar por distancia" />
+
         </menu>
     </item>
     <item

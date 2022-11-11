@@ -112,4 +112,9 @@
     <string name="promoEuroLErr">El descuento en €/L indicado no es válido.</string>
     <string name="promoBDErr">Se ha producido un error al acceder a la base de datos.</string>
 
+    <string name="lowcost">Mostrar solo low-cost</string>
+    <string name="consideraLowcost">Gasolineras consideradas low-cost</string>
+
+    <string name="marcasLowcost">Marcas Low-cost</string>
+
 </resources>
