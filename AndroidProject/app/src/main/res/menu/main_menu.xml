@@ -4,24 +4,6 @@
 
 
     <item
-        android:id="@+id/menuOrder"
-        android:title="Ordenar por"
-        android:icon="@drawable/order_by"
-        app:showAsAction="ifRoom">
-        <menu>
-            <item
-                android:id="@+id/menuOrdenarPorPrecio"
-                android:title="Ordenar por precio"
-                />
-
-            <item
-                android:id="@+id/menuOrdenarPorDistancia"
-                android:title="Ordenar por distancia"
-                />
-
-        </menu>
-    </item>
-    <item
         android:id="@+id/menuFilter"
         android:icon="@drawable/filter_gas"
         android:title="@string/filter"
@@ -42,6 +24,22 @@
         </menu>
     </item>
 
+    <item
+        android:id="@+id/menuOrder"
+        android:icon="@drawable/order_by"
+        android:title="Ordenar por"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/menuOrdenarPorPrecio"
+                android:title="Ordenar por precio" />
+
+            <item
+                android:id="@+id/menuOrdenarPorDistancia"
+                android:title="Ordenar por distancia" />
+
+        </menu>
+    </item>
     <item
         android:id="@+id/menuInfo"
         android:title="@string/info" />
