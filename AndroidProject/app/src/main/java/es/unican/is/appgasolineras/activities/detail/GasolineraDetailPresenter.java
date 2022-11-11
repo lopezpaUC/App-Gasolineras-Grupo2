@@ -9,6 +9,7 @@ import java.util.Map;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
+import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 
@@ -21,7 +22,6 @@ import es.unican.is.appgasolineras.repository.IPromocionesRepository;
  */
 public class GasolineraDetailPresenter implements IGasolineraDetailContract.Presenter {
 
-    private static final double ERROR_CONVERSION = -1.0; // Error convirtiendo String a double
     private final IGasolineraDetailContract.View view;   // Vista encargada de mostrar informacion
     private final Gasolinera gasolinera;                 // Gasolinera a mostrar
     private String precioSumarioStr;                     // Precio sumario de la gasolinera
@@ -41,12 +41,13 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         this.gasolinera = gasolinera;
 
         repPromotions = view.getPromocionesRepository();
+        repGasolineras = view.getGasolinerasRepository();
     }
 
     @Override
     public void init() {
         // Obtiene el precio sumario
-        precioSumarioStr = precioSumarioToStr(calculateSummaryPrice());
+        precioSumarioStr = repGasolineras.precioSumarioToStr(calculateSummaryPrice());
         // Solicita a la vista que muestre la informacion requerida
         loadGasolineraDetails();
     }
@@ -77,7 +78,7 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
 
     @Override
     public String getDiscountedSummaryPriceStr() {
-        return precioSumarioToStr(calculateDiscountedSummaryPrice());
+        return repGasolineras.precioSumarioToStr(calculateDiscountedSummaryPrice());
     }
 
     /**
@@ -97,12 +98,12 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         NumberFormat formato = NumberFormat.getInstance(Locale.FRANCE);
 
         // Convierte a double el precio del diesel A
-        precioDiesel = precioToDouble(dieselPriceStr, formato);
+        precioDiesel = repGasolineras.precioToDouble(dieselPriceStr, formato);
 
         // Convierte a double el precio de la gasolina 95
-        precioGasolina = precioToDouble(precioGasolinaStr, formato);
+        precioGasolina = repGasolineras.precioToDouble(precioGasolinaStr, formato);
 
-        return calculateSummary(precioDiesel, precioGasolina);
+        return repGasolineras.calculateSummary(precioDiesel, precioGasolina);
     }
 
     /**
@@ -127,15 +128,15 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         NumberFormat formato = NumberFormat.getInstance(Locale.FRANCE);
 
         // Converts diesel price to double
-        dieselPrice = precioToDouble(dieselPriceStr, formato);
+        dieselPrice = repGasolineras.precioToDouble(dieselPriceStr, formato);
 
         // Converts 95-octanes price to double
-        precioGasolina = precioToDouble(precioGasolinaStr, formato);
+        precioGasolina = repGasolineras.precioToDouble(precioGasolinaStr, formato);
 
         // If the gas station has no promotions assigned, all prices remain unaltered
         if (promotions.isEmpty()) {
-            discountedDieselPriceStr = precioSumarioToStr(truncateFuelPrice(dieselPrice));
-            discounted95OctanesPriceStr = precioSumarioToStr(truncateFuelPrice(precioGasolina));
+            discountedDieselPriceStr = repGasolineras.precioSumarioToStr(truncateFuelPrice(dieselPrice));
+            discounted95OctanesPriceStr = repGasolineras.precioSumarioToStr(truncateFuelPrice(precioGasolina));
             return calculateSummaryPrice();
         }
 
@@ -146,14 +147,14 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         // Calculates the best price for both diesel and 95 octanes
         double dieselDiscountedPrice = truncateFuelPrice(repGasolineras.
                 calculateDiscountedPrice(dieselPrice, bestPromotionDiesel));
-        discountedDieselPriceStr = precioSumarioToStr(dieselDiscountedPrice);
+        discountedDieselPriceStr = repGasolineras.precioSumarioToStr(dieselDiscountedPrice);
 
         double unleaded95DiscountedPrice = truncateFuelPrice(repGasolineras.
                 calculateDiscountedPrice(precioGasolina, bestPromotion95Octanes));
-        discounted95OctanesPriceStr = precioSumarioToStr(unleaded95DiscountedPrice);
+        discounted95OctanesPriceStr = repGasolineras.precioSumarioToStr(unleaded95DiscountedPrice);
 
         // Calculates the summary price according to the validity of the fuel's prices
-        discountedSummary = calculateSummary(dieselDiscountedPrice, unleaded95DiscountedPrice);
+        discountedSummary = repGasolineras.calculateSummary(dieselDiscountedPrice, unleaded95DiscountedPrice);
 
         return discountedSummary;
     }
@@ -173,54 +174,12 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
             info.put("municipality", checkValid(gasolinera.getMunicipio()));
             info.put("direction", checkValid(gasolinera.getDireccion()));
             info.put("cp", checkValid(gasolinera.getCp()));
-            info.put("price95", checkValidPrice(gasolinera.getNormal95()) + " €/L");
-            info.put("priceDieselA", checkValidPrice(gasolinera.getDieselA()) + " €/L");
+            info.put("price95", repGasolineras.checkValidPrice(gasolinera.getNormal95()) + " €/L");
+            info.put("priceDieselA", repGasolineras.checkValidPrice(gasolinera.getDieselA()) + " €/L");
             info.put("schedule", checkValid(gasolinera.getHorario()));
 
             view.showInfo(info);
         }
-    }
-
-    /**
-     * Produce un valor double valido para un precio de combustible indicado como cadena de texto.
-     * @param precio Precio de combustible como cadena de texto.
-     * @param formato Formato a aplicar en la conversion.
-     * @return Precio de combustible como valor valido convertido de tipo double.
-     */
-    private double precioToDouble(String precio, NumberFormat formato) {
-        double precioDouble;
-
-        try {
-            Number number = formato.parse(precio);
-
-            // Comprueba si se puede obtener el valor en formato double
-            if (number != null) {
-                precioDouble = number.doubleValue();
-            } else {
-                precioDouble = ERROR_CONVERSION;
-            }
-
-        } catch (ParseException e) { // Si hay un error en la conversion
-            precioDouble = ERROR_CONVERSION;
-        }
-
-        return precioDouble;
-    }
-
-    /**
-     * Produce el String correspondiente para el precio de sumario de la gasolinera.
-     *
-     * @param precio Precio de sumario, tipo double.
-     * @return Precio de sumario como cadena de texto. "-" en caso de haber ocurrido algún error.
-     */
-    private String precioSumarioToStr(double precio) {
-        String precioTxt = "-";
-
-        if (precio > 0.0) { // Si el precio es valido
-            precioTxt = String.format(Locale.FRANCE, "%.2f", precio);
-        }
-
-        return precioTxt;
     }
 
     /**
@@ -241,28 +200,6 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         return correccion;
     }
 
-    /**
-     * Comprueba que la cadena de texto relativa a un precio de la gasolinera contiene texto
-     * a poder mostrar de forma valida.
-     *
-     * @param texto Texto a comprobar.
-     * @return Mismo texto si la comprobacion ha sido satisfactoria.
-     *         Guion en caso de que el texto no pase la comprobacion.
-     */
-    private String checkValidPrice(String texto) {
-        String correccion = texto;
-
-        if (texto.contains("-") || texto.equals("")) { // Si es negativo o no contiene informacion
-            correccion = "-";
-        } else { // Prepara el string para que solo muestre dos decimales
-            StringBuilder sb = new StringBuilder(correccion);
-            sb.deleteCharAt(sb.length()-1);
-            correccion = sb.toString();
-        }
-
-        return correccion;
-    }
-
 
     /**
      * Truncates price to 2 decimal places
@@ -273,24 +210,5 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         price = price * Math.pow(10, 2);
         price = Math.floor(price);
         return price / Math.pow(10, 2);
-    }
-
-    /**
-     * Calculates the summary price given the diesel and 95-octanes prices
-     * @param dieselPrice the price for diesel
-     * @param unleaded95Price the price for 95-octanes
-     * @return the summary price
-     */
-    private double calculateSummary(double dieselPrice, double unleaded95Price) {
-        double summary;
-        // Determines the summary price based on the validity of both prices
-        if (dieselPrice <= 0.0) { // Invalid diesel price
-            summary = unleaded95Price;
-        } else if(unleaded95Price <= 0.0) { // Invalid 95-octanes price
-            summary = dieselPrice;
-        } else { // Both prices are valid
-            summary = (dieselPrice + unleaded95Price * 2.0) / 3.0;
-        }
-        return summary;
     }
 }

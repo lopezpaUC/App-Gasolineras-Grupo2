@@ -15,6 +15,7 @@ import java.util.Map;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.MainView;
+import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.PromocionesRepository;
 
 /**
@@ -182,5 +183,10 @@ public class GasolineraDetailView extends AppCompatActivity
     @Override
     public PromocionesRepository getPromocionesRepository() {
         return new PromocionesRepository(this);
+    }
+
+    @Override
+    public GasolinerasRepository getGasolinerasRepository() {
+        return new GasolinerasRepository(this);
     }
 }

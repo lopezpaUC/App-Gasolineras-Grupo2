@@ -59,6 +59,12 @@ public interface IMainContract {
         void onListPromotionsClicked();
 
         /**
+         * This method should be used by the View to notify the Presenter that the
+         * Order by Price button has been clicked.
+         */
+        void onOrderByPriceClicked();
+
+        /**
          * Obtiene la lista de gasolineras que debe mostrar la vista.
          * @return lista de gasolineras que debe mostrar la vista.
          */
@@ -70,6 +76,15 @@ public interface IMainContract {
          * @param brands Mara o listado de marcas.
          */
         void filter(CombustibleType combustibleType, List<String> brands);
+
+        /**
+         * Obtains a list of gas stations ordered by a determined price (diesel / 95-octanes /
+         * summary price), either in an ascending or a descending order.
+         * @param order the order (ascending / descending)
+         * @param orderedValue the price to be ordered
+         * @return
+         */
+        void orderByPrice(PriceOrderType order, PriceFilterType orderedValue);
     }
 
     /**
@@ -150,6 +165,11 @@ public interface IMainContract {
          * The View is requested to open the Filter dialog
          */
         void openFilterDialog();
+
+        /**
+         * The View is requested to oen the Order by Price dialog
+         */
+        void openOrderByPrice();
     }
 
 }

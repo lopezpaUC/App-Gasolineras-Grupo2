@@ -9,10 +9,10 @@ public enum PriceFilterType {
     public static PriceFilterType getPriceFilterType(int type) {
         PriceFilterType typeEnum;
         switch (type) {
-            case 1:
+            case 0:
                 typeEnum = DIESEL;
                 break;
-            case 2:
+            case 1:
                 typeEnum = GASOLINA;
                 break;
             default:
@@ -29,7 +29,7 @@ public enum PriceFilterType {
      * @param type String que representa un tipo de combustible.
      * @return Tipo de combustible.
      */
-    public static PriceFilterType getCombTypeFromString(String type) {
+    public static PriceFilterType getPriceFilterType(String type) {
         PriceFilterType typeEnum;
         switch (type) {
             case "Diésel":

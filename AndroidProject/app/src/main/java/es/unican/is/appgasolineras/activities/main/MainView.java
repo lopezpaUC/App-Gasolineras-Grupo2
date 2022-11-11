@@ -112,6 +112,9 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             case R.id.menuListaPromociones:
                 presenter.onListPromotionsClicked();
                 return true;
+            case R.id.menuOrdenarPorPrecio:
+                presenter.onOrderByPriceClicked();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -240,6 +243,53 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         dialogFilter.show();
     }
 
+    public void openOrderByPrice() {
+
+        Dialog dialogOrder = new Dialog(MainView.this);
+
+        // Deshabilitar titulo (ya asignado en layout)
+        dialogOrder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogOrder.setContentView(R.layout.activity_order_by_precio);
+
+        // Inicializar elementos
+        TextView tvCancelar = dialogOrder.findViewById(R.id.tvCancel);
+        TextView tvAplicar = dialogOrder.findViewById(R.id.tvApply);
+
+        // Inicializacion spinner tipo combustible
+        Spinner spinnerPrice = dialogOrder.findViewById(R.id.spnTipoPrecio);
+        initialiseSpinnerPrice(spinnerPrice, dialogOrder);
+
+        // Inicializacion spinner marcas
+        Spinner spinnerOrderType = dialogOrder.findViewById(R.id.spnTipoOrdenacion);
+        initialiseSpinnerOrder(spinnerOrderType, dialogOrder);
+
+        // Listener para aplicar
+        tvAplicar.setOnClickListener(view -> {
+
+            // Guardar en el atributo el precio y el orden seleccionados
+            int price = spinnerPrice.getSelectedItemPosition();
+            int order = spinnerOrderType.getSelectedItemPosition();
+
+            // Actualizar lista
+            int itemPositionPrice = spinnerPrice.getSelectedItemPosition();
+            int itemPositionOrder = spinnerOrderType.getSelectedItemPosition();
+
+            updateListPrice(price, order);
+
+            // Guardar el filtro por tipo de combustible
+            saveIntPrefFilter(getString(R.string.saved_price_type_order), itemPositionPrice);
+            saveIntPrefFilter(getString(R.string.saved_price_order), itemPositionOrder);
+
+            dialogOrder.dismiss();
+        });
+
+        // Listener para cancelar
+        tvCancelar.setOnClickListener(view -> dialogOrder.dismiss());
+
+        dialogOrder.show();
+
+    }
+
     /**
      * Inicializa el spinner del filtro por tipo de combustible.
      * @param spinnerCombustible Spinner con las opciones de tipos de combustibles.
@@ -259,6 +309,36 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
                 Context.MODE_PRIVATE);
         int savedCombValue = filterPref.getInt(getString(R.string.saved_comb_type_filter), 0);
         spinnerCombustible.setSelection(savedCombValue);
+    }
+
+    private void initialiseSpinnerPrice(Spinner spinnerPrice, Dialog dialogFilter) {
+        // ArrayAdapter con los tipos de combustibles
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(
+                dialogFilter.getContext(), R.array.price_type_order_array,
+                android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        spinnerPrice.setAdapter(arrayAdapter);
+
+        // Recupera la seleccion previa a cerrar la ventana
+        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                Context.MODE_PRIVATE);
+        int savedPriceValue = filterPref.getInt(getString(R.string.saved_price_type_order), 0);
+        spinnerPrice.setSelection(savedPriceValue);
+    }
+
+    private void initialiseSpinnerOrder(Spinner spinnerOrder, Dialog dialogFilter) {
+        // ArrayAdapter con los tipos de combustibles
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(
+                dialogFilter.getContext(), R.array.price_order_array,
+                android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        spinnerOrder.setAdapter(arrayAdapter);
+
+        // Recupera la seleccion previa a cerrar la ventana
+        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                Context.MODE_PRIVATE);
+        int savedOrderValue = filterPref.getInt(getString(R.string.saved_price_order), 0);
+        spinnerOrder.setSelection(savedOrderValue);
     }
 
     /**
@@ -300,6 +380,25 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
                 adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
                 break;
         }
+
+        // Actualiza la lista
+        ListView list = findViewById(R.id.lvGasolineras);
+        list.setAdapter(adapter);
+    }
+
+    private void updateListPrice(int price, int order)
+    {
+        // Converts position to diesel / 95-octanes / summary price
+        PriceFilterType selectedPriceType = PriceFilterType.getPriceFilterType(price);
+
+        // Converts position to order (ascending / descending)
+        PriceOrderType selectedOrderType = PriceOrderType.getPriceOrder(order);
+
+        // Requests presenter to order the list and to update the shown gas stations
+        presenter.orderByPrice(selectedOrderType, selectedPriceType);
+
+        // Prepara ArrayAdapter para la lista a mostrar
+        GasolinerasArrayAdapter adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
 
         // Actualiza la lista
         ListView list = findViewById(R.id.lvGasolineras);

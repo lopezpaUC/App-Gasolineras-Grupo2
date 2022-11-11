@@ -2,9 +2,12 @@ package es.unican.is.appgasolineras.repository;
 
 import android.content.Context;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Locale;
 
 import es.unican.is.appgasolineras.common.Callback;
 import es.unican.is.appgasolineras.common.prefs.Prefs;
@@ -25,6 +28,7 @@ public class GasolinerasRepository implements IGasolinerasRepository {
     private static final String KEY_LAST_SAVED = "KEY_LAST_SAVED";
     private static final int LOAD_OFFLINE = 1;
     private static final int LOAD_ONLINE = 0;
+    private static final double ERROR_CONVERSION = -1.0; // Error convirtiendo String a double
 
     private final Context context;
     private int loadingMethod;
@@ -161,5 +165,79 @@ public class GasolinerasRepository implements IGasolinerasRepository {
         } else {
             return price * (100 - promotion.getDescuentoPorcentual()) / 100;
         }
+    }
+
+    public String precioSumarioToStr(double precio) {
+        String precioTxt = "-";
+
+        if (precio > 0.0) { // Si el precio es valido
+            precioTxt = String.format(Locale.FRANCE, "%.2f", precio);
+        }
+
+        return precioTxt;
+    }
+
+    /**
+     * Comprueba que la cadena de texto relativa a un precio de la gasolinera contiene texto
+     * a poder mostrar de forma valida.
+     *
+     * @param texto Texto a comprobar.
+     * @return Mismo texto si la comprobacion ha sido satisfactoria.
+     *         Guion en caso de que el texto no pase la comprobacion.
+     */
+    @Override
+    public String checkValidPrice(String texto) {
+        String correccion = texto;
+
+        if (texto.contains("-") || texto.equals("")) { // Si es negativo o no contiene informacion
+            correccion = "-";
+        } else { // Prepara el string para que solo muestre dos decimales
+            StringBuilder sb = new StringBuilder(correccion);
+            sb.deleteCharAt(sb.length()-1);
+            correccion = sb.toString();
+        }
+
+        return correccion;
+    }
+
+    @Override
+    public double calculateSummary(double dieselPrice, double unleaded95Price) {
+        double summary;
+        // Determines the summary price based on the validity of both prices
+        if (dieselPrice <= 0.0) { // Invalid diesel price
+            summary = unleaded95Price;
+        } else if(unleaded95Price <= 0.0) { // Invalid 95-octanes price
+            summary = dieselPrice;
+        } else { // Both prices are valid
+            summary = (dieselPrice + unleaded95Price * 2.0) / 3.0;
+        }
+        return summary;
+    }
+
+    /**
+     * Produce un valor double valido para un precio de combustible indicado como cadena de texto.
+     * @param precio Precio de combustible como cadena de texto.
+     * @param formato Formato a aplicar en la conversion.
+     * @return Precio de combustible como valor valido convertido de tipo double.
+     */
+    @Override
+    public double precioToDouble(String precio, NumberFormat formato) {
+        double precioDouble;
+
+        try {
+            Number number = formato.parse(precio);
+
+            // Comprueba si se puede obtener el valor en formato double
+            if (number != null) {
+                precioDouble = number.doubleValue();
+            } else {
+                precioDouble = ERROR_CONVERSION;
+            }
+
+        } catch (ParseException e) { // Si hay un error en la conversion
+            precioDouble = ERROR_CONVERSION;
+        }
+
+        return precioDouble;
     }
 }

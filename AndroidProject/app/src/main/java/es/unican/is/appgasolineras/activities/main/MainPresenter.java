@@ -1,10 +1,12 @@
 package es.unican.is.appgasolineras.activities.main;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
@@ -141,7 +143,8 @@ public class MainPresenter implements IMainContract.Presenter {
         init();
     }
 
-    //public void onFilterByPriceClicked() { view.openPriceFilterDialog(); }
+    @Override
+    public void onOrderByPriceClicked() { view.openOrderByPrice(); }
 
     @Override
     public void filter(CombustibleType combustibleType, List<String> brands) {
@@ -165,9 +168,6 @@ public class MainPresenter implements IMainContract.Presenter {
         }
     }
 
-    public void filterByPrice() {
-
-    }
     /**
      * Filtra por tipo de combustible.
      * @param combustibleType Tipo de combustible a utilizar para filtrar
@@ -208,47 +208,10 @@ public class MainPresenter implements IMainContract.Presenter {
         }
     }
 
-    private List<Gasolinera> filterByPrice(PriceOrderType order, PriceFilterType orderedValue) {
+    @Override
+    public void orderByPrice(PriceOrderType order, PriceFilterType orderedValue) {
         // List with results
-        List<Gasolinera> filtered = new LinkedList<>();
-
-        // Applies promotions
-        if (orderedValue == PriceFilterType.DIESEL || orderedValue == PriceFilterType.GASOLINA) {
-            for (Gasolinera gasolinera : filtered) {
-                List<Promocion> promotions = repositoryPromotions.
-                        getPromocionesRelacionadasConGasolinera(gasolinera.getId());
-
-                double dieselPrice = Double.parseDouble(gasolinera.getDieselA());
-                double unleaded95Price = Double.parseDouble(gasolinera.getNormal95());
-                Promocion bestPromotionDiesel;
-                Promocion bestPromotion95Octanes;
-
-                // There is a promotion to be applied
-                if (!promotions.isEmpty()) {
-                    // Gets the best promotion for either diesel or unleaded 95 octanes
-                    if (orderedValue == PriceFilterType.DIESEL) { // Diesel
-                        // Gets the best promotion for diesel
-                        bestPromotionDiesel = repositoryGasolineras.bestPromotion(dieselPrice, promotions, "Diésel");
-
-                        // Valid promotion for diesel, updates price
-                        if (bestPromotionDiesel != null) {
-                            dieselPrice = repositoryGasolineras.calculateDiscountedPrice(dieselPrice, bestPromotionDiesel);
-                        }
-                    } else if (orderedValue == PriceFilterType.GASOLINA) { // 95 octanes
-                        bestPromotion95Octanes = repositoryGasolineras.bestPromotion(unleaded95Price, promotions, "Gasolina");
-
-                        // Valid promotion for 95 octanes, updates price
-                        if (bestPromotion95Octanes != null) {
-                            unleaded95Price = repositoryGasolineras.calculateDiscountedPrice(unleaded95Price, bestPromotion95Octanes);
-                        }
-                    } else { // Summary price
-                        double summaryPrice = gasolinera.getSummaryPrice();
-                    } // else
-                } // if
-                gasolinera.setDiscountedDiesel(String.valueOf(dieselPrice));
-                gasolinera.setDiscounted95(String.valueOf(unleaded95Price));
-            } // for
-        } // if (orderedValue)
+        List<Gasolinera> filtered;
 
         // Filters by defined criterion
         if (orderedValue == PriceFilterType.DIESEL) { // Diesel
@@ -258,16 +221,70 @@ public class MainPresenter implements IMainContract.Presenter {
             filtered = filterByGasolina();
             Collections.sort(filtered, new SortBy95OctanesPrice());
         } else { // Summary price
+            filtered = filterList(orderedValue);
             Collections.sort(filtered, new SortBySummaryPrice());
         }
-
-        Iterator<Gasolinera> iterator = filtered.iterator();
 
         // Descending order (highest first, lowest last) --> reversed ascending list
         if (order == PriceOrderType.DESC) {
             Collections.reverse(filtered);
         }
 
+        if (filtered.isEmpty()) { // If empty list (no compatible gas stations)
+            shownGasolineras = new ArrayList<>();
+        } else {
+            shownGasolineras = filtered;
+        }
+    }
+
+    private List<Gasolinera> filterList(PriceFilterType orderedValue) {
+        List<Gasolinera> filtered = new LinkedList<>();
+
+        // Applies promotions
+            for (Gasolinera gasolinera : getShownGasolineras()) {
+                NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
+                double dieselPrice = repositoryGasolineras.precioToDouble(gasolinera.getDieselA(), format);
+                double unleaded95Price = repositoryGasolineras.precioToDouble(gasolinera.getNormal95(), format);
+                double summaryPrice = repositoryGasolineras.precioToDouble(gasolinera.getSummaryPrice(), format);
+
+                if (orderedValue == PriceFilterType.DIESEL || orderedValue == PriceFilterType.GASOLINA) {
+                    List<Promocion> promotions = repositoryPromotions.
+                            getPromocionesRelacionadasConGasolinera(gasolinera.getId());
+
+
+                    Promocion bestPromotionDiesel;
+                    Promocion bestPromotion95Octanes;
+
+                    // There is a promotion to be applied
+                    if (!promotions.isEmpty()) {
+                        // Gets the best promotion for either diesel or unleaded 95 octanes
+                        if (orderedValue == PriceFilterType.DIESEL) { // Diesel
+                            // Gets the best promotion for diesel
+                            bestPromotionDiesel = repositoryGasolineras.bestPromotion(dieselPrice, promotions, "Diésel");
+
+                            // Valid promotion for diesel, updates price
+                            if (bestPromotionDiesel != null) {
+                                dieselPrice = repositoryGasolineras.calculateDiscountedPrice(dieselPrice, bestPromotionDiesel);
+                            }
+                        } else if (orderedValue == PriceFilterType.GASOLINA) { // 95 octanes
+                            bestPromotion95Octanes = repositoryGasolineras.bestPromotion(unleaded95Price, promotions, "Gasolina");
+
+                            // Valid promotion for 95 octanes, updates price
+                            if (bestPromotion95Octanes != null) {
+                                unleaded95Price = repositoryGasolineras.calculateDiscountedPrice(unleaded95Price, bestPromotion95Octanes);
+                            }
+                        }
+                    } // if
+                } else { // Summary price
+                    summaryPrice = gasolinera.calculateSummaryPrice();
+                }
+
+                gasolinera.setDiscountedDiesel(String.valueOf(dieselPrice));
+                gasolinera.setDiscounted95(String.valueOf(unleaded95Price));
+                gasolinera.setDiscountedSummaryPrice(repositoryGasolineras.precioSumarioToStr(summaryPrice));
+
+                filtered.add(gasolinera);
+            } // for
         return filtered;
     }
 

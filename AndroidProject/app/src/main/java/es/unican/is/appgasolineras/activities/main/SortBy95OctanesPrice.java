@@ -8,8 +8,8 @@ public class SortBy95OctanesPrice implements Comparator<Gasolinera> {
 
     @Override
     public int compare(Gasolinera gasolinera, Gasolinera other) {
-        double gasolinera95 = Double.parseDouble(gasolinera.getNormal95());
-        double other95 = Double.parseDouble(other.getNormal95());
+        double gasolinera95 = Double.parseDouble(gasolinera.getNormal95().replace(",", "."));
+        double other95 = Double.parseDouble(other.getNormal95().replace(",", "."));
 
         return Double.compare(gasolinera95, other95);
     }

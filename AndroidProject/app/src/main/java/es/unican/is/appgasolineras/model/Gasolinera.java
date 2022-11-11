@@ -31,8 +31,8 @@ Gasolinera implements Parcelable {
     @SerializedName("Horario")                      private String horario;
     @SerializedName("Precio Gasoleo A")             private String dieselA;
     @SerializedName("Precio Gasolina 95 E5")        private String normal95;  // 95 octanes
-                                                    private String summaryPrice;
 
+                                                    private String summaryPrice;
                                                     private String discountedDiesel;
                                                     private String discounted95;
                                                     private String discountedSummaryPrice;
@@ -141,6 +141,21 @@ Gasolinera implements Parcelable {
         this.discounted95 = discounted95;
     }
 
+    public String getSummaryPrice() {
+        return summaryPrice;
+    }
+    public void setSummaryPrice(String summaryPrice) {
+        this.summaryPrice = summaryPrice;
+    }
+
+    public String getDiscountedSummaryPrice() {
+        return discountedSummaryPrice;
+    }
+
+    public void setDiscountedSummaryPrice(String discountedSummaryPrice) {
+        this.discountedSummaryPrice = discountedSummaryPrice;
+    }
+
     /*
      * Methods for Parcelable interface. Needed to send this object in an Intent.
      *
@@ -159,7 +174,7 @@ Gasolinera implements Parcelable {
         normal95 = in.readString();
     }
 
-    public double getSummaryPrice() {
+    public double calculateSummaryPrice() {
         double dieselPrice = Double.parseDouble(dieselA);
         double unleaded95Price = Double.parseDouble(normal95);
 
