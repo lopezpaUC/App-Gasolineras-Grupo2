@@ -2,6 +2,7 @@ package es.unican.is.appgasolineras.activities.main;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,12 +11,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.SimpleDateFormat;
@@ -134,9 +138,33 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         return new GasolinerasRepository(this);
     }
 
+
     @Override
     public void showGasolineras(List<Gasolinera> gasolineras) {
         GasolinerasArrayAdapter adapter = new GasolinerasArrayAdapter(this, gasolineras);
+        ListView list = findViewById(R.id.lvGasolineras);
+        list.setAdapter(adapter);
+    }
+
+    @Override
+    public void showGasolinerasAdvanced(List<Gasolinera> shownGasolineras,
+                                        CombustibleType combustibleDestacado) {
+        GasolinerasArrayAdapter adapter;
+        switch (combustibleDestacado) {
+            case GASOLINA:
+                adapter = new GasolinerasArrayAdapter(this, shownGasolineras,
+                        getResources().getString(R.string.gasolina95label));
+                break;
+            case DIESEL:
+                adapter = new GasolinerasArrayAdapter(this, shownGasolineras,
+                        getResources().getString(R.string.dieselAlabel));
+                break;
+            default:
+                adapter = new GasolinerasArrayAdapter(this, shownGasolineras);
+                break;
+        }
+
+        // Actualiza la lista
         ListView list = findViewById(R.id.lvGasolineras);
         list.setAdapter(adapter);
     }
@@ -217,15 +245,39 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         MultipleSpinner spinnerMarcas = dialogFilter.findViewById(R.id.spnMarca);
         initializeSpinnerMarcas(spinnerMarcas);
 
+        // Inicializacion checkbox
+        CheckBox chckLowcost = dialogFilter.findViewById(R.id.chckLowcost);
+
+        // Listener para boton de informacion
+        ImageButton btnInfo = dialogFilter.findViewById(R.id.btnInfo);
+        btnInfo.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setPositiveButton(getResources().getString(R.string.accept),
+                    ((DialogInterface dialogInterface, int i) -> {
+                        dialogInterface.cancel();
+                    }));
+            builder.setTitle(getResources().getString(R.string.marcasLowcost));
+
+            StringBuilder sb = new StringBuilder();
+            for (String s:getResources().getStringArray(R.array.lowcost_array)) {
+                sb.append(s);
+            }
+            builder.setMessage(sb.toString());
+            AlertDialog ad = builder.create();
+            ad.show();
+        });
+
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
+            // Obtener estado del checkbox para gasolineras lowcost
+            boolean mostrarSoloLowcost = chckLowcost.isChecked();
 
             // Guardar en el atributo las marcas seleccionadas
             checkedBrandBoxes = spinnerMarcas.getSelectedStrings();
 
             // Actualizar lista
             int itemPositionComb = spinnerCombustible.getSelectedItemPosition();
-            updateList(itemPositionComb, checkedBrandBoxes);
+            updateList(itemPositionComb, checkedBrandBoxes, mostrarSoloLowcost);
 
             // Guardar el filtro por tipo de combustible
             saveIntPrefFilter(getString(R.string.saved_comb_type_filter), itemPositionComb);
@@ -276,34 +328,15 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
      *
      * @param itemPositionComb Posicion marcada en el filtro por tipo de combustible.
      * @param marcasSeleccionadas Gasolineras marcadas para ser mostradas en el filtro por marcas.
+     * @param lowcost Booleano que indica si solo se deben mostrar gasolineras lowcost (true).
      */
-    private void updateList(int itemPositionComb, List<String> marcasSeleccionadas) {
+    private void updateList(int itemPositionComb, List<String> marcasSeleccionadas, boolean lowcost) {
         // Convierte la posicion a un tipo de combustible, para mayor claridad
         CombustibleType combustibleSeleccionado = CombustibleType.getCombTypeFromInt(
                 itemPositionComb);
 
         // Solicita al presenter que realice el filtrado y actualice las gasolineras a mostrar
-        presenter.filter(combustibleSeleccionado, marcasSeleccionadas);
-
-        // Prepara ArrayAdapter para la lista a mostrar
-        GasolinerasArrayAdapter adapter;
-        switch (combustibleSeleccionado) {
-            case GASOLINA:
-                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
-                        getResources().getString(R.string.gasolina95label));
-                break;
-            case DIESEL:
-                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
-                        getResources().getString(R.string.dieselAlabel));
-                break;
-            default:
-                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
-                break;
-        }
-
-        // Actualiza la lista
-        ListView list = findViewById(R.id.lvGasolineras);
-        list.setAdapter(adapter);
+        presenter.filter(combustibleSeleccionado, marcasSeleccionadas, lowcost);
     }
 
     /**
