@@ -3,7 +3,6 @@ package es.unican.is.appgasolineras.repository;
 import android.content.Context;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import es.unican.is.appgasolineras.common.Callback;

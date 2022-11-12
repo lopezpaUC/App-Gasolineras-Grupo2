@@ -107,22 +107,22 @@ public class MainPresenterTest extends TestCase {
         wrongBrandList.add("REPSOLITO");
 
         // Caso valido: lista con una marca existente
-        sut.filter(CombustibleType.ALL_COMB, brandsList.subList(0, 1));
+        sut.filter(CombustibleType.ALL_COMB, brandsList.subList(0, 1),false);
         assertEquals(fuelStationsCepsa, sut.getShownGasolineras());
         verify(mockMainView).showGasolineras(sut.getShownGasolineras());
 
         // Caso válido: lista con mas de una marca existente
-        sut.filter(CombustibleType.ALL_COMB, brandsList);
+        sut.filter(CombustibleType.ALL_COMB, brandsList,false);
         assertEquals(fuelStationsList, sut.getShownGasolineras());
         verify(mockMainView, atLeast(2)).showGasolineras(sut.getShownGasolineras());
 
         // Caso valido: lista vacia
-        sut.filter(CombustibleType.ALL_COMB, brandsList.subList(0, 0));
+        sut.filter(CombustibleType.ALL_COMB, brandsList.subList(0, 0),false);
         assertEquals(fuelStationsList, sut.getShownGasolineras());
         verify(mockMainView, atLeast(3)).showGasolineras(sut.getShownGasolineras());
 
         // Caso no valido: lista con una marca no existente
-        sut.filter(CombustibleType.ALL_COMB, wrongBrandList);
+        sut.filter(CombustibleType.ALL_COMB, wrongBrandList,false);
         assertNull(sut.getShownGasolineras());
         verify(mockMainView).showLoadEmpty();
     }
