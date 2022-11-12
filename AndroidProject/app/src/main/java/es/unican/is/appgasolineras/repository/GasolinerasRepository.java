@@ -90,13 +90,16 @@ public class GasolinerasRepository implements IGasolinerasRepository {
 
     @Override
     public List<Marca> getMarcasLowcost() {
-        if (getMarcasLowcost().isEmpty()) {
-
-        }
-
         GasolineraDatabase db = GasolineraDatabase.getDB(context);
         MarcaDao marcasDao = db.marcaDao();
-        return marcasDao.getMarcasLowcost();
+
+        List<Marca> marcasLowcost = marcasDao.getMarcasLowcost();
+        if (marcasLowcost.isEmpty()) {
+            insertLowcost();
+            marcasLowcost = marcasDao.getMarcasLowcost();
+        }
+
+        return marcasLowcost;
     }
 
     public List<Gasolinera> getGasolinerasLowcost() {
@@ -104,11 +107,6 @@ public class GasolinerasRepository implements IGasolinerasRepository {
         GasolineraDao gasolinerasDao = db.gasolineraDao();
 
         List<Marca> marcasLowcost = getMarcasLowcost();
-
-        if (marcasLowcost.isEmpty()) {
-            insertLowcost();
-            marcasLowcost = getMarcasLowcost();
-        }
 
         List<Gasolinera> gasolinerasLowcost = new ArrayList<>();
         for (Gasolinera g:gasolinerasDao.getAll()) {
