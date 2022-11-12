@@ -33,6 +33,11 @@
     <string name="petronor">Petronor</string>
     <string name="repsol">Repsol</string>
     <string name="shell">Shell</string>
+    <string name="petroprix">Petroprix</string>
+    <string name="easygas">Easygas</string>
+    <string name="beroil">Beroil</string>
+    <string name="ballenoil">Ballenoil</string>
+    <string name="meroil">Meroil</string>
     <string name="varias">Varias</string>
     <string name="varios">Varios</string>
     <string name="loadErrorEmpty">No hay gasolineras compatibles.</string>
@@ -57,6 +62,11 @@
         <item>@string/petronor</item>
         <item>@string/repsol</item>
         <item>@string/shell</item>
+        <item>@string/petroprix</item>
+        <item>@string/easygas</item>
+        <item>@string/beroil</item>
+        <item>@string/ballenoil</item>
+        <item>@string/meroil</item>
     </string-array>
 
     <string-array name="empty_array">
@@ -116,5 +126,7 @@
     <string name="consideraLowcost">Gasolineras consideradas low-cost</string>
 
     <string name="marcasLowcost">Marcas Low-cost</string>
+    <string name="instLowcost">Se consideran gasolineras low-cost aquellas que se corresponden con
+    las siguientes marcas:</string>
 
 </resources>

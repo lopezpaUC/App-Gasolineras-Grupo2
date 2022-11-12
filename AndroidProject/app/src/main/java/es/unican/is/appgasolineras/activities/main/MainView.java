@@ -259,8 +259,13 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             builder.setTitle(getResources().getString(R.string.marcasLowcost));
 
             StringBuilder sb = new StringBuilder();
+            sb.append(getResources().getString(R.string.instLowcost));
+            sb.append("\n\n");
+
             for (String s:getResources().getStringArray(R.array.lowcost_array)) {
+                sb.append("-> ");
                 sb.append(s);
+                sb.append("\n");
             }
             builder.setMessage(sb.toString());
             AlertDialog ad = builder.create();
