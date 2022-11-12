@@ -8,8 +8,8 @@ public class SortBySummaryPrice implements Comparator<Gasolinera> {
 
     @Override
     public int compare(Gasolinera gasolinera, Gasolinera other) {
-        double gasolineraSummaryPrice = gasolinera.calculateSummaryPrice();
-        double otherSummaryPrice = other.calculateSummaryPrice();
+        double gasolineraSummaryPrice = gasolinera.calculateDiscountedSummaryPrice();
+        double otherSummaryPrice = other.calculateDiscountedSummaryPrice();
 
         return Double.compare(gasolineraSummaryPrice, otherSummaryPrice);
     }

@@ -275,13 +275,11 @@ public class MainPresenter implements IMainContract.Presenter {
                             }
                         }
                     } // if
-                } else { // Summary price
-                    summaryPrice = gasolinera.calculateSummaryPrice();
                 }
 
                 gasolinera.setDiscountedDiesel(String.valueOf(dieselPrice));
                 gasolinera.setDiscounted95(String.valueOf(unleaded95Price));
-                gasolinera.setDiscountedSummaryPrice(repositoryGasolineras.precioSumarioToStr(summaryPrice));
+                gasolinera.setDiscountedSummaryPrice(String.valueOf(gasolinera.calculateDiscountedSummaryPrice()));
 
                 filtered.add(gasolinera);
             } // for

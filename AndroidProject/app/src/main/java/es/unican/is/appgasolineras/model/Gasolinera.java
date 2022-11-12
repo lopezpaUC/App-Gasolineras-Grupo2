@@ -175,10 +175,18 @@ Gasolinera implements Parcelable {
     }
 
     public double calculateSummaryPrice() {
-        double dieselPrice = Double.parseDouble(dieselA);
-        double unleaded95Price = Double.parseDouble(normal95);
+        double dieselPrice = Double.parseDouble(dieselA.replace(",", "."));
+        double unleaded95Price = Double.parseDouble(normal95.replace(",", "."));
 
         return (dieselPrice + unleaded95Price * 2) / 3;
+    }
+
+    public double calculateDiscountedSummaryPrice() {
+        double dieselPrice = Double.parseDouble(discountedDiesel.replace(",", "."));
+        double unleaded95Price = Double.parseDouble(discounted95.replace(",", "."));
+
+        return (dieselPrice + unleaded95Price * 2) / 3;
+
     }
 
     public static final Creator<Gasolinera> CREATOR = new Creator<Gasolinera>() {

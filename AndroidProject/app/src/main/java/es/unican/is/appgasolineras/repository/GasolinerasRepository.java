@@ -240,4 +240,23 @@ public class GasolinerasRepository implements IGasolinerasRepository {
 
         return precioDouble;
     }
+
+    /**
+     * Comprueba que la cadena de texto relativa a información de la gasolinera contiene texto
+     * a poder mostrar de forma valida.
+     *
+     * @param texto Texto a comprobar.
+     * @return Mismo texto si la comprobacion ha sido satisfactoria.
+     *         Guion en caso de que el texto no pase la comprobacion.
+     */
+    @Override
+    public String checkValid(String texto) {
+        String correccion = texto;
+
+        if (texto.equals("")) { // Si no se contiene ninguna informacion
+            correccion = "-";
+        }
+
+        return correccion;
+    }
 }

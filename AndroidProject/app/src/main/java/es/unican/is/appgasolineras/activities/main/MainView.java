@@ -274,11 +274,11 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             int itemPositionPrice = spinnerPrice.getSelectedItemPosition();
             int itemPositionOrder = spinnerOrderType.getSelectedItemPosition();
 
-            updateListPrice(price, order);
-
-            // Guardar el filtro por tipo de combustible
+            // Saves selected price and order
             saveIntPrefFilter(getString(R.string.saved_price_type_order), itemPositionPrice);
             saveIntPrefFilter(getString(R.string.saved_price_order), itemPositionOrder);
+
+            updateListPrice(price, order);
 
             dialogOrder.dismiss();
         });

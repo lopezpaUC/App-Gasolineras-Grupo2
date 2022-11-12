@@ -170,34 +170,16 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         } else { // De lo contrario, si contiene mas informacion, la carga y ordena mostrarla
             Map<String, String> info = new HashMap<>();
             info.put("summary", precioSumarioStr + " €/L");
-            info.put("label", checkValid(gasolinera.getRotulo()));
-            info.put("municipality", checkValid(gasolinera.getMunicipio()));
-            info.put("direction", checkValid(gasolinera.getDireccion()));
-            info.put("cp", checkValid(gasolinera.getCp()));
+            info.put("label", repGasolineras.checkValid(gasolinera.getRotulo()));
+            info.put("municipality", repGasolineras.checkValid(gasolinera.getMunicipio()));
+            info.put("direction", repGasolineras.checkValid(gasolinera.getDireccion()));
+            info.put("cp", repGasolineras.checkValid(gasolinera.getCp()));
             info.put("price95", repGasolineras.checkValidPrice(gasolinera.getNormal95()) + " €/L");
             info.put("priceDieselA", repGasolineras.checkValidPrice(gasolinera.getDieselA()) + " €/L");
-            info.put("schedule", checkValid(gasolinera.getHorario()));
+            info.put("schedule", repGasolineras.checkValid(gasolinera.getHorario()));
 
             view.showInfo(info);
         }
-    }
-
-    /**
-     * Comprueba que la cadena de texto relativa a información de la gasolinera contiene texto
-     * a poder mostrar de forma valida.
-     *
-     * @param texto Texto a comprobar.
-     * @return Mismo texto si la comprobacion ha sido satisfactoria.
-     *         Guion en caso de que el texto no pase la comprobacion.
-     */
-    private String checkValid(String texto) {
-        String correccion = texto;
-
-        if (texto.equals("")) { // Si no se contiene ninguna informacion
-            correccion = "-";
-        }
-
-        return correccion;
     }
 
 
