@@ -107,6 +107,7 @@ public class MainPresenterTest extends TestCase {
         wrongBrandList.add("REPSOLITO");
 
         // Caso valido: lista con una marca existente
+
         sut.filter(CombustibleType.ALL_COMB, brandsList.subList(0, 1), false);
         assertEquals(fuelStationsCepsa, sut.getShownGasolineras());
         verify(mockMainView).showGasolinerasAdvanced(sut.getShownGasolineras(), CombustibleType.ALL_COMB);
