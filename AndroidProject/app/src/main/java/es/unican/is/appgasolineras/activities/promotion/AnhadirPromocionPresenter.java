@@ -200,7 +200,7 @@ public class AnhadirPromocionPresenter implements IAnhadirPromocionContract.Pres
         List<Marca> mParsed = new ArrayList<>();
 
         for (String m:marcas) {
-            mParsed.add(new Marca(m));
+            mParsed.add(new Marca(m, false));
         }
 
         return mParsed;

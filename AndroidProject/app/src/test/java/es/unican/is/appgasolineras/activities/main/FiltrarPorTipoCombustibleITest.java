@@ -69,7 +69,7 @@ public class FiltrarPorTipoCombustibleITest {
     public void testFilterByCombustible() {
 
         // Filtrar por diésel
-        sut.filter(CombustibleType.DIESEL, ls.subList(0,0),false);
+        sut.filter(CombustibleType.DIESEL, ls.subList(0,0), false);
         assertEquals(6, sut.getShownGasolineras().size());
         assertEquals("CEPSA", sut.getShownGasolineras().get(0).getRotulo());
         assertEquals("PETRONOR", sut.getShownGasolineras().get(1).getRotulo());
@@ -79,7 +79,7 @@ public class FiltrarPorTipoCombustibleITest {
 
 
         // Filtrar por gasolina
-        sut.filter(CombustibleType.GASOLINA, ls.subList(0,0),false);
+        sut.filter(CombustibleType.GASOLINA, ls.subList(0,0), false);
         assertEquals(8, sut.getShownGasolineras().size());
         assertEquals("CEPSA", sut.getShownGasolineras().get(0).getRotulo());
         assertEquals("REPSOL", sut.getShownGasolineras().get(1).getRotulo());
@@ -92,7 +92,7 @@ public class FiltrarPorTipoCombustibleITest {
 
 
         // Filtrar por todos
-        sut.filter(CombustibleType.ALL_COMB, ls.subList(0,0),false);
+        sut.filter(CombustibleType.ALL_COMB, ls.subList(0,0), false);
         assertEquals(10, sut.getShownGasolineras().size());
         assertEquals("CEPSA", sut.getShownGasolineras().get(0).getRotulo());
         assertEquals("REPSOL", sut.getShownGasolineras().get(1).getRotulo());
