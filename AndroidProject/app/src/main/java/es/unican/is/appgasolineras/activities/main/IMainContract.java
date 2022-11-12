@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
+import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 
 /**
  * The Main Activity is composed of a Presenter and View, which must expose the methods
@@ -107,6 +108,9 @@ public interface IMainContract {
          * @return the Repository object to access gas stations
          */
         IGasolinerasRepository getGasolineraRepository();
+
+
+        IPromocionesRepository getPromotionsRepository();
 
         /**
          * The View is requested to show a list of gas stations

@@ -34,6 +34,8 @@ import es.unican.is.appgasolineras.common.utils.MultipleSpinner;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
+import es.unican.is.appgasolineras.repository.IPromocionesRepository;
+import es.unican.is.appgasolineras.repository.PromocionesRepository;
 
 /**
  * Vista principal abierta al iniciar la aplicacion.
@@ -135,6 +137,11 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     @Override
     public IGasolinerasRepository getGasolineraRepository() {
         return new GasolinerasRepository(this);
+    }
+
+    @Override
+    public IPromocionesRepository getPromotionsRepository() {
+        return new PromocionesRepository(this);
     }
 
     @Override
@@ -397,10 +404,16 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         // Requests presenter to order the list and to update the shown gas stations
         presenter.orderByPrice(selectedOrderType, selectedPriceType);
 
-        // Prepara ArrayAdapter para la lista a mostrar
-        GasolinerasArrayAdapter adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
+        // Prepares ArrayAdapter for the list to be shown
+        GasolinerasArrayAdapter adapter;
+        if (selectedPriceType == PriceFilterType.SUMARIO) {
+            adapter =
+                    new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(), true);
+        } else {
+            adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
+        }
 
-        // Actualiza la lista
+        // Updates the list
         ListView list = findViewById(R.id.lvGasolineras);
         list.setAdapter(adapter);
     }

@@ -1,5 +1,6 @@
 package es.unican.is.appgasolineras.activities.main;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +32,8 @@ public class MainPresenter implements IMainContract.Presenter {
     // Metodo utilizado para la carga de gasolineras
     private int loadMethod;
 
+    private NumberFormat format;
+
     /**
      * Constructor del presenter de la vista principal.
      *
@@ -47,35 +50,40 @@ public class MainPresenter implements IMainContract.Presenter {
             repositoryGasolineras = view.getGasolineraRepository();
         }
 
+        if (repositoryPromotions == null) { // Si no consta repositorio asignado
+            repositoryPromotions = view.getPromotionsRepository();
+        }
+
+
         if (repositoryGasolineras != null) { // Si ya consta un repositorio
             doSyncInit();
         }
+
+        format = NumberFormat.getInstance(Locale.FRANCE);
     }
 
     /** NO USADO POR EL MOMENTO
      * Muestra contenido antes de haber intentado recibir el actualizado de internet.
      */
     /**private void doAsyncInit() {
-        repositoryGasolineras.requestGasolineras(new Callback<List<Gasolinera>>() {
-            @Override
-            public void onSuccess(List<Gasolinera> data) {
-                loadMethod = repositoryGasolineras.getLoadingMethod();
-                view.showGasolineras(data);
-                shownGasolineras = data;
-                if (loadMethod == LOAD_ONLINE) {
-                    view.showLoadCorrectOnline(data.size());
-                } else {
-                    view.showLoadCorrectOffline(data.size());
-                }
-            }
+     repositoryGasolineras.requestGasolineras(new Callback<List<Gasolinera>>() {
+    @Override public void onSuccess(List<Gasolinera> data) {
+    loadMethod = repositoryGasolineras.getLoadingMethod();
+    view.showGasolineras(data);
+    shownGasolineras = data;
+    if (loadMethod == LOAD_ONLINE) {
+    view.showLoadCorrectOnline(data.size());
+    } else {
+    view.showLoadCorrectOffline(data.size());
+    }
+    }
 
-            @Override
-            public void onFailure() {
-                shownGasolineras = null;
-                view.showLoadError();
-            }
-        });
-    }*/
+    @Override public void onFailure() {
+    shownGasolineras = null;
+    view.showLoadError();
+    }
+    });
+     }*/
 
     /**
      * Muestra contenido despues de intentar haber recibido el actualizado de internet.
@@ -124,7 +132,7 @@ public class MainPresenter implements IMainContract.Presenter {
     }
 
     @Override
-    public void onFilterClicked(){
+    public void onFilterClicked() {
         view.openFilterDialog();
     }
 
@@ -144,7 +152,9 @@ public class MainPresenter implements IMainContract.Presenter {
     }
 
     @Override
-    public void onOrderByPriceClicked() { view.openOrderByPrice(); }
+    public void onOrderByPriceClicked() {
+        view.openOrderByPrice();
+    }
 
     @Override
     public void filter(CombustibleType combustibleType, List<String> brands) {
@@ -170,6 +180,7 @@ public class MainPresenter implements IMainContract.Presenter {
 
     /**
      * Filtra por tipo de combustible.
+     *
      * @param combustibleType Tipo de combustible a utilizar para filtrar
      */
     public void filterByCombustible(CombustibleType combustibleType) {
@@ -196,13 +207,14 @@ public class MainPresenter implements IMainContract.Presenter {
 
     /**
      * Filtra por la marca o las marcas seleccionadas.
+     *
      * @param marcas Lista de marca o marcas seleccionadas.
      */
     private void filterByBrand(List<String> marcas) {
         List<Gasolinera> resultadoFiltrado = new ArrayList<>();
         if (!marcas.isEmpty()) { // Solo se filtra si se han indicado marcas
-            for (String m:marcas) {
-                 resultadoFiltrado.addAll(clearStationsWithoutBrand(m));
+            for (String m : marcas) {
+                resultadoFiltrado.addAll(clearStationsWithoutBrand(m));
             }
             shownGasolineras = resultadoFiltrado;
         }
@@ -211,91 +223,93 @@ public class MainPresenter implements IMainContract.Presenter {
     @Override
     public void orderByPrice(PriceOrderType order, PriceFilterType orderedValue) {
         // List with results
-        List<Gasolinera> filtered;
+        List<Gasolinera> ordered;
 
-        // Filters by defined criterion
+        // Orders by defined criterion
         if (orderedValue == PriceFilterType.DIESEL) { // Diesel
-            filtered = filterByDiesel();
-            Collections.sort(filtered, new SortByDieselPrice());
+            ordered = filterByDiesel();
+            Collections.sort(ordered, new SortByDieselPrice());
         } else if (orderedValue == PriceFilterType.GASOLINA) { // 95-octanes
-            filtered = filterByGasolina();
-            Collections.sort(filtered, new SortBy95OctanesPrice());
+            ordered = filterByGasolina();
+            Collections.sort(ordered, new SortBy95OctanesPrice());
         } else { // Summary price
-            filtered = filterList(orderedValue);
-            Collections.sort(filtered, new SortBySummaryPrice());
+            ordered = filterBySummaryPrice();
+            Collections.sort(ordered, new SortBySummaryPrice());
         }
 
         // Descending order (highest first, lowest last) --> reversed ascending list
         if (order == PriceOrderType.DESC) {
-            Collections.reverse(filtered);
+            Collections.reverse(ordered);
         }
 
-        if (filtered.isEmpty()) { // If empty list (no compatible gas stations)
+        if (ordered.isEmpty()) { // If empty list (no compatible gas stations)
             shownGasolineras = new ArrayList<>();
         } else {
-            shownGasolineras = filtered;
+            shownGasolineras = ordered;
         }
     }
 
-    private List<Gasolinera> filterList(PriceFilterType orderedValue) {
+    /**
+     * Orders the list of gas stations based on the order (ascending or descending).
+     * @return the ordered list
+     */
+    private List<Gasolinera> filterBySummaryPrice() {
         List<Gasolinera> filtered = new LinkedList<>();
 
         // Applies promotions
-            for (Gasolinera gasolinera : getShownGasolineras()) {
-                NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
-                double dieselPrice = repositoryGasolineras.precioToDouble(gasolinera.getDieselA(), format);
-                double unleaded95Price = repositoryGasolineras.precioToDouble(gasolinera.getNormal95(), format);
-                double summaryPrice = repositoryGasolineras.precioToDouble(gasolinera.getSummaryPrice(), format);
+        for (Gasolinera gasolinera : getShownGasolineras()) {
+            double dieselPrice = repositoryGasolineras.precioToDouble(gasolinera.getDieselA(), format);
+            double unleaded95Price = repositoryGasolineras.precioToDouble(gasolinera.getNormal95(), format);
 
-                if (orderedValue == PriceFilterType.DIESEL || orderedValue == PriceFilterType.GASOLINA) {
-                    List<Promocion> promotions = repositoryPromotions.
-                            getPromocionesRelacionadasConGasolinera(gasolinera.getId());
+            // Applies promotions to the gas station
+            List<Promocion> promotions = repositoryPromotions.
+                    getPromocionesRelacionadasConGasolinera(gasolinera.getId());
 
+            Promocion bestPromotionDiesel;
+            Promocion bestPromotion95Octanes;
 
-                    Promocion bestPromotionDiesel;
-                    Promocion bestPromotion95Octanes;
+            // There is a promotion to be applied
+            if (!promotions.isEmpty()) {
+                // Gets the best promotion for either diesel or unleaded 95 octanes
+                // Gets the best promotion for diesel
+                bestPromotionDiesel = repositoryGasolineras.bestPromotion(dieselPrice, promotions, "Diésel");
 
-                    // There is a promotion to be applied
-                    if (!promotions.isEmpty()) {
-                        // Gets the best promotion for either diesel or unleaded 95 octanes
-                        if (orderedValue == PriceFilterType.DIESEL) { // Diesel
-                            // Gets the best promotion for diesel
-                            bestPromotionDiesel = repositoryGasolineras.bestPromotion(dieselPrice, promotions, "Diésel");
-
-                            // Valid promotion for diesel, updates price
-                            if (bestPromotionDiesel != null) {
-                                dieselPrice = repositoryGasolineras.calculateDiscountedPrice(dieselPrice, bestPromotionDiesel);
-                            }
-                        } else if (orderedValue == PriceFilterType.GASOLINA) { // 95 octanes
-                            bestPromotion95Octanes = repositoryGasolineras.bestPromotion(unleaded95Price, promotions, "Gasolina");
-
-                            // Valid promotion for 95 octanes, updates price
-                            if (bestPromotion95Octanes != null) {
-                                unleaded95Price = repositoryGasolineras.calculateDiscountedPrice(unleaded95Price, bestPromotion95Octanes);
-                            }
-                        }
-                    } // if
+                // Valid promotion for diesel, updates price
+                if (bestPromotionDiesel != null) {
+                    dieselPrice = repositoryGasolineras.calculateDiscountedPrice(dieselPrice, bestPromotionDiesel);
                 }
 
-                gasolinera.setDiscountedDiesel(String.valueOf(dieselPrice));
-                gasolinera.setDiscounted95(String.valueOf(unleaded95Price));
-                gasolinera.setDiscountedSummaryPrice(String.valueOf(gasolinera.calculateDiscountedSummaryPrice()));
+                bestPromotion95Octanes = repositoryGasolineras.bestPromotion(unleaded95Price, promotions, "Gasolina");
 
-                filtered.add(gasolinera);
-            } // for
+                // Valid promotion for 95 octanes, updates price
+                if (bestPromotion95Octanes != null) {
+                    unleaded95Price = repositoryGasolineras.calculateDiscountedPrice(unleaded95Price, bestPromotion95Octanes);
+                }
+            } // if (!promotions...)
+
+            double summaryPrice = repositoryGasolineras.calculateSummary(dieselPrice, unleaded95Price);
+            String summaryPriceToStr = summaryPrice3DecimalPlacesString(summaryPrice);
+            gasolinera.setDiscountedDiesel(String.valueOf(dieselPrice));
+            gasolinera.setDiscounted95(String.valueOf(unleaded95Price));
+            gasolinera.setDiscountedSummaryPrice(summaryPriceToStr);
+
+            filtered.add(gasolinera);
+
+        } // for
         return filtered;
     }
 
 
     /**
      * Genera una lista que contenga aquellas gasolineras con la marca que se introduce como parametro.
+     *
      * @param marca Marca por la que se desea filtrar.
      * @return lista de gasolineras de las marcas seleccionadas.
      */
-    private List<Gasolinera> clearStationsWithoutBrand (String marca) {
+    private List<Gasolinera> clearStationsWithoutBrand(String marca) {
         List<Gasolinera> compatibles = new ArrayList<>();
 
-        for (Gasolinera g:shownGasolineras) {
+        for (Gasolinera g : shownGasolineras) {
             if (g.getRotulo().equals(marca.toUpperCase())) {
                 compatibles.add(g);
             }
@@ -306,11 +320,12 @@ public class MainPresenter implements IMainContract.Presenter {
     /**
      * Genera una lista que contenga aquellas gasolineras de la lista que actualmente se muestran
      * y que ofrecen diesel.
+     *
      * @return lista de gasolineras que ofrecen diesel.
      */
     private List<Gasolinera> filterByDiesel() {
         List<Gasolinera> compatibles = new ArrayList<>();
-        for (Gasolinera g:shownGasolineras) {
+        for (Gasolinera g : shownGasolineras) {
             if ((g.getDieselA() != null) && (!g.getDieselA().equals(""))) {
                 compatibles.add(g);
             }
@@ -321,6 +336,7 @@ public class MainPresenter implements IMainContract.Presenter {
     /**
      * Genera una lista que contenga aquellas gasolineras de la lista que actualmente se muestran
      * y que ofrecen gasolina.
+     *
      * @return lista de gasolineras que ofrecen gasolina.
      */
     private List<Gasolinera> filterByGasolina() {
@@ -331,5 +347,9 @@ public class MainPresenter implements IMainContract.Presenter {
             }
         }
         return compatibles;
+    }
+
+    private String summaryPrice3DecimalPlacesString(double value) {
+        return String.format(Locale.FRANCE, "%.3f", value);
     }
 }

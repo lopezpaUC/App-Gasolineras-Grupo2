@@ -145,13 +145,13 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         Promocion bestPromotion95Octanes = repGasolineras.bestPromotion(precioGasolina, promotions, "Gasolina");
 
         // Calculates the best price for both diesel and 95 octanes
-        double dieselDiscountedPrice = truncateFuelPrice(repGasolineras.
-                calculateDiscountedPrice(dieselPrice, bestPromotionDiesel));
-        discountedDieselPriceStr = repGasolineras.precioSumarioToStr(dieselDiscountedPrice);
+        double dieselDiscountedPrice = repGasolineras.
+                calculateDiscountedPrice(dieselPrice, bestPromotionDiesel);
+        discountedDieselPriceStr = repGasolineras.precioSumarioToStr(truncateFuelPrice(dieselDiscountedPrice));
 
-        double unleaded95DiscountedPrice = truncateFuelPrice(repGasolineras.
-                calculateDiscountedPrice(precioGasolina, bestPromotion95Octanes));
-        discounted95OctanesPriceStr = repGasolineras.precioSumarioToStr(unleaded95DiscountedPrice);
+        double unleaded95DiscountedPrice = repGasolineras.
+                calculateDiscountedPrice(precioGasolina, bestPromotion95Octanes);
+        discounted95OctanesPriceStr = repGasolineras.precioSumarioToStr(truncateFuelPrice(unleaded95DiscountedPrice));
 
         // Calculates the summary price according to the validity of the fuel's prices
         discountedSummary = repGasolineras.calculateSummary(dieselDiscountedPrice, unleaded95DiscountedPrice);
@@ -181,7 +181,6 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
             view.showInfo(info);
         }
     }
-
 
     /**
      * Truncates price to 2 decimal places

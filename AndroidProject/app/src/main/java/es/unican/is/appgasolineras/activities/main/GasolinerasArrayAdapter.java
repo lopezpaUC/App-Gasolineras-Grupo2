@@ -3,6 +3,7 @@ package es.unican.is.appgasolineras.activities.main;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.TextViewOnReceiveContentListener;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -22,6 +24,7 @@ import es.unican.is.appgasolineras.model.Gasolinera;
 
 public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
     private String precioDestacar;
+    private boolean summaryPrice;
 
     public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects) {
         super(context, 0, objects);
@@ -32,6 +35,13 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
                                    String precioDestacar) {
         super(context, 0, objects);
         this.precioDestacar = precioDestacar;
+        summaryPrice = false;
+    }
+
+    public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects,
+                                   boolean summaryPrice) {
+        super(context, 0, objects);
+        this.summaryPrice = summaryPrice;
     }
 
     @NonNull
@@ -58,6 +68,11 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
 
         // diesel A price
         prizeDiesel(gasolinera, convertView);
+
+        if (summaryPrice) {
+            // Summary price
+            summaryPrice(gasolinera, convertView);
+        }
 
         return convertView;
     }
@@ -124,6 +139,13 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
             tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.BOLD);
             tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
         }
+
+        // Hides summary price
+        TextView summaryLabelTv = convertView.findViewById(R.id.tvSummaryLabel);
+        TextView summaryTv = convertView.findViewById(R.id.tvSummary);
+
+        summaryLabelTv.setVisibility(View.INVISIBLE);
+        summaryTv.setVisibility(View.INVISIBLE);
     }
 
     private void prizeDiesel(Gasolinera gasolinera, View convertView){
@@ -158,5 +180,60 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
             tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.BOLD);
             tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
         }
+
+        // Hides summary price
+        TextView summaryLabelTv = convertView.findViewById(R.id.tvSummaryLabel);
+        TextView summaryTv = convertView.findViewById(R.id.tvSummary);
+
+        summaryLabelTv.setVisibility(View.INVISIBLE);
+        summaryTv.setVisibility(View.INVISIBLE);
     }
+
+    private void summaryPrice(Gasolinera gasolinera, View convertView) {
+        TextView tvLabel = convertView.findViewById(R.id.tvSummaryLabel);
+        String label = getContext().getResources().getString(R.string.sumPrice);
+        Log.d("DEBUG", label);
+        tvLabel.setText(label + ":");
+
+        TextView tv = convertView.findViewById(R.id.tvSummary);
+        Double precioDouble = -1.0;
+        String precioString = "-";
+
+        // Converts price to double
+        NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
+
+        try {
+            Number number = format.parse(gasolinera.getDiscountedSummaryPrice());
+            precioDouble = number.doubleValue();
+        } catch (Exception e) {
+            precioString = "-";
+        }
+
+        // Checks if the price is valid
+        if (precioDouble < 0.0) {
+            tv.setText(precioString);
+        } else {
+            precioString = gasolinera.getDiscountedSummaryPrice();
+        }
+
+        tv.setText(precioString);
+
+        if (precioDestacar != null && precioDestacar.equals(getContext().getResources().getString(R.string.gasolina95label))) {
+
+            TextView tv95Label = convertView.findViewById(R.id.tv95Label);
+            TextView tv95 = convertView.findViewById(R.id.tv95);
+            tv95Label.setTypeface(tv95Label.getTypeface(), Typeface.BOLD);
+            tv95.setTypeface(tv95.getTypeface(), Typeface.BOLD);
+        } else if (precioDestacar != null && precioDestacar.equals(getContext().getResources().getString(R.string.dieselAlabel))) {
+            TextView tvDieselLabel = convertView.findViewById(R.id.tvDieselALabel);
+            TextView tvDiesel = convertView.findViewById(R.id.tvDieselA);
+            tvDieselLabel.setTypeface(tvDieselLabel.getTypeface(), Typeface.BOLD);
+            tvDiesel.setTypeface(tvDiesel.getTypeface(), Typeface.BOLD);
+        }
+
+        // Shows summary price
+        tvLabel.setVisibility(View.VISIBLE);
+        tv.setVisibility(View.VISIBLE);
+    }
+
 }
