@@ -204,6 +204,9 @@ public class MainPresenter implements IMainContract.Presenter {
         }
     }
 
+    /**
+     * Filtra las gasolineras visibles, dejando mostradas solo aquellas lowcost.
+     */
     private void filterByLowcost() {
         List<Gasolinera> copyGas = new ArrayList<>(shownGasolineras);
         for (Gasolinera g:copyGas) {
