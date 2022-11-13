@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
+import es.unican.is.appgasolineras.model.Marca;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 
 public class MainPresenter implements IMainContract.Presenter {
@@ -142,6 +143,10 @@ public class MainPresenter implements IMainContract.Presenter {
         filterByCombustible(combustibleType);
         filterByBrand(brands);
 
+        if (lowcost) {
+            filterByLowcost();
+        }
+
         if (!shownGasolineras.isEmpty()) { // Si hay gasolineras a mostrar despues de filtrado
             view.showGasolinerasAdvanced(shownGasolineras, combustibleType);
 
@@ -196,6 +201,15 @@ public class MainPresenter implements IMainContract.Presenter {
                  resultadoFiltrado.addAll(clearStationsWithoutBrand(m));
             }
             shownGasolineras = resultadoFiltrado;
+        }
+    }
+
+    private void filterByLowcost() {
+        List<Gasolinera> copyGas = new ArrayList<>(shownGasolineras);
+        for (Gasolinera g:copyGas) {
+            if (!repository.getGasolinerasLowcost().contains(g)) {
+                shownGasolineras.remove(g);
+            }
         }
     }
 
