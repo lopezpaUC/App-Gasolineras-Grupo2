@@ -68,9 +68,10 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         this.init();
 
         SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
-                Context.MODE_PRIVATE);
+                Context.MODE_PRIVATE); // NOSONAR
         SharedPreferences.Editor editor = filterPref.edit();
         editor.putInt(getString(R.string.saved_comb_type_filter), 0);
+        editor.putBoolean(getString(R.string.saved_lowcost_sele), false);
         editor.apply();
     }
 
@@ -100,9 +101,10 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             case R.id.menuRefresh:
                 presenter.onRefreshClicked();
                 SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
-                        Context.MODE_PRIVATE);
+                        Context.MODE_PRIVATE); // NOSONAR
                 SharedPreferences.Editor editor = filterPref.edit();
                 editor.putInt(getString(R.string.saved_comb_type_filter), 0);
+                editor.putBoolean(getString(R.string.saved_lowcost_sele), false);
                 editor.apply();
 
                 checkedBrandBoxes = new ArrayList<>();
@@ -248,14 +250,18 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         // Inicializacion checkbox
         CheckBox chckLowcost = dialogFilter.findViewById(R.id.chckLowcost);
 
+        // Recupera la seleccion previa a cerrar la ventana
+        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                Context.MODE_PRIVATE); // NOSONAR
+        boolean savedCheckValue = filterPref.getBoolean(getString(R.string.saved_lowcost_sele), false);
+        chckLowcost.setChecked(savedCheckValue);
+
         // Listener para boton de informacion
         ImageButton btnInfo = dialogFilter.findViewById(R.id.btnInfo);
         btnInfo.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setPositiveButton(getResources().getString(R.string.accept),
-                    ((DialogInterface dialogInterface, int i) -> {
-                        dialogInterface.cancel();
-                    }));
+                    ((DialogInterface dialogInterface, int i) -> dialogInterface.cancel()));
             builder.setTitle(getResources().getString(R.string.marcasLowcost));
 
             StringBuilder sb = new StringBuilder();
@@ -287,6 +293,9 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             // Guardar el filtro por tipo de combustible
             saveIntPrefFilter(getString(R.string.saved_comb_type_filter), itemPositionComb);
 
+            // Guardar la seleccion de filtrado lowcost
+            saveBoolPrefFilter(getString(R.string.saved_lowcost_sele), mostrarSoloLowcost);
+
             dialogFilter.dismiss();
         });
 
@@ -313,7 +322,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         // Recupera la seleccion previa a cerrar la ventana
         SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
-                Context.MODE_PRIVATE);
+                Context.MODE_PRIVATE); // NOSONAR
         int savedCombValue = filterPref.getInt(getString(R.string.saved_comb_type_filter), 0);
         spinnerCombustible.setSelection(savedCombValue);
     }
@@ -353,11 +362,28 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     private void saveIntPrefFilter(String key, int value) {
         // Obtiene Preference de los filtros
         SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
-                Context.MODE_PRIVATE);
+                Context.MODE_PRIVATE); // NOSONAR
 
         // Guarda el valor
         SharedPreferences.Editor editor = filterPref.edit();
         editor.putInt(key, value);
+        editor.apply();
+    }
+
+    /**
+     * Guarda un booleano relacionado con los filtros.
+     *
+     * @param key Clave para realizar la persistencia.
+     * @param value Valor booleano a guardar.
+     */
+    private void saveBoolPrefFilter(String key, boolean value) {
+        // Obtiene Preference de los filtros
+        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                Context.MODE_PRIVATE); // NOSONAR
+
+        // Guarda el valor
+        SharedPreferences.Editor editor = filterPref.edit();
+        editor.putBoolean(key, value);
         editor.apply();
     }
 
