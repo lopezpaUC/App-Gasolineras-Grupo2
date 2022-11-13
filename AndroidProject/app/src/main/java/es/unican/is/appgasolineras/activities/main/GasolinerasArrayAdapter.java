@@ -21,10 +21,16 @@ import java.util.Locale;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.model.Gasolinera;
+import es.unican.is.appgasolineras.model.Promocion;
+import es.unican.is.appgasolineras.repository.GasolinerasRepository;
+import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
+import es.unican.is.appgasolineras.repository.IPromocionesRepository;
+import es.unican.is.appgasolineras.repository.PromocionesRepository;
 
 public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
     private String precioDestacar;
     private boolean summaryPrice;
+    private IGasolinerasRepository gasolinerasRepository = new GasolinerasRepository(getContext());
 
     public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects) {
         super(context, 0, objects);
@@ -203,7 +209,7 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
 
         try {
-            Number number = format.parse(gasolinera.getDiscountedSummaryPrice());
+            Number number = format.parse(getDiscountedSummaryPrice(gasolinera));
             precioDouble = number.doubleValue();
         } catch (Exception e) {
             precioString = "-";
@@ -213,7 +219,7 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         if (precioDouble < 0.0) {
             tv.setText(precioString);
         } else {
-            precioString = gasolinera.getDiscountedSummaryPrice();
+            precioString = getDiscountedSummaryPrice(gasolinera);
         }
 
         tv.setText(precioString);
@@ -235,5 +241,28 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         tvLabel.setVisibility(View.VISIBLE);
         tv.setVisibility(View.VISIBLE);
     }
+
+    public String getDiscountedSummaryPrice(Gasolinera gasStation) {
+        NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
+        IPromocionesRepository promocionesRepository = new PromocionesRepository(getContext());
+        List<Promocion> promotions = promocionesRepository.
+                getPromocionesRelacionadasConGasolinera(gasStation.getId());
+
+        String dieselStr = gasStation.getDieselA();
+        String unleaded95Str = gasStation.getNormal95();
+
+        double diesel = gasolinerasRepository.precioToDouble(dieselStr, format);
+        double unleaded95 = gasolinerasRepository.precioToDouble(unleaded95Str, format);
+
+        Promocion promotionDiesel = gasolinerasRepository.bestPromotion(diesel, promotions, "Diésel");
+        Promocion promotion95 = gasolinerasRepository.bestPromotion(unleaded95, promotions, "Gasolina");
+
+        double discountedDiesel = gasolinerasRepository.calculateDiscountedPrice(diesel, promotionDiesel);
+        double discounted95 = gasolinerasRepository.calculateDiscountedPrice(unleaded95, promotion95);
+        double summaryPrice = gasolinerasRepository.calculateSummary(discountedDiesel, discounted95);
+
+        return gasolinerasRepository.precioSumarioToStr(summaryPrice);
+    }
+
 
 }

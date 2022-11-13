@@ -51,4 +51,20 @@ public enum CombustibleType {
 
         return typeEnum;
     }
+
+    public String getCombStringFromInt(int value) {
+        String comb;
+
+        switch (value) {
+            case 0:
+                comb = "Diésel";
+                break;
+            case 1:
+                comb = "Gasolina";
+                break;
+            default:
+                comb = "Todos";
+        }
+        return comb;
+    }
 }

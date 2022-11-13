@@ -289,9 +289,7 @@ public class MainPresenter implements IMainContract.Presenter {
 
             double summaryPrice = repositoryGasolineras.calculateSummary(dieselPrice, unleaded95Price);
             String summaryPriceToStr = summaryPrice3DecimalPlacesString(summaryPrice);
-            gasolinera.setDiscountedDiesel(String.valueOf(dieselPrice));
-            gasolinera.setDiscounted95(String.valueOf(unleaded95Price));
-            gasolinera.setDiscountedSummaryPrice(summaryPriceToStr);
+
 
             filtered.add(gasolinera);
 

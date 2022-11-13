@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -277,6 +278,12 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             int price = spinnerPrice.getSelectedItemPosition();
             int order = spinnerOrderType.getSelectedItemPosition();
 
+            // Recupera la seleccion previa a cerrar la ventana
+            SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                    Context.MODE_PRIVATE);
+
+            int savedFilter = filterPref.getInt(getString(R.string.saved_comb_type_filter), 0);
+
             // Actualizar lista
             int itemPositionPrice = spinnerPrice.getSelectedItemPosition();
             int itemPositionOrder = spinnerOrderType.getSelectedItemPosition();
@@ -285,7 +292,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             saveIntPrefFilter(getString(R.string.saved_price_type_order), itemPositionPrice);
             saveIntPrefFilter(getString(R.string.saved_price_order), itemPositionOrder);
 
-            updateListPrice(price, order);
+            updateListPrice(price, order, savedFilter);
 
             dialogOrder.dismiss();
         });
@@ -393,7 +400,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         list.setAdapter(adapter);
     }
 
-    private void updateListPrice(int price, int order)
+    private void updateListPrice(int price, int order, int savedFilter)
     {
         // Converts position to diesel / 95-octanes / summary price
         PriceFilterType selectedPriceType = PriceFilterType.getPriceFilterType(price);
@@ -404,13 +411,15 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         // Requests presenter to order the list and to update the shown gas stations
         presenter.orderByPrice(selectedOrderType, selectedPriceType);
 
+        String filterStr = CombustibleType.ALL_COMB.getCombStringFromInt(savedFilter - 1);
+
         // Prepares ArrayAdapter for the list to be shown
         GasolinerasArrayAdapter adapter;
         if (selectedPriceType == PriceFilterType.SUMARIO) {
             adapter =
                     new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(), true);
         } else {
-            adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
+            adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(), filterStr);
         }
 
         // Updates the list

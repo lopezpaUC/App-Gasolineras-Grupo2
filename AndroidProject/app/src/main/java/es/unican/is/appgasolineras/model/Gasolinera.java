@@ -32,11 +32,6 @@ Gasolinera implements Parcelable {
     @SerializedName("Precio Gasoleo A")             private String dieselA;
     @SerializedName("Precio Gasolina 95 E5")        private String normal95;  // 95 octanes
 
-                                                    private String summaryPrice;
-                                                    private String discountedDiesel;
-                                                    private String discounted95;
-                                                    private String discountedSummaryPrice;
-
     public Gasolinera() {
         id = "";
         rotulo = "";
@@ -46,10 +41,6 @@ Gasolinera implements Parcelable {
         horario = "";
         dieselA = "";
         normal95 = "";
-        summaryPrice = "";
-        discountedDiesel = "";
-        discounted95 = "";
-        discountedSummaryPrice = "";
     }
 
     public Gasolinera(String id, String rotulo, String cp, String direccion, String municipio,
@@ -62,10 +53,6 @@ Gasolinera implements Parcelable {
         this.horario = horario;
         this.dieselA = dieselA;
         this.normal95 = normal95;
-        this.summaryPrice = String.valueOf(getSummaryPrice());
-        this.discountedDiesel = dieselA;
-        this.discounted95 = normal95;
-        this.discountedSummaryPrice = summaryPrice;
     }
 
     @NonNull
@@ -125,37 +112,6 @@ Gasolinera implements Parcelable {
 
     public void setNormal95(String normal95) { this.normal95 = normal95; }
 
-    public String getDiscountedDiesel() {
-        return discountedDiesel;
-    }
-
-    public void setDiscountedDiesel(String discountedDiesel) {
-        this.discountedDiesel = discountedDiesel;
-    }
-
-    public String getDiscounted95() {
-        return discounted95;
-    }
-
-    public void setDiscounted95(String discounted95) {
-        this.discounted95 = discounted95;
-    }
-
-    public String getSummaryPrice() {
-        return summaryPrice;
-    }
-    public void setSummaryPrice(String summaryPrice) {
-        this.summaryPrice = summaryPrice;
-    }
-
-    public String getDiscountedSummaryPrice() {
-        return discountedSummaryPrice;
-    }
-
-    public void setDiscountedSummaryPrice(String discountedSummaryPrice) {
-        this.discountedSummaryPrice = discountedSummaryPrice;
-    }
-
     /*
      * Methods for Parcelable interface. Needed to send this object in an Intent.
      *
@@ -179,14 +135,6 @@ Gasolinera implements Parcelable {
         double unleaded95Price = Double.parseDouble(normal95.replace(",", "."));
 
         return (dieselPrice + unleaded95Price * 2) / 3;
-    }
-
-    public double calculateDiscountedSummaryPrice() {
-        double dieselPrice = Double.parseDouble(discountedDiesel.replace(",", "."));
-        double unleaded95Price = Double.parseDouble(discounted95.replace(",", "."));
-
-        return (dieselPrice + unleaded95Price * 2) / 3;
-
     }
 
     public static final Creator<Gasolinera> CREATOR = new Creator<Gasolinera>() {
