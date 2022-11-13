@@ -265,43 +265,9 @@ public class MainPresenter implements IMainContract.Presenter {
 
         // Applies promotions
         for (Gasolinera gasolinera : getShownGasolineras()) {
-            /**double dieselPrice = repositoryGasolineras.precioToDouble(gasolinera.getDieselA(), format);
-            double unleaded95Price = repositoryGasolineras.precioToDouble(gasolinera.getNormal95(), format);
-
-            // Applies promotions to the gas station
-            List<Promocion> promotions = repositoryPromotions.
-                    getPromocionesRelacionadasConGasolinera(gasolinera.getId());
-
-            Promocion bestPromotionDiesel;
-            Promocion bestPromotion95Octanes;
-
-            // There is a promotion to be applied
-            if (!promotions.isEmpty()) {
-                // Gets the best promotion for either diesel or unleaded 95 octanes
-                // Gets the best promotion for diesel
-                bestPromotionDiesel = repositoryGasolineras.bestPromotion(dieselPrice, promotions, "Diésel");
-
-                // Valid promotion for diesel, updates price
-                if (bestPromotionDiesel != null && dieselPrice != -1.0) {
-                    dieselPrice = repositoryGasolineras.calculateDiscountedPrice(dieselPrice, bestPromotionDiesel);
-                }
-
-                bestPromotion95Octanes = repositoryGasolineras.bestPromotion(unleaded95Price, promotions, "Gasolina");
-
-                // Valid promotion for 95 octanes, updates price
-                if (bestPromotion95Octanes != null && unleaded95Price != -1.0) {
-                    unleaded95Price = repositoryGasolineras.calculateDiscountedPrice(unleaded95Price, bestPromotion95Octanes);
-                }
-            } // if (!promotions...)
-
-            double summaryPrice = repositoryGasolineras.calculateSummary(dieselPrice, unleaded95Price);
-            String summaryPriceToStr = summaryPrice3DecimalPlacesString(summaryPrice);
-
-            */
             if (!gasolinera.getDieselA().equals("") && !gasolinera.getNormal95().equals("")) {
                 filtered.add(gasolinera);
             }
-
         } // for
         return filtered;
     }
