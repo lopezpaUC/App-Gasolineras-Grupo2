@@ -321,8 +321,4 @@ public class MainPresenter implements IMainContract.Presenter {
         }
         return compatibles;
     }
-
-    private String summaryPrice3DecimalPlacesString(double value) {
-        return String.format(Locale.FRANCE, "%.3f", value);
-    }
 }

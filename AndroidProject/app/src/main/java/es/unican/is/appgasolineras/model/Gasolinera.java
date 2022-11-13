@@ -130,13 +130,6 @@ Gasolinera implements Parcelable {
         normal95 = in.readString();
     }
 
-    public double calculateSummaryPrice() {
-        double dieselPrice = Double.parseDouble(dieselA.replace(",", "."));
-        double unleaded95Price = Double.parseDouble(normal95.replace(",", "."));
-
-        return (dieselPrice + unleaded95Price * 2) / 3;
-    }
-
     public static final Creator<Gasolinera> CREATOR = new Creator<Gasolinera>() {
         @Override
         public Gasolinera createFromParcel(Parcel in) {

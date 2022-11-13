@@ -384,14 +384,14 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         switch (combustibleSeleccionado) {
             case GASOLINA:
                 adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
-                        getResources().getString(R.string.gasolina95label));
+                        getResources().getString(R.string.gasolina95label), false);
                 break;
             case DIESEL:
                 adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
-                        getResources().getString(R.string.dieselAlabel));
+                        getResources().getString(R.string.dieselAlabel), false);
                 break;
             default:
-                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
+                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(), false, false);
                 break;
         }
 
@@ -417,9 +417,9 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         GasolinerasArrayAdapter adapter;
         if (selectedPriceType == PriceFilterType.SUMARIO) {
             adapter =
-                    new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(), true);
+                    new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(), true, true);
         } else {
-            adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(), filterStr);
+            adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(), filterStr, true);
         }
 
         // Updates the list
