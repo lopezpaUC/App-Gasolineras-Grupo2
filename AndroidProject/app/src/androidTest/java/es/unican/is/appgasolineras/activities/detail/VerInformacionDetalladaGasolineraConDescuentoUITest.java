@@ -8,6 +8,7 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
@@ -15,6 +16,7 @@ import static org.hamcrest.Matchers.anything;
 import android.content.Context;
 
 import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -98,7 +100,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
     }
 
     private void UIT1bTest() {
-        //onView(isRoot()).perform(ViewActions.pressBack());
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(1).perform(click());
         onView(withId(R.id.tvDireccion)).check(matches(withText("CR N-629 79,7")));
         onView(withId(R.id.tvMunicipio)).check(matches(withText("Ampuero")));
@@ -117,7 +119,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
     }
 
     private void UIT1cTest() {
-        //onView(isRoot()).perform(ViewActions.pressBack());
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(2).perform(click());
         onView(withId(R.id.tvDireccion)).check(matches(withText("CARRETERA N-611 KM. 163,2")));
         onView(withId(R.id.tvMunicipio)).check(matches(withText("Arenas de Iguña")));
@@ -134,7 +136,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
     }
 
     private void UIT1dTest() {
-        //onView(isRoot()).perform(ViewActions.pressBack());
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(3).perform(click());
         onView(withId(R.id.tvDireccion)).check(matches(withText("CARRETERA ARGOÑOS SOMO KM. 28,7")));
         onView(withId(R.id.tvMunicipio)).check(matches(withText("Arnuero")));
@@ -151,7 +153,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
     }
 
     private void UIT1eTest() {
-        //onView(isRoot()).perform(ViewActions.pressBack());
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(4).perform(click());
 
         onView(withId(R.id.tvDireccion)).check(matches(withText("CARRETERA CASTILLO SIETEVILLAS KM. S/N")));
@@ -169,7 +171,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
     }
 
     private void UIT1fTest() {
-        //onView(isRoot()).perform(ViewActions.pressBack());
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(5).perform(click());
 
         onView(withId(R.id.tvDireccion)).check(matches(withText("CALLE BOO, 52")));
@@ -188,7 +190,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
 
     private void UIT1gTest() {
-        //onView(isRoot()).perform(ViewActions.pressBack());
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(6).perform(click());
 
         onView(withId(R.id.tvDireccion)).check(matches(withText("CALLE PROSPERIDAD, 61")));
@@ -206,7 +208,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
     }
 
     private void UIT1hTest() {
-        //onView(isRoot()).perform(ViewActions.pressBack());
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(7).perform(click());
 
         onView(withId(R.id.tvDireccion)).check(matches(withText("POLIGONO INDUSTRIAL GUARNIZO PARCELA, 22")));
@@ -224,7 +226,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
     }
 
     private void UIT1iTest() {
-        //onView(isRoot()).perform(ViewActions.pressBack());
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(8).perform(click());
 
         onView(withId(R.id.tvDireccion)).check(matches(withText("CALLE PROSPERIDAD, 61")));
@@ -242,7 +244,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
     }
 
     private void UIT1jTest() {
-        //onView(isRoot()).perform(ViewActions.pressBack());
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(9).perform(click());
 
         onView(withId(R.id.tvDireccion)).check(matches(withText("AU A-8, 182")));
