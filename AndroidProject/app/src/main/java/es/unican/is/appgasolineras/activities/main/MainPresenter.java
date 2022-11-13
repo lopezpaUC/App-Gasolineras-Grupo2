@@ -228,18 +228,25 @@ public class MainPresenter implements IMainContract.Presenter {
         // Orders by defined criterion
         if (orderedValue == PriceFilterType.DIESEL) { // Diesel
             ordered = filterByDiesel();
-            Collections.sort(ordered, new SortByDieselPrice());
+            Collections.sort(ordered, new SortByDieselPrice(repositoryGasolineras, repositoryPromotions));
         } else if (orderedValue == PriceFilterType.GASOLINA) { // 95-octanes
             ordered = filterByGasolina();
-            Collections.sort(ordered, new SortBy95OctanesPrice());
+            Collections.sort(ordered, new SortBy95OctanesPrice(repositoryGasolineras, repositoryPromotions));
         } else { // Summary price
             ordered = filterBySummaryPrice();
-            Collections.sort(ordered, new SortBySummaryPrice());
+            Collections.sort(ordered, new SortBySummaryPrice(repositoryGasolineras, repositoryPromotions));
         }
 
         // Descending order (highest first, lowest last) --> reversed ascending list
         if (order == PriceOrderType.DESC) {
             Collections.reverse(ordered);
+        }
+
+        // Anhade las restantes
+        for (Gasolinera g:shownGasolineras) {
+            if (!ordered.contains(g)) {
+                ordered.add(ordered.size(), g);
+            }
         }
 
         if (ordered.isEmpty()) { // If empty list (no compatible gas stations)
@@ -254,11 +261,11 @@ public class MainPresenter implements IMainContract.Presenter {
      * @return the ordered list
      */
     private List<Gasolinera> filterBySummaryPrice() {
-        List<Gasolinera> filtered = new LinkedList<>();
+        List<Gasolinera> filtered = new ArrayList<>();
 
         // Applies promotions
         for (Gasolinera gasolinera : getShownGasolineras()) {
-            double dieselPrice = repositoryGasolineras.precioToDouble(gasolinera.getDieselA(), format);
+            /**double dieselPrice = repositoryGasolineras.precioToDouble(gasolinera.getDieselA(), format);
             double unleaded95Price = repositoryGasolineras.precioToDouble(gasolinera.getNormal95(), format);
 
             // Applies promotions to the gas station
@@ -275,14 +282,14 @@ public class MainPresenter implements IMainContract.Presenter {
                 bestPromotionDiesel = repositoryGasolineras.bestPromotion(dieselPrice, promotions, "Diésel");
 
                 // Valid promotion for diesel, updates price
-                if (bestPromotionDiesel != null) {
+                if (bestPromotionDiesel != null && dieselPrice != -1.0) {
                     dieselPrice = repositoryGasolineras.calculateDiscountedPrice(dieselPrice, bestPromotionDiesel);
                 }
 
                 bestPromotion95Octanes = repositoryGasolineras.bestPromotion(unleaded95Price, promotions, "Gasolina");
 
                 // Valid promotion for 95 octanes, updates price
-                if (bestPromotion95Octanes != null) {
+                if (bestPromotion95Octanes != null && unleaded95Price != -1.0) {
                     unleaded95Price = repositoryGasolineras.calculateDiscountedPrice(unleaded95Price, bestPromotion95Octanes);
                 }
             } // if (!promotions...)
@@ -290,8 +297,10 @@ public class MainPresenter implements IMainContract.Presenter {
             double summaryPrice = repositoryGasolineras.calculateSummary(dieselPrice, unleaded95Price);
             String summaryPriceToStr = summaryPrice3DecimalPlacesString(summaryPrice);
 
-
-            filtered.add(gasolinera);
+            */
+            if (!gasolinera.getDieselA().equals("") && !gasolinera.getNormal95().equals("")) {
+                filtered.add(gasolinera);
+            }
 
         } // for
         return filtered;
