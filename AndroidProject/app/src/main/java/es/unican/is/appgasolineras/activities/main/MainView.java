@@ -68,7 +68,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         this.init();
 
         SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
-                Context.MODE_PRIVATE); // NOSONAR
+                Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = filterPref.edit();
         editor.putInt(getString(R.string.saved_comb_type_filter), 0);
         editor.putBoolean(getString(R.string.saved_lowcost_sele), false);
@@ -101,7 +101,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             case R.id.menuRefresh:
                 presenter.onRefreshClicked();
                 SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
-                        Context.MODE_PRIVATE); // NOSONAR
+                        Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = filterPref.edit();
                 editor.putInt(getString(R.string.saved_comb_type_filter), 0);
                 editor.putBoolean(getString(R.string.saved_lowcost_sele), false);
@@ -252,7 +252,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         // Recupera la seleccion previa a cerrar la ventana
         SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
-                Context.MODE_PRIVATE); // NOSONAR
+                Context.MODE_PRIVATE);
         boolean savedCheckValue = filterPref.getBoolean(getString(R.string.saved_lowcost_sele), false);
         chckLowcost.setChecked(savedCheckValue);
 
@@ -322,7 +322,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         // Recupera la seleccion previa a cerrar la ventana
         SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
-                Context.MODE_PRIVATE); // NOSONAR
+                Context.MODE_PRIVATE);
         int savedCombValue = filterPref.getInt(getString(R.string.saved_comb_type_filter), 0);
         spinnerCombustible.setSelection(savedCombValue);
     }
@@ -362,7 +362,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     private void saveIntPrefFilter(String key, int value) {
         // Obtiene Preference de los filtros
         SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
-                Context.MODE_PRIVATE); // NOSONAR
+                Context.MODE_PRIVATE);
 
         // Guarda el valor
         SharedPreferences.Editor editor = filterPref.edit();
@@ -379,7 +379,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     private void saveBoolPrefFilter(String key, boolean value) {
         // Obtiene Preference de los filtros
         SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
-                Context.MODE_PRIVATE); // NOSONAR
+                Context.MODE_PRIVATE);
 
         // Guarda el valor
         SharedPreferences.Editor editor = filterPref.edit();

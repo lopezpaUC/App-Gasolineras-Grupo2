@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
-import es.unican.is.appgasolineras.model.Marca;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 
 public class MainPresenter implements IMainContract.Presenter {

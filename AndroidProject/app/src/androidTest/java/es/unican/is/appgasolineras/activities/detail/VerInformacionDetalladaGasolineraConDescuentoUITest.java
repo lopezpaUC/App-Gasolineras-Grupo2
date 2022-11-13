@@ -19,41 +19,46 @@ import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.MainView;
-import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.PromocionesRepository;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
+@RunWith(AndroidJUnit4.class)
 public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
     @Rule
-    public ActivityScenarioRule<MainView> activityRule =
-            new ActivityScenarioRule<>(MainView.class);
-
-    private Promocion promocion;
+    public ActivityScenarioRule<MainView> activityRule = new ActivityScenarioRule<>(MainView.class);
 
     @BeforeClass
     public static void setUp() {
         InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase("gasolineras-database");
-
         GasolinerasServiceConstants.setStaticURLMostrarPromocionEnGasolinera();
     }
 
+    @Before
+    public void insert() {
+        addPromotions();
+    }
+
     @After
-    public void cleanDatabase() {
+    public void cleanDB() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         PromocionesRepository repPromociones = new PromocionesRepository(context);
-        repPromociones.deleteAllPromociones();    }
+        repPromociones.deleteAllPromociones();
+    }
 
     @AfterClass
     public static void clean() {
@@ -61,14 +66,21 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         GasolinerasServiceConstants.setMinecoURL();
     }
 
-    /**@Test
-    public void VerInformacionDetalladaGasolineraConDescuentoTest() {
-        addPromotions();
-    }*/
-
     @Test
-    public void UIT1aTest() {
-        addPromotions();
+    public void VerInformacionDetalladaGasolineraConDescuentoTest() {
+        UIT1aTest();
+        UIT1bTest();
+        UIT1cTest();
+        UIT1dTest();
+        UIT1eTest();
+        UIT1fTest();
+        UIT1gTest();
+        UIT1hTest();
+        UIT1iTest();
+        UIT1jTest();
+    }
+
+    private void UIT1aTest() {
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(0).perform(click());
         onView(withId(R.id.tvDireccion)).check(matches(withText("CARRETERA 6316 KM. 10,5")));
         onView(withId(R.id.tvMunicipio)).check(matches(withText("Alfoz de Lloredo")));
@@ -87,10 +99,8 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("")));
     }
 
-    @Test
-    public void UIT1bTest() {
-        addPromotions();
-        //onView(isRoot()).perform(ViewActions.pressBack());
+    private void UIT1bTest() {
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(1).perform(click());
         onView(withId(R.id.tvDireccion)).check(matches(withText("CR N-629 79,7")));
         onView(withId(R.id.tvMunicipio)).check(matches(withText("Ampuero")));
@@ -108,10 +118,8 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,50 €/L")));
     }
 
-    @Test
-    public void UIT1cTest() {
-        addPromotions();
-        //onView(isRoot()).perform(ViewActions.pressBack());
+    private void UIT1cTest() {
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(2).perform(click());
         onView(withId(R.id.tvDireccion)).check(matches(withText("CARRETERA N-611 KM. 163,2")));
         onView(withId(R.id.tvMunicipio)).check(matches(withText("Arenas de Iguña")));
@@ -127,10 +135,8 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,78 €/L")));
     }
 
-    @Test
-    public void UIT1dTest() {
-        addPromotions();
-        //onView(isRoot()).perform(ViewActions.pressBack());
+    private void UIT1dTest() {
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(3).perform(click());
         onView(withId(R.id.tvDireccion)).check(matches(withText("CARRETERA ARGOÑOS SOMO KM. 28,7")));
         onView(withId(R.id.tvMunicipio)).check(matches(withText("Arnuero")));
@@ -146,10 +152,8 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,74 €/L")));
     }
 
-    @Test
-    public void UIT1eTest() {
-        addPromotions();
-        //onView(isRoot()).perform(ViewActions.pressBack());
+    private void UIT1eTest() {
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(4).perform(click());
 
         onView(withId(R.id.tvDireccion)).check(matches(withText("CARRETERA CASTILLO SIETEVILLAS KM. S/N")));
@@ -166,10 +170,8 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,70 €/L")));
     }
 
-    @Test
-    public void UIT1fTest() {
-        addPromotions();
-        //onView(isRoot()).perform(ViewActions.pressBack());
+    private void UIT1fTest() {
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(5).perform(click());
 
         onView(withId(R.id.tvDireccion)).check(matches(withText("CALLE BOO, 52")));
@@ -187,10 +189,8 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
     }
 
 
-    @Test
-    public void UIT1gTest() {
-        addPromotions();
-        //onView(isRoot()).perform(ViewActions.pressBack());
+    private void UIT1gTest() {
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(6).perform(click());
 
         onView(withId(R.id.tvDireccion)).check(matches(withText("CALLE PROSPERIDAD, 61")));
@@ -207,10 +207,8 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,74 €/L")));
     }
 
-    @Test
-    public void UIT1hTest() {
-        addPromotions();
-        //onView(isRoot()).perform(ViewActions.pressBack());
+    private void UIT1hTest() {
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(7).perform(click());
 
         onView(withId(R.id.tvDireccion)).check(matches(withText("POLIGONO INDUSTRIAL GUARNIZO PARCELA, 22")));
@@ -227,10 +225,8 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("- €/L")));
     }
 
-    @Test
-    public void UIT1iTest() {
-        addPromotions();
-        //onView(isRoot()).perform(ViewActions.pressBack());
+    private void UIT1iTest() {
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(8).perform(click());
 
         onView(withId(R.id.tvDireccion)).check(matches(withText("CALLE PROSPERIDAD, 61")));
@@ -246,10 +242,9 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("- €/L")));
         onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,81 €/L")));
     }
-    @Test
-    public void UIT1jTest() {
-        addPromotions();
-        //onView(isRoot()).perform(ViewActions.pressBack());
+
+    private void UIT1jTest() {
+        onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(9).perform(click());
 
         onView(withId(R.id.tvDireccion)).check(matches(withText("AU A-8, 182")));
@@ -271,7 +266,8 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
     private static void addPromotions() {
 
         /*** Promotion 1 - UIT.1b ***/
-        clickAdd();onView(withId(R.id.etNombre)).perform(scrollTo(), typeText("50centRepsol"),
+        clickAdd();
+        onView(withId(R.id.etNombre)).perform(scrollTo(), typeText("50centRepsol"),
                 closeSoftKeyboard()); // Name
 
         // Fuels
