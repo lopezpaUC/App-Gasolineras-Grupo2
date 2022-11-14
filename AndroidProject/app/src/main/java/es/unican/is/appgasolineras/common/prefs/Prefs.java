@@ -32,7 +32,7 @@ public class Prefs implements IPrefs {
     }
 
     public Prefs(Context context, String preferencesKey) {
-        preferences = context.getSharedPreferences(preferencesKey, Context.MODE_PRIVATE);
+        preferences = context.getSharedPreferences(preferencesKey, Context.MODE_PRIVATE);  // NOSONAR
         editor = preferences.edit();
     }
 

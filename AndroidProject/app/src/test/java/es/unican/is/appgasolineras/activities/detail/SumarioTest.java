@@ -1,12 +1,22 @@
 package es.unican.is.appgasolineras.activities.detail;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import es.unican.is.appgasolineras.model.Gasolinera;
+import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -14,11 +24,18 @@ import es.unican.is.appgasolineras.model.Gasolinera;
 public class SumarioTest {
 
     @Mock
-    IGasolineraDetailContract.View mockDetailContract;
+    private IGasolineraDetailContract.View mockDetailView;
 
-    @Test
-    public void calculaSumarioTest() {
-        Gasolinera gasolinera = new Gasolinera();
+    @Mock
+    private IGasolinerasRepository mockGasolinerasRepository;
+
+    private Gasolinera gasolinera;
+    private GasolineraDetailPresenter sut;
+    private NumberFormat format;
+
+    @Before
+    public void setUp() {
+        gasolinera = new Gasolinera();
         gasolinera.setId("123");
         gasolinera.setRotulo("shell");
         gasolinera.setCp("39234");
@@ -28,25 +45,51 @@ public class SumarioTest {
 
         gasolinera.setDieselA("1");
         gasolinera.setNormal95("3");
-        GasolineraDetailPresenter sut = new GasolineraDetailPresenter(mockDetailContract, gasolinera);
+
+        format = NumberFormat.getInstance(Locale.FRANCE);
+
+        when (mockDetailView.getGasolinerasRepository()).thenReturn(mockGasolinerasRepository);
+
+        sut = new GasolineraDetailPresenter(mockDetailView, gasolinera);
+        when (mockGasolinerasRepository.precioToDouble(anyString(), any())).thenReturn(2.333);
+        when (mockGasolinerasRepository.calculateSummary(anyDouble(), anyDouble())).thenReturn(2.333);
+        when (mockGasolinerasRepository.precioSumarioToStr(anyDouble())).thenReturn("2,33");
         sut.init();
+    }
+
+    @Test
+    public void calculaSumarioTest() {
         String precioSumario = sut.getPrecioSumario();
         Assert.assertEquals("2,33", precioSumario);
 
         gasolinera.setDieselA("-1");
         gasolinera.setNormal95("-3,5");
+        when (mockGasolinerasRepository.precioToDouble(anyString(), any())).thenReturn(-1.0);
+        when (mockGasolinerasRepository.calculateSummary(anyDouble(), anyDouble())).thenReturn(-1.0);
+        when (mockGasolinerasRepository.precioSumarioToStr(anyDouble())).thenReturn("-");
         sut.init();
+
         precioSumario = sut.getPrecioSumario();
         Assert.assertEquals("-", precioSumario);
+
         gasolinera.setDieselA("0");
         gasolinera.setNormal95("3.0");
+        when (mockGasolinerasRepository.precioToDouble(anyString(), any())).thenReturn(3.0);
+        when (mockGasolinerasRepository.calculateSummary(anyDouble(), anyDouble())).thenReturn(3.0);
+        when (mockGasolinerasRepository.precioSumarioToStr(anyDouble())).thenReturn("3,00");
         sut.init();
+
         precioSumario = sut.getPrecioSumario();
         Assert.assertEquals("3,00", precioSumario);
 
         gasolinera.setDieselA("5.0");
         gasolinera.setNormal95("0.0");
+        when (mockGasolinerasRepository.precioToDouble(anyString(), any())).thenReturn(5.0);
+        when (mockGasolinerasRepository.calculateSummary(anyDouble(), anyDouble())).thenReturn(5.0);
+        when (mockGasolinerasRepository.precioSumarioToStr(anyDouble())).thenReturn("5,00");
+
         sut.init();
+
         precioSumario = sut.getPrecioSumario();
         Assert.assertEquals("5,00", precioSumario);
     }

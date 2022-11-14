@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="petroprixL">Petroprix</string>
+    <string name="easygasL">Easygas</string>
+    <string name="beroilL">Beroil</string>
+    <string name="ballenoilL">Ballenoil</string>
+    <string name="meroilL">Meroil</string>
+
+    <string-array name="lowcost_array">
+        <item>@string/petroprixL</item>
+        <item>@string/easygasL</item>
+        <item>@string/beroilL</item>
+        <item>@string/ballenoilL</item>
+        <item>@string/meroilL</item>
+    </string-array>
+
+</resources>

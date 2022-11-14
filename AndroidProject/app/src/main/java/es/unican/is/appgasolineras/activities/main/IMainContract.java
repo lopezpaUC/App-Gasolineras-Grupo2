@@ -75,8 +75,9 @@ public interface IMainContract {
          * Filtra gasolineras a mostrar en funcion de los parametros especificados.
          * @param combustibleType Tipo de combustible.
          * @param brands Mara o listado de marcas.
+         * @param lowcost Booleano que indica si se deben mostrar solo resultados lowcost (true).
          */
-        void filter(CombustibleType combustibleType, List<String> brands);
+        void filter(CombustibleType combustibleType, List<String> brands, boolean lowcost);
 
         /**
          * Obtains a list of gas stations ordered by a determined price (diesel / 95-octanes /
@@ -98,6 +99,15 @@ public interface IMainContract {
          * Initialization method
          */
         void init();
+
+        /**
+         * Actualiza el adapter utilizado por la lista de gasolineras, modificando las gasolineras
+         * a mostras.
+         * @param shownGasolineras Gasolineras a mostrar.
+         * @param combustibleDestacado Combustible a destacar.
+         */
+        void showGasolinerasAdvanced(List<Gasolinera> shownGasolineras,
+                                     CombustibleType combustibleDestacado);
 
         /**
          * Returns the Gasolineras Repository object.

@@ -35,7 +35,8 @@ public class GasolinerasService {
     }
 
     public static GasolinerasAPI resetAPI(){
-        return api = null;
+        api = null;
+        return api;
     }
 
     /**

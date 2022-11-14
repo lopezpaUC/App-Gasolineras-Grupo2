@@ -38,11 +38,17 @@
     <string name="petronor">Petronor</string>
     <string name="repsol">Repsol</string>
     <string name="shell">Shell</string>
+    <string name="petroprix">Petroprix</string>
+    <string name="easygas">Easygas</string>
+    <string name="beroil">Beroil</string>
+    <string name="ballenoil">Ballenoil</string>
+    <string name="meroil">Meroil</string>
     <string name="varias">Varias</string>
     <string name="varios">Varios</string>
     <string name="loadErrorEmpty">No hay gasolineras compatibles.</string>
     <string name="preference_filter_file_key_">AppFilterPreference</string>
     <string name="saved_comb_type_filter">TipoCombustible</string>
+    <string name="saved_lowcost_sele">Seleccion lowcost</string>
     <string name="saved_marca_type_filter">TipoMarca</string>
     <string name="saved_price_type_order">PriceType</string>
     <string name="saved_price_order">OrderType</string>
@@ -69,16 +75,6 @@
     <string name="EurosPorLitrolabel">€/L</string>
     <string name="Porcentajelabel">%</string>
     <string name="allA">Todas</string>
-    <string name="informacion">Información</string>
-    <string name="promoExito">Promoción añadida con éxito.</string>
-    <string name="promoRepe">Ya existe una promoción con ese nombre.</string>
-    <string name="promoSinComb">No se han indicado combustibles.</string>
-    <string name="promoSinGas">No se han indicado gasolineras.</string>
-    <string name="promoSinDesc">No se ha indicado un descuento.</string>
-    <string name="promoPorcErr">El porcentaje indicado no es válido.</string>
-    <string name="promoEuroLErr">El descuento en €/L indicado no es válido.</string>
-    <string name="promoBDErr">Se ha producido un error al acceder a la base de datos.</string>
-
 
 
     <string-array name="combustible_types_array">
@@ -128,5 +124,23 @@
         <item>@string/EurosPorLitrolabel</item>
         <item>@string/Porcentajelabel</item>
     </string-array>
+
+    <string name="informacion">Información</string>
+    <string name="promoExito">Promoción añadida con éxito.</string>
+    <string name="promoRepe">Ya existe una promoción con ese nombre.</string>
+    <string name="promoSinComb">No se han indicado combustibles.</string>
+    <string name="promoSinGas">No se han indicado gasolineras.</string>
+    <string name="promoSinDesc">No se ha indicado un descuento.</string>
+    <string name="promoPorcErr">El porcentaje indicado no es válido.</string>
+    <string name="promoEuroLErr">El descuento en €/L indicado no es válido.</string>
+    <string name="promoBDErr">Se ha producido un error al acceder a la base de datos.</string>
+
+    <string name="lowcost">Mostrar solo low-cost</string>
+    <string name="consideraLowcost">Gasolineras consideradas low-cost</string>
+
+    <string name="marcasLowcost">Marcas Low-cost</string>
+    <string name="instLowcost">Se consideran gasolineras low-cost aquellas que se corresponden con
+    las siguientes marcas:</string>
+
 
 </resources>

@@ -12,17 +12,56 @@ import es.unican.is.appgasolineras.model.MarcaPromocionCrossRef;
 @Dao
 public interface MarcaDao {
 
+    /**
+     * Obtiene las marcas registradas en la base de datos.
+     *
+     * @return lista de marcas registradas.
+     */
     @Query("SELECT * FROM marcas")
     List<Marca> getMarcas();
 
+    /**
+     * Obtiene una marca en base a su ID.
+     *
+     * @param id ID de la marca
+     *
+     * @return marca con el ID indicado, o null si no esta registrada.
+     */
+    @Query("SELECT * FROM marcas where nombre = :id")
+    Marca getMarcaById(String id);
+
+    /**
+     * Obtiene las marcas lowcost de entre aquellas registradas en la base de datos.
+     *
+     * @return lista de marcas lowcost registradas.
+     */
+    @Query("SELECT * FROM marcas where esLowcost = 1") // 1 = True
+    List<Marca> getMarcasLowcost();
+
+    /**
+     * Inserta varias marcas en la base de datos.
+     *
+     * @param marcas Colección de marcas a insertar.
+     */
     @Insert
     void insertAll(Marca... marcas);
 
+    /**
+     * Inserta una marca en la base de datos.
+     *
+     * @param marca Mara a insertar en la base de datos.
+     */
     @Insert
     void insert(Marca marca);
 
+    /**
+     * Borra todas las marcas de la tabla de marcas.
+     */
     @Query("DELETE FROM marcas")
     void deleteAll();
+
+    @Query("UPDATE marcas SET esLowcost = 1 where nombre = :nombre")
+    void updateMarcaToLowcost(String nombre);
 
     /**
      * Inserta una relacion entre marca y promocion.

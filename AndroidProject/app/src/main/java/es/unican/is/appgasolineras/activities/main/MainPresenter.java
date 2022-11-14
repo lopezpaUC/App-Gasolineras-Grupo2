@@ -155,15 +155,19 @@ public class MainPresenter implements IMainContract.Presenter {
     public void onOrderByPriceClicked() {
         view.openOrderByPrice();
     }
+    public void filter(CombustibleType combustibleType, List<String> brands, boolean lowcost) {
+        shownGasolineras = repositoryGasolineras.getGasolineras(); // Lista Completa
 
-    @Override
-    public void filter(CombustibleType combustibleType, List<String> brands) {
         shownGasolineras = repositoryGasolineras.getGasolineras(); // Lista Completa
         filterByCombustible(combustibleType);
         filterByBrand(brands);
 
+        if (lowcost) {
+            filterByLowcost();
+        }
+
         if (!shownGasolineras.isEmpty()) { // Si hay gasolineras a mostrar despues de filtrado
-            view.showGasolineras(shownGasolineras);
+            view.showGasolinerasAdvanced(shownGasolineras, combustibleType);
 
             // Muestra la informacion de la obtencion de las gasolineras
             if (loadMethod == LOAD_ONLINE) {
@@ -272,6 +276,18 @@ public class MainPresenter implements IMainContract.Presenter {
         return filtered;
     }
 
+
+    /**
+     * Filtra las gasolineras visibles, dejando mostradas solo aquellas lowcost.
+     */
+    private void filterByLowcost() {
+        List<Gasolinera> copyGas = new ArrayList<>(shownGasolineras);
+        for (Gasolinera g:copyGas) {
+            if (!repositoryGasolineras.getGasolinerasLowcost().contains(g)) {
+                shownGasolineras.remove(g);
+            }
+        }
+    }
 
     /**
      * Genera una lista que contenga aquellas gasolineras con la marca que se introduce como parametro.

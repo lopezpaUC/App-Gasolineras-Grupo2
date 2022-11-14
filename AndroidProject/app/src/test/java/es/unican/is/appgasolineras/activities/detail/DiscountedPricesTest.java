@@ -20,11 +20,14 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.MockitoRule;
 
+import java.text.NumberFormat;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
+import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 
 /**
@@ -42,12 +45,16 @@ public class DiscountedPricesTest {
 
     private Context context;
     private List<Promocion> promotions;
+    private NumberFormat format;
 
     @Mock
     IGasolineraDetailContract.View mockDetailView;
 
     @Mock
     IPromocionesRepository mockPromocionesRepository;
+
+    @Mock
+    IGasolinerasRepository mockGasolinerasRepository;
 
     @Before
     public void setUp() {
@@ -65,16 +72,27 @@ public class DiscountedPricesTest {
         // Creates promotion list
         promotions = new LinkedList<>();
 
+        format = NumberFormat.getInstance(Locale.FRANCE);
+
         // Defines mock behaviour
         when (mockDetailView.getPromocionesRepository()).thenReturn(mockPromocionesRepository);
+        when (mockDetailView.getGasolinerasRepository()).thenReturn(mockGasolinerasRepository);
 
         // Creates the tested class (SUT - System Under Test) and initialises it
         sut = new GasolineraDetailPresenter(mockDetailView, gasStation);
+        when (mockGasolinerasRepository.precioToDouble("1", format)).thenReturn(1.0);
+        when (mockGasolinerasRepository.precioToDouble("3", format)).thenReturn(3.0);
+        when (mockGasolinerasRepository.precioToDouble("2,33", format)).thenReturn(2.333);
+        when (mockGasolinerasRepository.calculateSummary(anyDouble(), anyDouble())).thenReturn(2.333);
+        when (mockGasolinerasRepository.precioSumarioToStr(2.333)).thenReturn("2,33");
+        when (mockGasolinerasRepository.precioSumarioToStr(1.0)).thenReturn("1,00");
+        when (mockGasolinerasRepository.precioSumarioToStr(3.0)).thenReturn("3,00");
         sut.init();
     }
 
     @Test
-    public void calculateDiscountedSummaryPriceTest() {
+    public void UT1aTest() {
+
         // XXX: UT.1a - no promotion applied
         updatePromotions();
 
@@ -82,8 +100,14 @@ public class DiscountedPricesTest {
         Assert.assertEquals("1,00", sut.getDiscountedDieselPriceStr());
         Assert.assertEquals("3,00", sut.getDiscounted95OctanesPriceStr());
 
+    }
+
+    @Test
+    public void UT1bTest() {
         // XXX: UT.1b - 20-cent promotion for all fuels
-        Promocion promotion = new Promocion();
+        promotion = null;
+        promotion = new Promocion();
+        promotion.setId("a");
         promotion.setDescuentoEurosLitro(0.2);
         promotion.setDescuentoPorcentual(-1);
         promotion.setCombustibles("Diésel-Gasolina");
@@ -91,9 +115,32 @@ public class DiscountedPricesTest {
         promotions.add(promotion);
         updatePromotions();
 
+        when (mockGasolinerasRepository.bestPromotion(1.0, promotions, "Diésel"))
+                .thenReturn(promotion);
+        when (mockGasolinerasRepository.bestPromotion(3.0, promotions, "Gasolina"))
+                .thenReturn(promotion);
+
+        when (mockGasolinerasRepository.precioToDouble("0,8", format)).thenReturn(0.8);
+        when (mockGasolinerasRepository.precioToDouble("2,8", format)).thenReturn(2.8);
+        when (mockGasolinerasRepository.precioToDouble("2,13", format)).thenReturn(2.133);
+        when (mockGasolinerasRepository.precioSumarioToStr(2.133)).thenReturn("2,13");
+        when (mockGasolinerasRepository.precioSumarioToStr(0.8)).thenReturn("0,80");
+        when (mockGasolinerasRepository.precioSumarioToStr(2.8)).thenReturn("2,80");
+        when (mockGasolinerasRepository.calculateSummary(anyDouble(), anyDouble())).thenReturn(2.133);
+
+        when (mockGasolinerasRepository.calculateDiscountedPrice(1.0, promotion)).thenReturn(0.8);
+        when (mockGasolinerasRepository.calculateDiscountedPrice(3.0, promotion)).thenReturn(2.8);
+        sut.init();
+
         Assert.assertEquals("2,13", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("0,80", sut.getDiscountedDieselPriceStr());
         Assert.assertEquals("2,80", sut.getDiscounted95OctanesPriceStr());
+
+    }
+
+
+    @Test
+    public void calculateDiscountedSummaryPriceTest() {
 
         // XXX: UT.1c - 20-cent promotion only for diesel
         promotion = new Promocion();
@@ -103,10 +150,6 @@ public class DiscountedPricesTest {
         promotions.clear();
         promotions.add(promotion);
         updatePromotions();
-
-        Assert.assertEquals("2,27", sut.getDiscountedSummaryPriceStr());
-        Assert.assertEquals("0,80", sut.getDiscountedDieselPriceStr());
-        Assert.assertEquals("3,00", sut.getDiscounted95OctanesPriceStr());
 
         // XXX: UT.1d - 20-cent promotion only for 95-octanes
         promotion = new Promocion();

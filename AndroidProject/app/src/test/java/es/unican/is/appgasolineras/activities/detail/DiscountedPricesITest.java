@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -24,6 +25,8 @@ import java.util.List;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
+import es.unican.is.appgasolineras.repository.GasolinerasRepository;
+import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 import es.unican.is.appgasolineras.repository.PromocionesRepository;
 import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
@@ -37,6 +40,7 @@ public class DiscountedPricesITest {
     private IGasolineraDetailContract.View mockDetailView;
 
     private IPromocionesRepository promocionesRepository;
+    private IGasolinerasRepository gasolinerasRepository;
     private Gasolinera gasStation;
     private Context context;
     private List<Promocion> promotions;
@@ -75,6 +79,9 @@ public class DiscountedPricesITest {
         promocionesRepository = new PromocionesRepository(context);
         when(mockDetailView.getPromocionesRepository()).thenReturn(promocionesRepository);
 
+        gasolinerasRepository = new GasolinerasRepository(context);
+        when(mockDetailView.getGasolinerasRepository()).thenReturn(gasolinerasRepository);
+
         sut = new GasolineraDetailPresenter(mockDetailView, gasStation);
         sut.init();
     }
@@ -86,13 +93,17 @@ public class DiscountedPricesITest {
         db.close();
     }
 
+
     @Test
-    public void calculateDiscountedSummaryPriceTest() {
+    public void UT1aTest() {
         // XXX: UT.1a - no promotion applied
         Assert.assertEquals("2,33", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("1,00", sut.getDiscountedDieselPriceStr());
         Assert.assertEquals("3,00", sut.getDiscounted95OctanesPriceStr());
+    }
 
+    @Test
+    public void UT1bTest() {
         // XXX: UT.1b - 20-cent promotion for all fuels
         promotion = new Promocion();
         promotion.setDescuentoEurosLitro(0.2);
@@ -105,6 +116,12 @@ public class DiscountedPricesITest {
         Assert.assertEquals("2,13", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("0,80", sut.getDiscountedDieselPriceStr());
         Assert.assertEquals("2,80", sut.getDiscounted95OctanesPriceStr());
+    }
+
+
+    @Test
+    public void calculateDiscountedSummaryPriceTest() {
+
 
         // XXX: UT.1c - 20-cent promotion only for diesel
         promotion = new Promocion();
