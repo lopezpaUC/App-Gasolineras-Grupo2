@@ -525,6 +525,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
         // Accept button
         onView(withId(android.R.id.button1)).perform(click());
+
     }
 
     private static void clickAdd() {
