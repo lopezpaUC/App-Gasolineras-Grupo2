@@ -59,7 +59,6 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
     public GrantPermissionRule permissionRule =
             GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-
     @BeforeClass
     public static void setUp() {
         InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase("gasolineras-database");
