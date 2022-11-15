@@ -55,15 +55,6 @@ public interface IGasolinerasRepository {
     int getLoadingMethod();
 
     /**
-     * Calculates the discounted price for a fuel based on its price and the promotion applied
-     *
-     * @param price     the base price
-     * @param promotion the promotion which will be applied on the price
-     * @return the discounted price
-     */
-    double calculateDiscountedPrice(double price, Promocion promotion);
-
-    /**
      * Obtains the best promotion from a list of promotions, according to the given price
      *
      * @param price      the base price
@@ -72,51 +63,6 @@ public interface IGasolinerasRepository {
      */
     Promocion bestPromotion(double price, List<Promocion> promotions, String fuel);
 
-    /**
-     * Produce el String correspondiente para el precio de sumario de la gasolinera.
-     *
-     * @param precio Precio de sumario, tipo double.
-     * @return Precio de sumario como cadena de texto. "-" en caso de haber ocurrido algún error.
-     */
-    String precioSumarioToStr(double precio);
-
-    /**
-     * Comprueba que la cadena de texto relativa a un precio de la gasolinera contiene texto
-     * a poder mostrar de forma valida.
-     *
-     * @param texto Texto a comprobar.
-     * @return Mismo texto si la comprobacion ha sido satisfactoria.
-     * Guion en caso de que el texto no pase la comprobacion.
-     */
-    String checkValidPrice(String texto);
-
-    /**
-     * Produce un valor double valido para un precio de combustible indicado como cadena de texto.
-     *
-     * @param precio  Precio de combustible como cadena de texto.
-     * @param formato Formato a aplicar en la conversion.
-     * @return Precio de combustible como valor valido convertido de tipo double.
-     */
-    double precioToDouble(String precio, NumberFormat formato);
-
-    /**
-     * Calculates the summary price given the diesel and 95-octanes prices
-     *
-     * @param dieselPrice     the price for diesel
-     * @param unleaded95Price the price for 95-octanes
-     * @return the summary price
-     */
-    double calculateSummary(double dieselPrice, double unleaded95Price);
-
-    /**
-     * Comprueba que la cadena de texto relativa a información de la gasolinera contiene texto
-     * a poder mostrar de forma valida.
-     *
-     * @param texto Texto a comprobar.
-     * @return Mismo texto si la comprobacion ha sido satisfactoria.
-     *         Guion en caso de que el texto no pase la comprobacion.
-     */
-    String checkValid(String texto);
 
      /* Retorna lista de marcas de gasolineras lowcost.
      *

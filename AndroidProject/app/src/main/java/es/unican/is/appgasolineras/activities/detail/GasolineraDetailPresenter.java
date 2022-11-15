@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import es.unican.is.appgasolineras.common.utils.PriceUtilities;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
@@ -29,7 +30,7 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
     private String discounted95OctanesPriceStr;
     private IPromocionesRepository repPromotions;          // Promotions repository
     private IGasolinerasRepository repGasolineras;         // Gas stations repository
-
+    private PriceUtilities utilities;
     /**
      * Constructor del presenter.
      *
@@ -42,12 +43,13 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
 
         repPromotions = view.getPromocionesRepository();
         repGasolineras = view.getGasolinerasRepository();
+        utilities = new PriceUtilities();
     }
 
     @Override
     public void init() {
         // Obtiene el precio sumario
-        precioSumarioStr = repGasolineras.precioSumarioToStr(calculateSummaryPrice());
+        precioSumarioStr = utilities.precioSumarioToStr(calculateSummaryPrice());
         // Solicita a la vista que muestre la informacion requerida
         loadGasolineraDetails();
     }
@@ -78,7 +80,7 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
 
     @Override
     public String getDiscountedSummaryPriceStr() {
-        return repGasolineras.precioSumarioToStr(calculateDiscountedSummaryPrice());
+        return utilities.precioSumarioToStr(calculateDiscountedSummaryPrice());
     }
 
     /**
@@ -98,12 +100,12 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         NumberFormat formato = NumberFormat.getInstance(Locale.FRANCE);
 
         // Convierte a double el precio del diesel A
-        precioDiesel = repGasolineras.precioToDouble(dieselPriceStr, formato);
+        precioDiesel = utilities.precioToDouble(dieselPriceStr, formato);
 
         // Convierte a double el precio de la gasolina 95
-        precioGasolina = repGasolineras.precioToDouble(precioGasolinaStr, formato);
+        precioGasolina = utilities.precioToDouble(precioGasolinaStr, formato);
 
-        return repGasolineras.calculateSummary(precioDiesel, precioGasolina);
+        return utilities.calculateSummary(precioDiesel, precioGasolina);
     }
 
     /**
@@ -128,15 +130,15 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         NumberFormat formato = NumberFormat.getInstance(Locale.FRANCE);
 
         // Converts diesel price to double
-        dieselPrice = repGasolineras.precioToDouble(dieselPriceStr, formato);
+        dieselPrice = utilities.precioToDouble(dieselPriceStr, formato);
 
         // Converts 95-octanes price to double
-        precioGasolina = repGasolineras.precioToDouble(precioGasolinaStr, formato);
+        precioGasolina = utilities.precioToDouble(precioGasolinaStr, formato);
 
         // If the gas station has no promotions assigned, all prices remain unaltered
         if (promotions.isEmpty()) {
-            discountedDieselPriceStr = repGasolineras.precioSumarioToStr(truncateFuelPrice(dieselPrice));
-            discounted95OctanesPriceStr = repGasolineras.precioSumarioToStr(truncateFuelPrice(precioGasolina));
+            discountedDieselPriceStr = utilities.precioSumarioToStr(truncateFuelPrice(dieselPrice));
+            discounted95OctanesPriceStr = utilities.precioSumarioToStr(truncateFuelPrice(precioGasolina));
             return calculateSummaryPrice();
         }
 
@@ -145,16 +147,16 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         Promocion bestPromotion95Octanes = repGasolineras.bestPromotion(precioGasolina, promotions, "Gasolina");
 
         // Calculates the best price for both diesel and 95 octanes
-        double dieselDiscountedPrice = repGasolineras.
+        double dieselDiscountedPrice = utilities.
                 calculateDiscountedPrice(dieselPrice, bestPromotionDiesel);
-        discountedDieselPriceStr = repGasolineras.precioSumarioToStr(truncateFuelPrice(dieselDiscountedPrice));
+        discountedDieselPriceStr = utilities.precioSumarioToStr(truncateFuelPrice(dieselDiscountedPrice));
 
-        double unleaded95DiscountedPrice = repGasolineras.
+        double unleaded95DiscountedPrice = utilities.
                 calculateDiscountedPrice(precioGasolina, bestPromotion95Octanes);
-        discounted95OctanesPriceStr = repGasolineras.precioSumarioToStr(truncateFuelPrice(unleaded95DiscountedPrice));
+        discounted95OctanesPriceStr = utilities.precioSumarioToStr(truncateFuelPrice(unleaded95DiscountedPrice));
 
         // Calculates the summary price according to the validity of the fuel's prices
-        discountedSummary = repGasolineras.calculateSummary(dieselDiscountedPrice, unleaded95DiscountedPrice);
+        discountedSummary = utilities.calculateSummary(dieselDiscountedPrice, unleaded95DiscountedPrice);
 
         return discountedSummary;
     }
@@ -170,13 +172,13 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
         } else { // De lo contrario, si contiene mas informacion, la carga y ordena mostrarla
             Map<String, String> info = new HashMap<>();
             info.put("summary", precioSumarioStr + " €/L");
-            info.put("label", repGasolineras.checkValid(gasolinera.getRotulo()));
-            info.put("municipality", repGasolineras.checkValid(gasolinera.getMunicipio()));
-            info.put("direction", repGasolineras.checkValid(gasolinera.getDireccion()));
-            info.put("cp", repGasolineras.checkValid(gasolinera.getCp()));
-            info.put("price95", repGasolineras.checkValidPrice(gasolinera.getNormal95()) + " €/L");
-            info.put("priceDieselA", repGasolineras.checkValidPrice(gasolinera.getDieselA()) + " €/L");
-            info.put("schedule", repGasolineras.checkValid(gasolinera.getHorario()));
+            info.put("label", utilities.checkValid(gasolinera.getRotulo()));
+            info.put("municipality", utilities.checkValid(gasolinera.getMunicipio()));
+            info.put("direction", utilities.checkValid(gasolinera.getDireccion()));
+            info.put("cp", utilities.checkValid(gasolinera.getCp()));
+            info.put("price95", utilities.checkValidPrice(gasolinera.getNormal95()) + " €/L");
+            info.put("priceDieselA", utilities.checkValidPrice(gasolinera.getDieselA()) + " €/L");
+            info.put("schedule", utilities.checkValid(gasolinera.getHorario()));
 
             view.showInfo(info);
         }

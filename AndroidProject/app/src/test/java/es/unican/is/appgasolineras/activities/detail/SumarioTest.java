@@ -51,10 +51,10 @@ public class SumarioTest {
         when (mockDetailView.getGasolinerasRepository()).thenReturn(mockGasolinerasRepository);
 
         sut = new GasolineraDetailPresenter(mockDetailView, gasolinera);
-        when (mockGasolinerasRepository.precioToDouble(anyString(), any())).thenReturn(2.333);
+        /*when (mockGasolinerasRepository.precioToDouble(anyString(), any())).thenReturn(2.333);
         when (mockGasolinerasRepository.calculateSummary(anyDouble(), anyDouble())).thenReturn(2.333);
         when (mockGasolinerasRepository.precioSumarioToStr(anyDouble())).thenReturn("2,33");
-        sut.init();
+        */sut.init();
     }
 
     @Test
@@ -64,30 +64,30 @@ public class SumarioTest {
 
         gasolinera.setDieselA("-1");
         gasolinera.setNormal95("-3,5");
-        when (mockGasolinerasRepository.precioToDouble(anyString(), any())).thenReturn(-1.0);
+        /*when (mockGasolinerasRepository.precioToDouble(anyString(), any())).thenReturn(-1.0);
         when (mockGasolinerasRepository.calculateSummary(anyDouble(), anyDouble())).thenReturn(-1.0);
         when (mockGasolinerasRepository.precioSumarioToStr(anyDouble())).thenReturn("-");
-        sut.init();
+        */sut.init();
 
         precioSumario = sut.getPrecioSumario();
         Assert.assertEquals("-", precioSumario);
 
         gasolinera.setDieselA("0");
         gasolinera.setNormal95("3.0");
-        when (mockGasolinerasRepository.precioToDouble(anyString(), any())).thenReturn(3.0);
+        /*when (mockGasolinerasRepository.precioToDouble(anyString(), any())).thenReturn(3.0);
         when (mockGasolinerasRepository.calculateSummary(anyDouble(), anyDouble())).thenReturn(3.0);
         when (mockGasolinerasRepository.precioSumarioToStr(anyDouble())).thenReturn("3,00");
-        sut.init();
+        */sut.init();
 
         precioSumario = sut.getPrecioSumario();
         Assert.assertEquals("3,00", precioSumario);
 
         gasolinera.setDieselA("5.0");
         gasolinera.setNormal95("0.0");
-        when (mockGasolinerasRepository.precioToDouble(anyString(), any())).thenReturn(5.0);
+        /*when (mockGasolinerasRepository.precioToDouble(anyString(), any())).thenReturn(5.0);
         when (mockGasolinerasRepository.calculateSummary(anyDouble(), anyDouble())).thenReturn(5.0);
         when (mockGasolinerasRepository.precioSumarioToStr(anyDouble())).thenReturn("5,00");
-
+*/
         sut.init();
 
         precioSumario = sut.getPrecioSumario();

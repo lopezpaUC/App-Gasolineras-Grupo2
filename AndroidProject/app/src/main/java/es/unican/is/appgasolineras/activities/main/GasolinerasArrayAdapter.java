@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 
 import es.unican.is.appgasolineras.R;
+import es.unican.is.appgasolineras.common.utils.PriceUtilities;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
@@ -32,28 +33,33 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
 
     private IGasolinerasRepository gasolinerasRepository = new GasolinerasRepository(getContext());
     private IPromocionesRepository promocionesRepository = new PromocionesRepository(getContext());
-    private boolean order;
+    private PriceUtilities utilities;
+    private NumberFormat format;
+
 
     public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects) {
         super(context, 0, objects);
         precioDestacar = null;
-        this.order = false;
+        format = NumberFormat.getInstance(Locale.getDefault());
+        utilities = new PriceUtilities();
     }
 
     public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects,
-                                   String precioDestacar, boolean order) {
+                                   String precioDestacar) {
         super(context, 0, objects);
         this.precioDestacar = precioDestacar;
 
         summaryPrice = false;
-        this.order = order;
+        format = NumberFormat.getInstance(Locale.getDefault());
+        utilities = new PriceUtilities();
     }
 
     public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects,
-                                   boolean summaryPrice, boolean order) {
+                                   boolean summaryPrice) {
         super(context, 0, objects);
         this.summaryPrice = summaryPrice;
-        this.order = order;
+        format = NumberFormat.getInstance(Locale.getDefault());
+        utilities = new PriceUtilities();
     }
 
     @NonNull
@@ -128,31 +134,25 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         Double precioDouble = -1.0;
         String precioString = "-";
 
-        double unleaded95 = gasolinerasRepository.precioToDouble(gasolinera.getNormal95(), NumberFormat.getInstance(Locale.FRANCE));
-        double discountedUnleaded95 = unleaded95;
-        List<Promocion> promociones1 = promocionesRepository.getPromocionesRelacionadasConGasolinera(gasolinera.getId());
+        // Convierte el precio a formato Double
+        NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
 
-        // If it is ordered, it shows the price with promotions
-        if (order) {
-            if (!promociones1.isEmpty()) {
-                Promocion bestPromotion = gasolinerasRepository.bestPromotion(unleaded95, promociones1, "Gasolina");
-                discountedUnleaded95 = gasolinerasRepository.calculateDiscountedPrice(unleaded95, bestPromotion);
-            }
-        } else { // Normal view or filter
-            precioString = gasolinera.getNormal95();
+        try {
+            Number number = format.parse(gasolinera.getNormal95());
+            precioDouble = number.doubleValue();
+        } catch (Exception e) {
+            precioString = "-";
         }
-        precioDouble = discountedUnleaded95;
 
         // Comprueba si el precio no es valido
         if (precioDouble < 0.0) {
             tv.setText(precioString);
         } else {
-            precioString = String.valueOf(precioDouble);
+            precioString = gasolinera.getNormal95();
         }
 
         tv.setText(precioString);
 
-        // Keeps filter persistency
         if (precioDestacar != null && precioDestacar.equals(getContext().getResources().getString(R.string.gasolina95label))) {
             tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.BOLD);
             tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
@@ -175,31 +175,25 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         Double precioDouble = -1.0;
         String precioString = "-";
 
-        double diesel = gasolinerasRepository.precioToDouble(gasolinera.getDieselA(), NumberFormat.getInstance(Locale.FRANCE));
-        double discountedDiesel = diesel;
-        List<Promocion> promotions = promocionesRepository.getPromocionesRelacionadasConGasolinera(gasolinera.getId());
+        // Convierte el precio a formato Double
+        NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
 
-        // If it is ordered, it shows the price with promotions
-        if (order) {
-            if (!promotions.isEmpty()) {
-                Promocion bestPromotion = gasolinerasRepository.bestPromotion(diesel, promotions, "Diésel");
-                discountedDiesel = gasolinerasRepository.calculateDiscountedPrice(diesel, bestPromotion);
-            }
-        } else { // Normal view or filter
-            precioString = gasolinera.getDieselA();
+        try {
+            Number number = format.parse(gasolinera.getDieselA());
+            precioDouble = number.doubleValue();
+        } catch (Exception e) {
+            precioString = "-";
         }
-       precioDouble = discountedDiesel;
 
         // Comprueba si el precio no es valido
         if (precioDouble < 0.0) {
             tv.setText(precioString);
         } else {
-            precioString = String.valueOf(precioDouble);
+            precioString = gasolinera.getDieselA();
         }
 
         tv.setText(precioString);
 
-        // Keeps filter persistency
         if (precioDestacar != null && precioDestacar.equals(getContext().getResources().getString(R.string.dieselAlabel))) {
             tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.BOLD);
             tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
@@ -222,11 +216,17 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         Double precioDouble = -1.0;
         String precioString = "-";
 
+        String summaryStr = "-";
+
         // Converts price to double
         NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
 
         try {
-            Number number = format.parse(getDiscountedSummaryPrice(gasolinera));
+            double diesel = format.parse(gasolinera.getDieselA()).doubleValue();
+            double unleaded95 = format.parse(gasolinera.getNormal95()).doubleValue();
+            double summary = utilities.calculateSummary(diesel, unleaded95);
+            summaryStr = utilities.precioSumarioToStr(summary);
+            Number number = format.parse(summaryStr);
             precioDouble = number.doubleValue();
         } catch (Exception e) {
             precioString = "-";
@@ -236,18 +236,20 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         if (precioDouble < 0.0) {
             tv.setText(precioString);
         } else {
-            precioString = getDiscountedSummaryPrice(gasolinera);
+            precioString = summaryStr;
         }
 
         tv.setText(precioString);
 
-        if (precioDestacar != null && precioDestacar.equals(getContext().getResources().getString(R.string.gasolina95label))) {
+        if (precioDestacar != null && precioDestacar.equals(getContext().getResources().
+                getString(R.string.gasolina95label))) {
 
             TextView tv95Label = convertView.findViewById(R.id.tv95Label);
             TextView tv95 = convertView.findViewById(R.id.tv95);
             tv95Label.setTypeface(tv95Label.getTypeface(), Typeface.BOLD);
             tv95.setTypeface(tv95.getTypeface(), Typeface.BOLD);
-        } else if (precioDestacar != null && precioDestacar.equals(getContext().getResources().getString(R.string.dieselAlabel))) {
+        } else if (precioDestacar != null && precioDestacar.equals(getContext().getResources().
+                getString(R.string.dieselAlabel))) {
             TextView tvDieselLabel = convertView.findViewById(R.id.tvDieselALabel);
             TextView tvDiesel = convertView.findViewById(R.id.tvDieselA);
             tvDieselLabel.setTypeface(tvDieselLabel.getTypeface(), Typeface.BOLD);
@@ -257,32 +259,6 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         // Shows summary price
         tvLabel.setVisibility(View.VISIBLE);
         tv.setVisibility(View.VISIBLE);
-    }
-
-    public String getDiscountedSummaryPrice(Gasolinera gasStation) {
-        NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
-        IPromocionesRepository promocionesRepository = new PromocionesRepository(getContext());
-        List<Promocion> promotions = promocionesRepository.
-                getPromocionesRelacionadasConGasolinera(gasStation.getId());
-
-        // Base prices (text)
-        String dieselStr = gasStation.getDieselA();
-        String unleaded95Str = gasStation.getNormal95();
-
-        // Base prices (numeric format)
-        double diesel = gasolinerasRepository.precioToDouble(dieselStr, format);
-        double unleaded95 = gasolinerasRepository.precioToDouble(unleaded95Str, format);
-
-        // Promotions
-        Promocion promotionDiesel = gasolinerasRepository.bestPromotion(diesel, promotions, "Diésel");
-        Promocion promotion95 = gasolinerasRepository.bestPromotion(unleaded95, promotions, "Gasolina");
-
-        // Prices with applied promotions
-        double discountedDiesel = gasolinerasRepository.calculateDiscountedPrice(diesel, promotionDiesel);
-        double discounted95 = gasolinerasRepository.calculateDiscountedPrice(unleaded95, promotion95);
-        double summaryPrice = gasolinerasRepository.calculateSummary(discountedDiesel, discounted95);
-
-        return gasolinerasRepository.precioSumarioToStr(summaryPrice);
     }
 
 

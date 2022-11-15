@@ -166,11 +166,11 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         switch (combustibleDestacado) {
             case GASOLINA:
                 adapter = new GasolinerasArrayAdapter(this, shownGasolineras,
-                        getResources().getString(R.string.gasolina95label), false);
+                        getResources().getString(R.string.gasolina95label));
                 break;
             case DIESEL:
                 adapter = new GasolinerasArrayAdapter(this, shownGasolineras,
-                        getResources().getString(R.string.dieselAlabel), false);
+                        getResources().getString(R.string.dieselAlabel));
                 break;
             default:
                 adapter = new GasolinerasArrayAdapter(this, shownGasolineras);
@@ -451,14 +451,14 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         switch (combustibleSeleccionado) {
             case GASOLINA:
                 adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
-                        getResources().getString(R.string.gasolina95label), false);
+                        getResources().getString(R.string.gasolina95label));
                 break;
             case DIESEL:
                 adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
-                        getResources().getString(R.string.dieselAlabel), false);
+                        getResources().getString(R.string.dieselAlabel));
                 break;
             default:
-                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(), false, false);
+                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(), true);
                 break;
         }
 
@@ -484,9 +484,10 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         GasolinerasArrayAdapter adapter;
         if (selectedPriceType == PriceFilterType.SUMARIO) {
             adapter =
-                    new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(), true, true);
+                    new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
         } else {
-            adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(), filterStr, true);
+            adapter = new GasolinerasArrayAdapter
+                    (this, presenter.getShownGasolineras(), filterStr);
         }
 
         // Updates the list
