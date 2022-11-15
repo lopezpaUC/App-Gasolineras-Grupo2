@@ -1,4 +1,7 @@
 <resources>
+    <string name="type_price">Tipo de precio</string>
+    <string name="type_order">Tipo de ordenación</string>
+    <string name="order_by_precio">Ordenar por precio</string>
     <string name="app_name">App Gasolineras</string>
     <string name="gasolina95label">Gasolina</string>
     <string name="dieselAlabel">Diésel</string>
@@ -11,6 +14,8 @@
     <string name="prices">Precios</string>
     <string name="schedule">Horario</string>
     <string name="sumPrice">Precio Sumario</string>
+    <string name="ascending">Ascendente</string>
+    <string name="descending">Descendente</string>
     <string name="error">Error</string>
     <string name="no_detail_info">Ha habido un error cargando la información en detalle de la gasolinera.</string>
     <string name="accept">Aceptar</string>
@@ -41,43 +46,12 @@
     <string name="varias">Varias</string>
     <string name="varios">Varios</string>
     <string name="loadErrorEmpty">No hay gasolineras compatibles.</string>
-
-    <string-array name="combustible_types_array">
-        <item>@string/all</item>
-        <item>@string/dieselAlabel</item>
-        <item>@string/gasolina95label</item>
-    </string-array>
-
-    <string-array name="combustible_types_array_nall">
-        <item>@string/dieselAlabel</item>
-        <item>@string/gasolina95label</item>
-    </string-array>
-
-    <string-array name="brands_types_array">
-        <item>@string/avia</item>
-        <item>@string/campsa</item>
-        <item>@string/carrefour</item>
-        <item>@string/cepsa</item>
-        <item>@string/galp</item>
-        <item>@string/petronor</item>
-        <item>@string/repsol</item>
-        <item>@string/shell</item>
-        <item>@string/petroprix</item>
-        <item>@string/easygas</item>
-        <item>@string/beroil</item>
-        <item>@string/ballenoil</item>
-        <item>@string/meroil</item>
-    </string-array>
-
-    <string-array name="empty_array">
-        <item>-</item>
-    </string-array>
-
     <string name="preference_filter_file_key_">AppFilterPreference</string>
     <string name="saved_comb_type_filter">TipoCombustible</string>
     <string name="saved_lowcost_sele">Seleccion lowcost</string>
     <string name="saved_marca_type_filter">TipoMarca</string>
-
+    <string name="saved_price_type_order">PriceType</string>
+    <string name="saved_price_order">OrderType</string>
     <string name="nuevaPromocion">NUEVA PROMOCIÓN</string>
     <string name="name">Nombre</string>
     <string name="indicacionNombre">Introduzca el nombre de la promoción.</string>
@@ -101,6 +75,44 @@
     <string name="EurosPorLitrolabel">€/L</string>
     <string name="Porcentajelabel">%</string>
     <string name="allA">Todas</string>
+
+
+    <string-array name="combustible_types_array">
+        <item>@string/all</item>
+        <item>@string/dieselAlabel</item>
+        <item>@string/gasolina95label</item>
+    </string-array>
+
+    <string-array name="price_type_order_array">
+        <item>@string/dieselAlabel</item>
+        <item>@string/gasolina95label</item>
+        <item>@string/sumPrice</item>
+    </string-array>
+
+    <string-array name="price_order_array">
+        <item>@string/ascending</item>
+        <item>@string/descending</item>
+    </string-array>
+
+    <string-array name="combustible_types_array_nall">
+        <item>@string/dieselAlabel</item>
+        <item>@string/gasolina95label</item>
+    </string-array>
+
+    <string-array name="brands_types_array">
+        <item>@string/avia</item>
+        <item>@string/campsa</item>
+        <item>@string/carrefour</item>
+        <item>@string/cepsa</item>
+        <item>@string/galp</item>
+        <item>@string/petronor</item>
+        <item>@string/repsol</item>
+        <item>@string/shell</item>
+    </string-array>
+
+    <string-array name="empty_array">
+        <item>-</item>
+    </string-array>
 
     <string-array name="selectors_types_array">
         <item>@string/allA</item>
@@ -129,5 +141,6 @@
     <string name="marcasLowcost">Marcas Low-cost</string>
     <string name="instLowcost">Se consideran gasolineras low-cost aquellas que se corresponden con
     las siguientes marcas:</string>
+
 
 </resources>

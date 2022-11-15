@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import androidx.test.core.app.ApplicationProvider;
@@ -24,6 +25,8 @@ import java.util.List;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
+import es.unican.is.appgasolineras.repository.GasolinerasRepository;
+import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 import es.unican.is.appgasolineras.repository.PromocionesRepository;
 import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
@@ -37,6 +40,7 @@ public class DiscountedPricesITest {
     private IGasolineraDetailContract.View mockDetailView;
 
     private IPromocionesRepository promocionesRepository;
+    private IGasolinerasRepository gasolinerasRepository;
     private Gasolinera gasStation;
     private Context context;
     private List<Promocion> promotions;
@@ -74,6 +78,9 @@ public class DiscountedPricesITest {
 
         promocionesRepository = new PromocionesRepository(context);
         when(mockDetailView.getPromocionesRepository()).thenReturn(promocionesRepository);
+
+        gasolinerasRepository = new GasolinerasRepository(context);
+        when(mockDetailView.getGasolinerasRepository()).thenReturn(gasolinerasRepository);
 
         sut = new GasolineraDetailPresenter(mockDetailView, gasStation);
         sut.init();

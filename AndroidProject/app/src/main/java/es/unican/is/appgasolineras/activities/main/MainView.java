@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +39,8 @@ import es.unican.is.appgasolineras.common.utils.MultipleSpinner;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
+import es.unican.is.appgasolineras.repository.IPromocionesRepository;
+import es.unican.is.appgasolineras.repository.PromocionesRepository;
 
 /**
  * Vista principal abierta al iniciar la aplicacion.
@@ -118,6 +121,9 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
             case R.id.menuListaPromociones:
                 presenter.onListPromotionsClicked();
                 return true;
+            case R.id.menuOrdenarPorPrecio:
+                presenter.onOrderByPriceClicked();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -140,6 +146,11 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         return new GasolinerasRepository(this);
     }
 
+
+    @Override
+    public IPromocionesRepository getPromotionsRepository() {
+        return new PromocionesRepository(this);
+    }
 
     @Override
     public void showGasolineras(List<Gasolinera> gasolineras) {
@@ -306,6 +317,59 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         dialogFilter.show();
     }
 
+    public void openOrderByPrice() {
+
+        Dialog dialogOrder = new Dialog(MainView.this);
+
+        // Deshabilitar titulo (ya asignado en layout)
+        dialogOrder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogOrder.setContentView(R.layout.activity_order_by_precio);
+
+        // Inicializar elementos
+        TextView tvCancelar = dialogOrder.findViewById(R.id.tvCancel);
+        TextView tvAplicar = dialogOrder.findViewById(R.id.tvApply);
+
+        // Inicializacion spinner tipo combustible
+        Spinner spinnerPrice = dialogOrder.findViewById(R.id.spnTipoPrecio);
+        initialiseSpinnerPrice(spinnerPrice, dialogOrder);
+
+        // Inicializacion spinner marcas
+        Spinner spinnerOrderType = dialogOrder.findViewById(R.id.spnTipoOrdenacion);
+        initialiseSpinnerOrder(spinnerOrderType, dialogOrder);
+
+        // Listener para aplicar
+        tvAplicar.setOnClickListener(view -> {
+
+            // Guardar en el atributo el precio y el orden seleccionados
+            int price = spinnerPrice.getSelectedItemPosition();
+            int order = spinnerOrderType.getSelectedItemPosition();
+
+            // Recupera la seleccion previa a cerrar la ventana
+            SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                    Context.MODE_PRIVATE);
+
+            int savedFilter = filterPref.getInt(getString(R.string.saved_comb_type_filter), 0);
+
+            // Actualizar lista
+            int itemPositionPrice = spinnerPrice.getSelectedItemPosition();
+            int itemPositionOrder = spinnerOrderType.getSelectedItemPosition();
+
+            // Saves selected price and order
+            saveIntPrefFilter(getString(R.string.saved_price_type_order), itemPositionPrice);
+            saveIntPrefFilter(getString(R.string.saved_price_order), itemPositionOrder);
+
+            updateListPrice(price, order, savedFilter);
+
+            dialogOrder.dismiss();
+        });
+
+        // Listener para cancelar
+        tvCancelar.setOnClickListener(view -> dialogOrder.dismiss());
+
+        dialogOrder.show();
+
+    }
+
     /**
      * Inicializa el spinner del filtro por tipo de combustible.
      * @param spinnerCombustible Spinner con las opciones de tipos de combustibles.
@@ -325,6 +389,36 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
                 Context.MODE_PRIVATE);
         int savedCombValue = filterPref.getInt(getString(R.string.saved_comb_type_filter), 0);
         spinnerCombustible.setSelection(savedCombValue);
+    }
+
+    private void initialiseSpinnerPrice(Spinner spinnerPrice, Dialog dialogFilter) {
+        // ArrayAdapter con los tipos de combustibles
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(
+                dialogFilter.getContext(), R.array.price_type_order_array,
+                android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        spinnerPrice.setAdapter(arrayAdapter);
+
+        // Recupera la seleccion previa a cerrar la ventana
+        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                Context.MODE_PRIVATE);
+        int savedPriceValue = filterPref.getInt(getString(R.string.saved_price_type_order), 0);
+        spinnerPrice.setSelection(savedPriceValue);
+    }
+
+    private void initialiseSpinnerOrder(Spinner spinnerOrder, Dialog dialogFilter) {
+        // ArrayAdapter con los tipos de combustibles
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(
+                dialogFilter.getContext(), R.array.price_order_array,
+                android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        spinnerOrder.setAdapter(arrayAdapter);
+
+        // Recupera la seleccion previa a cerrar la ventana
+        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                Context.MODE_PRIVATE);
+        int savedOrderValue = filterPref.getInt(getString(R.string.saved_price_order), 0);
+        spinnerOrder.setSelection(savedOrderValue);
     }
 
     /**
@@ -351,6 +445,54 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         // Solicita al presenter que realice el filtrado y actualice las gasolineras a mostrar
         presenter.filter(combustibleSeleccionado, marcasSeleccionadas, lowcost);
+
+        // Prepara ArrayAdapter para la lista a mostrar
+        GasolinerasArrayAdapter adapter;
+        switch (combustibleSeleccionado) {
+            case GASOLINA:
+                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
+                        getResources().getString(R.string.gasolina95label));
+                break;
+            case DIESEL:
+                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
+                        getResources().getString(R.string.dieselAlabel));
+                break;
+            default:
+                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(), true);
+                break;
+        }
+
+        // Actualiza la lista
+        ListView list = findViewById(R.id.lvGasolineras);
+        list.setAdapter(adapter);
+    }
+
+    private void updateListPrice(int price, int order, int savedFilter)
+    {
+        // Converts position to diesel / 95-octanes / summary price
+        PriceFilterType selectedPriceType = PriceFilterType.getPriceFilterType(price);
+
+        // Converts position to order (ascending / descending)
+        PriceOrderType selectedOrderType = PriceOrderType.getPriceOrder(order);
+
+        // Requests presenter to order the list and to update the shown gas stations
+        presenter.orderByPrice(selectedOrderType, selectedPriceType);
+
+        String filterStr = CombustibleType.ALL_COMB.getCombStringFromInt(savedFilter - 1);
+
+        // Prepares ArrayAdapter for the list to be shown
+        GasolinerasArrayAdapter adapter;
+        if (selectedPriceType == PriceFilterType.SUMARIO) {
+            adapter =
+                    new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
+        } else {
+            adapter = new GasolinerasArrayAdapter
+                    (this, presenter.getShownGasolineras(), filterStr);
+        }
+
+        // Updates the list
+        ListView list = findViewById(R.id.lvGasolineras);
+        list.setAdapter(adapter);
     }
 
     /**

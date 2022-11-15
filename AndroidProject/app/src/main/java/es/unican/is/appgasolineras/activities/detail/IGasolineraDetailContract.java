@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.Map;
 
+import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 
 /**
@@ -85,5 +86,7 @@ public interface IGasolineraDetailContract {
         Context getContext();
 
         IPromocionesRepository getPromocionesRepository();
+
+        IGasolinerasRepository getGasolinerasRepository();
     }
 }

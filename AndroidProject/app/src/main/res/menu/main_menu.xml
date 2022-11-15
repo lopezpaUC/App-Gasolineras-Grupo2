@@ -2,7 +2,6 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-
     <item
         android:id="@+id/menuFilter"
         android:icon="@drawable/filter_gas"
@@ -40,6 +39,7 @@
 
         </menu>
     </item>
+
     <item
         android:id="@+id/menuInfo"
         android:title="@string/info" />

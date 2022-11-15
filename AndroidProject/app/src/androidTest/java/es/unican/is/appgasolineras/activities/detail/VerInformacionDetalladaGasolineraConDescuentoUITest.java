@@ -32,6 +32,7 @@ import org.junit.runner.RunWith;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.MainView;
+import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.PromocionesRepository;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
@@ -115,7 +116,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         // Discounted price (only for diesel)
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("1,50 €/L")));
-        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,50 €/L")));
+        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,51 €/L")));
     }
 
     private void UIT1cTest() {
@@ -132,7 +133,8 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("")));
-        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,78 €/L")));
+
+        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("")));
     }
 
     private void UIT1dTest() {
@@ -149,7 +151,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("1,61 €/L")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("")));
-        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,74 €/L")));
+        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,75 €/L")));
     }
 
     private void UIT1eTest() {
@@ -185,7 +187,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("1,69 €/L")));
-        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,78 €/L")));
+        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,79 €/L")));
     }
 
 
@@ -204,7 +206,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("1,63 €/L")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("")));
-        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,74 €/L")));
+        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,75 €/L")));
     }
 
     private void UIT1hTest() {
@@ -240,7 +242,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("- €/L")));
-        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,81 €/L")));
+        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,82 €/L")));
     }
 
     private void UIT1jTest() {
@@ -258,7 +260,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("- €/L")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("")));
-        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,99 €/L")));
+        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("2,00 €/L")));
     }
 
 

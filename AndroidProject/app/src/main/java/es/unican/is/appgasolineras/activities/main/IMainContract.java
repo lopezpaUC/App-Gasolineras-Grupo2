@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
+import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 
 /**
  * The Main Activity is composed of a Presenter and View, which must expose the methods
@@ -59,6 +60,12 @@ public interface IMainContract {
         void onListPromotionsClicked();
 
         /**
+         * This method should be used by the View to notify the Presenter that the
+         * Order by Price button has been clicked.
+         */
+        void onOrderByPriceClicked();
+
+        /**
          * Obtiene la lista de gasolineras que debe mostrar la vista.
          * @return lista de gasolineras que debe mostrar la vista.
          */
@@ -71,6 +78,15 @@ public interface IMainContract {
          * @param lowcost Booleano que indica si se deben mostrar solo resultados lowcost (true).
          */
         void filter(CombustibleType combustibleType, List<String> brands, boolean lowcost);
+
+        /**
+         * Obtains a list of gas stations ordered by a determined price (diesel / 95-octanes /
+         * summary price), either in an ascending or a descending order.
+         * @param order the order (ascending / descending)
+         * @param orderedValue the price to be ordered
+         * @return
+         */
+        void orderByPrice(PriceOrderType order, PriceFilterType orderedValue);
     }
 
     /**
@@ -102,6 +118,9 @@ public interface IMainContract {
          * @return the Repository object to access gas stations
          */
         IGasolinerasRepository getGasolineraRepository();
+
+
+        IPromocionesRepository getPromotionsRepository();
 
         /**
          * The View is requested to show a list of gas stations
@@ -160,6 +179,11 @@ public interface IMainContract {
          * The View is requested to open the Filter dialog
          */
         void openFilterDialog();
+
+        /**
+         * The View is requested to oen the Order by Price dialog
+         */
+        void openOrderByPrice();
     }
 
 }

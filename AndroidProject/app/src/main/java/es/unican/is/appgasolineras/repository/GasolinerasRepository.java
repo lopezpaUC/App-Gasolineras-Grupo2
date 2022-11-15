@@ -1,19 +1,24 @@
 package es.unican.is.appgasolineras.repository;
 
 import android.content.Context;
+import android.util.Log;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.Instant;
+import java.util.List;
+import java.util.Locale;
 
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.common.Callback;
 import es.unican.is.appgasolineras.common.prefs.Prefs;
+import es.unican.is.appgasolineras.common.utils.PriceUtilities;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.GasolinerasResponse;
+import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.model.Marca;
 import es.unican.is.appgasolineras.repository.db.GasolineraDao;
 import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
@@ -177,4 +182,27 @@ public class GasolinerasRepository implements IGasolinerasRepository {
         }
     }*/ // No usado por el momento
 
+    @Override
+    public Promocion bestPromotion(double price, List<Promocion> promotions, String fuel) {
+        Promocion bestPromotion = null;
+        PriceUtilities utilities = new PriceUtilities();
+        double bestPrice = Double.POSITIVE_INFINITY;
+
+        // Loops all promotions
+        for (Promocion promotion : promotions) {
+            // Checks for type of fuel assigned to the promotion
+            if (promotion.getCombustibles().contains(fuel) ||
+                    fuel.contains(promotion.getCombustibles())) {
+                // Calculates the price for the promotion
+                double discountedPrice = utilities.calculateDiscountedPrice(price, promotion);
+
+                // Updates the best price and the best promotion
+                if (discountedPrice < bestPrice) {
+                    bestPrice = discountedPrice;
+                    bestPromotion = promotion;
+                }
+            }
+        }
+        return bestPromotion;
+    }
 }
