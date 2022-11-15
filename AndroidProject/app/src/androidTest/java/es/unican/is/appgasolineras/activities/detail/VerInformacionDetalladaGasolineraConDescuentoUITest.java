@@ -261,7 +261,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("- €/L")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("")));
         onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("2,00 €/L")));
-        g
+
     }
 
 
