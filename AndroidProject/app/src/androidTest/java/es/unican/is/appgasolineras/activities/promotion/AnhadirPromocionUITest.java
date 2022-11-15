@@ -134,6 +134,7 @@ public class AnhadirPromocionUITest {
         }
         onView(withText(R.string.listPromotions)).perform(click());
 
+
         DataInteraction p = onData(anything()).inAdapterView(withId(R.id.lvPromociones)).
                 atPosition(0);
         p.onChildView(withId(R.id.tvNamePromocion)).check(matches(withText("P01")));
