@@ -260,6 +260,4 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         tvLabel.setVisibility(View.VISIBLE);
         tv.setVisibility(View.VISIBLE);
     }
-
-
 }
