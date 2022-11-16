@@ -133,7 +133,7 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
         if (nombreAcortado.contains("ESTACION"))
             nombreAcortado = nombreAcortado.substring(21, nombreAcortado.length());
         if (nombreAcortado.length()>10)
-            nombreAcortado = nombreAcortado.substring(0, 10) + "...";
+            nombreAcortado = nombreAcortado.substring(0, 9) + "...";
         return nombreAcortado;
     }
 }
