@@ -35,6 +35,13 @@ public interface IListaPromocionesContract {
          * y FALSE si no lo es.
          */
         boolean listaPromocionesVacia();
+
+        /**
+         * Devuelve el nombre de la gasolinera acortado si es muy extenso.
+         * @param nombreGasolinera
+         * @return nombre acortado
+         */
+        String acortaString(String nombreGasolinera);
     }
 
     /**

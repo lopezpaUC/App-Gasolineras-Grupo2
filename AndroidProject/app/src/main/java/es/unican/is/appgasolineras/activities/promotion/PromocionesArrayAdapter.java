@@ -122,6 +122,7 @@ public class PromocionesArrayAdapter extends ArrayAdapter<Promocion> {
         Matcher match = Pattern.compile("([a-z])([a-z]*)", Pattern.CASE_INSENSITIVE).matcher(gasolinera);
         while(match.find())
         {
+            System.out.println(match.group(1));
             match.appendReplacement(strbf, match.group(1).toUpperCase() + match.group(2).toLowerCase());
         }
         tv.setText(match.appendTail(strbf).toString());

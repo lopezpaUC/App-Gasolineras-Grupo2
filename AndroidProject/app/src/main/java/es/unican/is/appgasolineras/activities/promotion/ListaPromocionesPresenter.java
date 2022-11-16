@@ -2,7 +2,10 @@ package es.unican.is.appgasolineras.activities.promotion;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import es.unican.is.appgasolineras.model.Gasolinera;
+import es.unican.is.appgasolineras.model.MarcaPromocionCrossRef;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
@@ -54,12 +57,19 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
      * @param promocion Promocion
      */
     public void promocionAEnsenhar(Promocion promocion){
-        if(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).size()>1){
+        List<Gasolinera> listaGasolineras = repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId());
+        String marca = listaGasolineras.get(0).getRotulo();
+        Boolean variasMarcas = false;
+        if(listaGasolineras.size()>1){
+            // Comprobamos si solo es una marca o varias
+            if(repositoryPromociones.getMarcasRelacionadasConPromocion(promocion.getId()).size()>1)
+                listaImagenPromocion.add("composicion");
+            else
+                listaImagenPromocion.add(marca.toLowerCase());
             listaNombreGasolineras.add("Varias");
-            listaImagenPromocion.add("composicion");
         } else {
-            listaNombreGasolineras.add(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).get(0).getRotulo());
-            listaImagenPromocion.add(repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).get(0).getRotulo().toLowerCase());
+            listaNombreGasolineras.add(acortaString(listaGasolineras.get(0).getRotulo()));
+            listaImagenPromocion.add(listaGasolineras.get(0).getRotulo().toLowerCase());
         }
     }
 
@@ -104,5 +114,26 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
     @Override
     public boolean listaPromocionesVacia(){
         return repositoryPromociones.getPromociones().isEmpty();
+    }
+
+    @Override
+    public String acortaString(String nombreGasolinera){
+        String nombreAcortado = nombreGasolinera;
+        if (nombreAcortado.contains("E.S. "))
+            nombreAcortado = nombreAcortado.substring(5, nombreAcortado.length());
+        if (nombreAcortado.contains("E.S."))
+            nombreAcortado = nombreAcortado.substring(4, nombreAcortado.length());
+        if (nombreAcortado.contains("S.L."))
+            nombreAcortado = nombreAcortado.substring(0, nombreAcortado.length()-5);
+        if (nombreAcortado.contains("S.L"))
+            nombreAcortado = nombreAcortado.substring(0, nombreAcortado.length()-4);
+        System.out.println(nombreAcortado);
+        if (nombreAcortado.contains("AREA"))
+            nombreAcortado = nombreAcortado.substring(17, nombreAcortado.length());
+        if (nombreAcortado.contains("ESTACION"))
+            nombreAcortado = nombreAcortado.substring(21, nombreAcortado.length());
+        if (nombreAcortado.length()>10)
+            nombreAcortado = nombreAcortado.substring(0, 9) + "...";
+        return nombreAcortado;
     }
 }
