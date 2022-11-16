@@ -6,6 +6,7 @@ import java.util.List;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Marca;
+import es.unican.is.appgasolineras.model.MarcaPromocionCrossRef;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
 import es.unican.is.appgasolineras.repository.db.MarcaDao;
@@ -131,5 +132,15 @@ public class PromocionesRepository implements IPromocionesRepository {
         promocionesDao.deleteAllRelationsMarcaPromocion();
         promocionesDao.deleteAllRelationsGasolineraPromocion();
         promocionesDao.deleteAll();
+    }
+
+    @Override
+    public List<MarcaPromocionCrossRef> getMarcasRelacionadasConPromocion(String idPromocion) {
+        List<MarcaPromocionCrossRef> marcas;
+
+        GasolineraDatabase db = GasolineraDatabase.getDB(context);
+        MarcaDao marcasDao = db.marcaDao();
+        marcas = marcasDao.findMarcasRelatedByID(idPromocion);
+        return marcas;
     }
 }

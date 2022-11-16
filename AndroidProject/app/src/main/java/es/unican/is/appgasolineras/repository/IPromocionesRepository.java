@@ -4,6 +4,7 @@ import java.util.List;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Marca;
+import es.unican.is.appgasolineras.model.MarcaPromocionCrossRef;
 import es.unican.is.appgasolineras.model.Promocion;
 
 public interface IPromocionesRepository {
@@ -102,4 +103,11 @@ public interface IPromocionesRepository {
      * Borra todas las promociones y lo relacionado con ellas.
      */
     void deleteAllPromociones();
+
+    /**
+     * Devuelve una lista de las marcas relacionadas con una promocion.
+     * @param idPromocion id de la promocion
+     * @return lista de marcas
+     */
+    List<MarcaPromocionCrossRef> getMarcasRelacionadasConPromocion(String idPromocion);
 }
