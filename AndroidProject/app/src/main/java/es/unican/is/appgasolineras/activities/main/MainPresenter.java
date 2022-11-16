@@ -155,10 +155,11 @@ public class MainPresenter implements IMainContract.Presenter {
     public void onOrderByPriceClicked() {
         view.openOrderByPrice();
     }
+
+    @Override
     public void filter(CombustibleType combustibleType, List<String> brands, boolean lowcost) {
         shownGasolineras = repositoryGasolineras.getGasolineras(); // Lista Completa
 
-        shownGasolineras = repositoryGasolineras.getGasolineras(); // Lista Completa
         filterByCombustible(combustibleType);
         filterByBrand(brands);
 

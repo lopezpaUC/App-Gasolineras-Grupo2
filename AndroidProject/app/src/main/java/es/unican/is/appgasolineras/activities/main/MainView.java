@@ -445,26 +445,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         // Solicita al presenter que realice el filtrado y actualice las gasolineras a mostrar
         presenter.filter(combustibleSeleccionado, marcasSeleccionadas, lowcost);
-
-        // Prepara ArrayAdapter para la lista a mostrar
-        GasolinerasArrayAdapter adapter;
-        switch (combustibleSeleccionado) {
-            case GASOLINA:
-                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
-                        getResources().getString(R.string.gasolina95label));
-                break;
-            case DIESEL:
-                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
-                        getResources().getString(R.string.dieselAlabel));
-                break;
-            default:
-                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(), true);
-                break;
-        }
-
-        // Actualiza la lista
-        ListView list = findViewById(R.id.lvGasolineras);
-        list.setAdapter(adapter);
     }
 
     private void updateListPrice(int price, int order, int savedFilter)

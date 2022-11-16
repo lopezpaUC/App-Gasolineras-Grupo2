@@ -108,6 +108,11 @@
         <item>@string/petronor</item>
         <item>@string/repsol</item>
         <item>@string/shell</item>
+        <item>@string/petroprix</item>
+        <item>@string/easygas</item>
+        <item>@string/beroil</item>
+        <item>@string/ballenoil</item>
+        <item>@string/meroil</item>
     </string-array>
 
     <string-array name="empty_array">
