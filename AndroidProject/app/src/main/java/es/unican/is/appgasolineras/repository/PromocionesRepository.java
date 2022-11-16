@@ -2,7 +2,9 @@ package es.unican.is.appgasolineras.repository;
 
 import android.content.Context;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Marca;
@@ -135,12 +137,18 @@ public class PromocionesRepository implements IPromocionesRepository {
     }
 
     @Override
-    public List<MarcaPromocionCrossRef> getMarcasRelacionadasConPromocion(String idPromocion) {
-        List<MarcaPromocionCrossRef> marcas;
+    public Set<Marca> getMarcasRelacionadasConPromocion(String idPromocion) {
+        List<MarcaPromocionCrossRef> marcasPromociones;
 
         GasolineraDatabase db = GasolineraDatabase.getDB(context);
         MarcaDao marcasDao = db.marcaDao();
-        marcas = marcasDao.findMarcasRelatedByID(idPromocion);
+        marcasPromociones = marcasDao.findMarcasRelatedByID(idPromocion);
+
+        Set<Marca> marcas = new HashSet<>();
+
+        for (MarcaPromocionCrossRef mp:marcasPromociones) {
+            marcas.add(marcasDao.getMarca(mp.getMarcaID()));
+        }
         return marcas;
     }
 }

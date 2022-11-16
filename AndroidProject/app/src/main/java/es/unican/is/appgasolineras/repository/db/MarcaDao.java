@@ -15,6 +15,9 @@ public interface MarcaDao {
     @Query("SELECT * FROM marcas")
     List<Marca> getMarcas();
 
+    @Query("SELECT * FROM marcas where nombre = :nombre")
+    Marca getMarca(String nombre);
+
     @Insert
     void insertAll(Marca... marcas);
 

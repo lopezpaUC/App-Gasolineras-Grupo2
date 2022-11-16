@@ -62,12 +62,7 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
         Boolean variasMarcas = false;
         if(listaGasolineras.size()>1){
             // Comprobamos si solo es una marca o varias
-            for (Gasolinera gasolinera : listaGasolineras){
-                if(!marca.equals(gasolinera.getRotulo())){
-                    variasMarcas = true;
-                }
-            }
-            if (variasMarcas)
+            if(repositoryPromociones.getMarcasRelacionadasConPromocion(promocion.getId()).size()>1)
                 listaImagenPromocion.add("composicion");
             else
                 listaImagenPromocion.add(marca.toLowerCase());
@@ -124,12 +119,19 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
     @Override
     public String acortaString(String nombreGasolinera){
         String nombreAcortado = nombreGasolinera;
-        if (nombreAcortado.contains("."))
-            nombreAcortado = nombreAcortado.substring(5, nombreGasolinera.length());
-        if (nombreAcortado.contains("."))
-            nombreAcortado = nombreAcortado.substring(0, nombreGasolinera.length()-5);
+        if (nombreAcortado.contains("E.S. "))
+            nombreAcortado = nombreAcortado.substring(5, nombreAcortado.length());
+        if (nombreAcortado.contains("E.S."))
+            nombreAcortado = nombreAcortado.substring(4, nombreAcortado.length());
+        if (nombreAcortado.contains("S.L."))
+            nombreAcortado = nombreAcortado.substring(0, nombreAcortado.length()-5);
+        if (nombreAcortado.contains("S.L"))
+            nombreAcortado = nombreAcortado.substring(0, nombreAcortado.length()-4);
+        System.out.println(nombreAcortado);
         if (nombreAcortado.contains("AREA"))
-            nombreAcortado = nombreAcortado.substring(17, nombreGasolinera.length());
+            nombreAcortado = nombreAcortado.substring(17, nombreAcortado.length());
+        if (nombreAcortado.contains("ESTACION"))
+            nombreAcortado = nombreAcortado.substring(21, nombreAcortado.length());
         if (nombreAcortado.length()>10)
             nombreAcortado = nombreAcortado.substring(0, 10) + "...";
         return nombreAcortado;

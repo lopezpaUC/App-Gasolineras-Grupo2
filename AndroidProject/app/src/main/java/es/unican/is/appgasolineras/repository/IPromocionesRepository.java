@@ -1,6 +1,7 @@
 package es.unican.is.appgasolineras.repository;
 
 import java.util.List;
+import java.util.Set;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Marca;
@@ -109,5 +110,5 @@ public interface IPromocionesRepository {
      * @param idPromocion id de la promocion
      * @return lista de marcas
      */
-    List<MarcaPromocionCrossRef> getMarcasRelacionadasConPromocion(String idPromocion);
+    Set<Marca> getMarcasRelacionadasConPromocion(String idPromocion);
 }
