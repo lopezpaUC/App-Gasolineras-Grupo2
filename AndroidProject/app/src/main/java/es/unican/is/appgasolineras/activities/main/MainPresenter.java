@@ -1,13 +1,13 @@
 package es.unican.is.appgasolineras.activities.main;
 
 
-import java.text.NumberFormat;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 
 import java.util.List;
-import java.util.Locale;
+
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 
