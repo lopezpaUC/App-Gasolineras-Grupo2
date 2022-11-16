@@ -8,27 +8,23 @@ public enum PriceOrderType {
 
     public static PriceOrderType getPriceOrder(int value) {
         PriceOrderType priceOrder;
-        switch (value) {
-            case 0:
-                priceOrder = ASC;
-                break;
-            default:
-                priceOrder = DESC;
-                break;
+        if(value == 0) {
+            priceOrder = ASC;
+        }else {
+            priceOrder = DESC;
         }
         return priceOrder;
     }
 
     public static PriceOrderType getPriceOrderFromString(String order) {
         PriceOrderType priceOrder;
-        switch (order) {
-            case "ASC":
-                priceOrder = ASC;
-                break;
-            default:
-                priceOrder = DESC;
-                break;
+
+        if(order.equals("ASC")) {
+            priceOrder = ASC;
+        } else {
+            priceOrder = DESC;
         }
+
         return priceOrder;
     }
 }

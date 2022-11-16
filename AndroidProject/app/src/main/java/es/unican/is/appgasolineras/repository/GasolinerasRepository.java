@@ -1,10 +1,7 @@
 package es.unican.is.appgasolineras.repository;
 
 import android.content.Context;
-import android.util.Log;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Locale;

@@ -1,16 +1,16 @@
 package es.unican.is.appgasolineras.activities.main;
 
-import java.text.DecimalFormat;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
+
+
 import java.util.List;
 import java.util.Locale;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
-import es.unican.is.appgasolineras.model.Promocion;
+
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 
@@ -32,7 +32,7 @@ public class MainPresenter implements IMainContract.Presenter {
     // Metodo utilizado para la carga de gasolineras
     private int loadMethod;
 
-    private NumberFormat format;
+
 
     /**
      * Constructor del presenter de la vista principal.
@@ -59,7 +59,7 @@ public class MainPresenter implements IMainContract.Presenter {
             doSyncInit();
         }
 
-        format = NumberFormat.getInstance(Locale.FRANCE);
+
     }
 
     /** NO USADO POR EL MOMENTO

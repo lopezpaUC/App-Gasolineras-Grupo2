@@ -5,26 +5,21 @@ public enum FilterType {
 
     public static FilterType getPriceOrder(int value) {
         FilterType filterType;
-        switch (value) {
-            case 0:
-                filterType = FUEL_BRAND;
-                break;
-            default:
-                filterType = PRICE;
-                break;
+        if(value == 0) {
+            filterType = FUEL_BRAND;
+        } else {
+            filterType = PRICE;
         }
         return filterType;
     }
 
     public static FilterType getPriceOrderFromString(String order) {
         FilterType filterType;
-        switch (order) {
-            case "COMBUSTIBLES-MARCAS":
-                filterType = FUEL_BRAND;
-                break;
-            default:
-                filterType = PRICE;
-                break;
+
+        if(order.equals("COMBUSTIBLES-MARCAS")) {
+            filterType = FUEL_BRAND;
+        } else {
+            filterType = PRICE;
         }
         return filterType;
     }

@@ -9,7 +9,9 @@ import es.unican.is.appgasolineras.model.Promocion;
 public class PriceUtilities {
     private static final double ERROR_CONVERSION = -1.0; // Error convirtiendo String a double
 
-    public PriceUtilities() {}
+    public PriceUtilities() {
+        // Constructor vacio
+    }
 
     /**
      * Calculates the discounted price for a fuel based on its price and the promotion applied

@@ -1,7 +1,6 @@
 package es.unican.is.appgasolineras.activities.detail;
 
 import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -10,7 +9,6 @@ import java.util.Map;
 import es.unican.is.appgasolineras.common.utils.PriceUtilities;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
-import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 

@@ -3,7 +3,6 @@ package es.unican.is.appgasolineras.activities.main;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,26 +20,19 @@ import java.util.Locale;
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.common.utils.PriceUtilities;
 import es.unican.is.appgasolineras.model.Gasolinera;
-import es.unican.is.appgasolineras.model.Promocion;
-import es.unican.is.appgasolineras.repository.GasolinerasRepository;
-import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
-import es.unican.is.appgasolineras.repository.IPromocionesRepository;
-import es.unican.is.appgasolineras.repository.PromocionesRepository;
+
 
 public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
     private String precioDestacar;
     private boolean summaryPrice;
-
-    private IGasolinerasRepository gasolinerasRepository = new GasolinerasRepository(getContext());
-    private IPromocionesRepository promocionesRepository = new PromocionesRepository(getContext());
     private PriceUtilities utilities;
-    private NumberFormat format;
+
 
 
     public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects) {
         super(context, 0, objects);
         precioDestacar = null;
-        format = NumberFormat.getInstance(Locale.getDefault());
+
         utilities = new PriceUtilities();
     }
 
@@ -50,7 +42,7 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         this.precioDestacar = precioDestacar;
 
         summaryPrice = false;
-        format = NumberFormat.getInstance(Locale.getDefault());
+
         utilities = new PriceUtilities();
     }
 
@@ -58,7 +50,7 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
                                    boolean summaryPrice) {
         super(context, 0, objects);
         this.summaryPrice = summaryPrice;
-        format = NumberFormat.getInstance(Locale.getDefault());
+
         utilities = new PriceUtilities();
     }
 
