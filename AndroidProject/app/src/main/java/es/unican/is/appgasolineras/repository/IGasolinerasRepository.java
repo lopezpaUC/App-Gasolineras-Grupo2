@@ -9,7 +9,7 @@ import es.unican.is.appgasolineras.model.Gasolinera;
  * A Repository to access gas stations/
  * This class abstracts away the source of the gas stations (REST API, local DB, etc.)
  */
-public interface IGasolinerasRepository {
+public interface gIGasolinerasRepository {
 
     /**
      * Request gas stations asynchronously
