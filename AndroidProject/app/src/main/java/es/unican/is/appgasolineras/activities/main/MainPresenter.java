@@ -157,6 +157,7 @@ public class MainPresenter implements IMainContract.Presenter {
             }
 
         } else { // Si no hay gasolineras a mostrar despues de filtrado
+            view.showGasolineras(shownGasolineras);
             view.showLoadEmpty();
             shownGasolineras = null;
         }
@@ -224,7 +225,7 @@ public class MainPresenter implements IMainContract.Presenter {
         List<Gasolinera> compatibles = new ArrayList<>();
 
         for (Gasolinera g:shownGasolineras) {
-            if (g.getRotulo().equals(marca.toUpperCase())) {
+            if (g.getRotulo().contains(marca.toUpperCase())) {
                 compatibles.add(g);
             }
         }
