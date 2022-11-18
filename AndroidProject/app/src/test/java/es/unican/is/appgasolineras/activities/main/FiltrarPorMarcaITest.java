@@ -40,6 +40,7 @@ public class FiltrarPorMarcaITest {
 
     @AfterClass
     public static void clean() {
+
         GasolinerasService.resetAPI();
         GasolinerasServiceConstants.setMinecoURL();
     }
