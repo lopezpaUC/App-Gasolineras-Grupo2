@@ -8,17 +8,23 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.anything;
 
+import android.Manifest;
+
 import androidx.test.espresso.DataInteraction;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
+import es.unican.is.appgasolineras.utils.ScreenshotTestRule;
 
 public class MainPresenterUITest {
 
@@ -33,8 +39,22 @@ public class MainPresenterUITest {
         GasolinerasServiceConstants.setMinecoURL();
     }
 
+    // IMPORTANTE: No tiene rule, se incluye en el rule de abajo
+    public ActivityScenarioRule<MainView> activityRule =
+            new ActivityScenarioRule(MainView.class);
+
+    // Aquí se combinan el ActivityScenarioRule y el ScreenshotTestRule,
+    // de forma que la captura de pantalla se haga antes de que se cierre la actividad
     @Rule
-    public ActivityScenarioRule<MainView> activityRule = new ActivityScenarioRule<>(MainView.class);
+    public final TestRule activityAndScreenshotRule = RuleChain
+            .outerRule(activityRule)
+            .around(new ScreenshotTestRule());
+
+    @Rule
+    public GrantPermissionRule permissionRule =
+            GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+
 
     @Test
     public void testFiltrarPorLowcost() {
