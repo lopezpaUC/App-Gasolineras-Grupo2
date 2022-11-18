@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="petroprixL">Petroprix</string>
     <string name="easygasL">Easygas</string>
     <string name="beroilL">Beroil</string>

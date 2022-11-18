@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.MainView;
+import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 public class VerInformacionDetalladaGasolineraUITest {
@@ -34,6 +35,7 @@ public class VerInformacionDetalladaGasolineraUITest {
 
     @AfterClass
     public static void clean() {
+        GasolinerasService.resetAPI();
         GasolinerasServiceConstants.setMinecoURL();
     }
 

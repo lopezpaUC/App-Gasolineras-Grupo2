@@ -31,11 +31,12 @@ import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 @Config(manifest=Config.NONE)
 
 @RunWith(RobolectricTestRunner.class)
-public class FiltrarPorMarcaITest {
+
+public class MainPresenterITest {
 
     @BeforeClass
     public static void setUp() {
-        GasolinerasServiceConstants.setStaticURL2();
+        GasolinerasServiceConstants.setStaticURLFiltrarPorLowcost();
     }
 
     @AfterClass
@@ -44,13 +45,23 @@ public class FiltrarPorMarcaITest {
         GasolinerasServiceConstants.setMinecoURL();
     }
 
-    private List<String> brandsList = new ArrayList<>();
+    @After
+    public void cleanDatabase() {
+        GasolineraDatabase db = GasolineraDatabase.getDB(ApplicationProvider.getApplicationContext());
+        db.close();
+    }
+
+    private List<String> brandsList1Element = new ArrayList<>();
+    private List<String> brandsList2Element = new ArrayList<>();
+    private List<String> emptyBrandList = new ArrayList<>();
     private List<String> wrongBrandList = new ArrayList<>();
 
     private MainPresenter sut;
+
     @Mock
     private IMainContract.View mockMainView;
-    private IGasolinerasRepository  fuelStationRepository;
+
+    private IGasolinerasRepository fuelStationRepository;
 
     @Before
     public void start(){
@@ -64,9 +75,18 @@ public class FiltrarPorMarcaITest {
 
         sut.init();
 
-        brandsList.add("REPSOL");
-        brandsList.add("CEPSA");
+        //Lista 1 elemento
+        brandsList1Element.add("REPSOL");
+
+        //Lista 2 elementos
+        brandsList2Element.add("CEPSA");
+        brandsList2Element.add("REPSOL");
+
+        // Lista con una marca no existente
         wrongBrandList.add("REPSOLITO");
+
+
+
     }
 
     @After
@@ -76,29 +96,35 @@ public class FiltrarPorMarcaITest {
     }
 
     @Test
-    public void testFilterByBrand() {
-        // Caso valido: lista con una marca existente
-        sut.filter(CombustibleType.ALL_COMB, brandsList.subList(0, 1), false);
-        assertEquals(2, sut.getShownGasolineras().size());
+    public void testFilter() {
+
+        // Caso valido: lista de gasolineras Repsol con diesel
+        sut.filter(CombustibleType.DIESEL, brandsList1Element, false);
+        assertEquals(37, sut.getShownGasolineras().size());
         assertEquals("REPSOL", sut.getShownGasolineras().get(0).getRotulo());
         assertEquals("REPSOL", sut.getShownGasolineras().get(1).getRotulo());
+        assertEquals("2,009", sut.getShownGasolineras().get(0).getDieselA());
+        assertEquals("1,979", sut.getShownGasolineras().get(1).getDieselA());
 
-        // Caso válido: lista con mas de una marca existente
-        sut.filter(CombustibleType.ALL_COMB, brandsList, false);
-        assertEquals(3, sut.getShownGasolineras().size());
-        assertEquals("REPSOL", sut.getShownGasolineras().get(0).getRotulo());
-        assertEquals("REPSOL", sut.getShownGasolineras().get(1).getRotulo());
-        assertEquals("CEPSA", sut.getShownGasolineras().get(2).getRotulo());
-
-        // Caso valido: lista vacia
-        sut.filter(CombustibleType.ALL_COMB, brandsList.subList(0, 0), false);
-        assertEquals(10, sut.getShownGasolineras().size());
+        // Caso valido: lista de gasolineras Cepsa y Repsol con gasolina
+        sut.filter(CombustibleType.GASOLINA, brandsList2Element, false);
+        assertEquals(55, sut.getShownGasolineras().size());
         assertEquals("CEPSA", sut.getShownGasolineras().get(0).getRotulo());
-        assertEquals("G2", sut.getShownGasolineras().get(5).getRotulo());
-        assertEquals("REPSOL", sut.getShownGasolineras().get(9).getRotulo());
+        assertEquals("REPSOL", sut.getShownGasolineras().get(54).getRotulo());
+        assertEquals("1,829", sut.getShownGasolineras().get(0).getNormal95());
+        assertEquals("1,879", sut.getShownGasolineras().get(54).getNormal95());
+
+        // Caso valido: lista de gasolineras lowcost con gasolina y diesel
+        //sut.filter(CombustibleType.ALL_COMB, emptyBrandList, true);
+        //assertEquals(9, sut.getShownGasolineras().size());
+        //assertEquals("CEPSA", sut.getShownGasolineras().get(0).getRotulo());
+        //assertEquals("G2", sut.getShownGasolineras().get(5).getRotulo());
+        //assertEquals("REPSOL", sut.getShownGasolineras().get(9).getRotulo());
 
         // Caso no valido: lista con una marca no existente
         sut.filter(CombustibleType.ALL_COMB, wrongBrandList, false);
         assertNull(sut.getShownGasolineras());
     }
+
+
 }

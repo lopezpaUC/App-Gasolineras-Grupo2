@@ -20,7 +20,7 @@ import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
-public class FiltrarPorLowcostUITest {
+public class MainPresenterUITest {
 
     @BeforeClass
     public static void setUp() {
@@ -38,19 +38,29 @@ public class FiltrarPorLowcostUITest {
 
     @Test
     public void testFiltrarPorLowcost() {
-        // Caso valido: filtro unico
+        // Caso valido: filtro unico por lowcost
         onView(withId(R.id.menuFilter)).perform(click());
+        onView((withId(R.id.tvLowcostTitle))).check(matches(withText("Mostrar solo low-cost")));
         onView((withId(R.id.chckLowcost))).perform(click());
         onView(withId(R.id.tvApply)).perform(click());
 
-        /* Comprobamos los datos de una gasolinera, los cuáles deberían ser los esperados.*/
+        /* Comprobacion de la primera gasolinera lowcost.*/
         DataInteraction gasolinera = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(0);
-        gasolinera.onChildView(withId(R.id.tvName)).check(matches(withText("BALLENOIL")));
-        gasolinera.onChildView(withId(R.id.tvAddress)).check(matches(withText("CALLE GUTIERREZ SOLANA 24, 24")));
+        gasolinera.onChildView(withId(R.id.tvName)).check(matches(withText("PETROPRIX")));
+        gasolinera.onChildView(withId(R.id.tvAddress)).check(matches(withText("CARRETERA 6316 KM. 10,5")));
         gasolinera.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
-        gasolinera.onChildView(withId(R.id.tv95)).check(matches(withText("1,699")));
+        gasolinera.onChildView(withId(R.id.tv95)).check(matches(withText("1,859")));
         gasolinera.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
-        gasolinera.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,799")));
+        gasolinera.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));
+
+        /* Comprobacion de la segunda gasolinera lowcost.*/
+        DataInteraction gasolinera2 = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(1);
+        gasolinera2.onChildView(withId(R.id.tvName)).check(matches(withText("BALLENOIL")));
+        gasolinera2.onChildView(withId(R.id.tvAddress)).check(matches(withText("CALLE GUTIERREZ SOLANA 24, 24")));
+        gasolinera2.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
+        gasolinera2.onChildView(withId(R.id.tv95)).check(matches(withText("1,699")));
+        gasolinera2.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
+        gasolinera2.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,779")));
 
     }
 
