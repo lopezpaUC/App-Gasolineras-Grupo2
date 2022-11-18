@@ -24,6 +24,7 @@ import org.junit.rules.TestRule;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.MainView;
+import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 import es.unican.is.appgasolineras.utils.ScreenshotTestRule;
 
@@ -52,6 +53,7 @@ public class VerInformacionDetalladaGasolineraUITest {
 
     @AfterClass
     public static void clean() {
+        GasolinerasService.resetAPI();
         GasolinerasServiceConstants.setMinecoURL();
     }
 
