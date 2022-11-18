@@ -25,6 +25,7 @@ import java.util.List;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
+import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 @Config(manifest=Config.NONE)
@@ -39,6 +40,8 @@ public class FiltrarPorMarcaITest {
 
     @AfterClass
     public static void clean() {
+
+        GasolinerasService.resetAPI();
         GasolinerasServiceConstants.setMinecoURL();
     }
 

@@ -92,25 +92,30 @@ public class OrdenarPorMarcaITest {
     }
 
     @Test
-    public void testEliminar() {
+    public void testOrderGasolineras() {
         //Caso exito: ordena Diesel de forma ascendente
         sut.orderByPrice(PriceOrderType.ASC, PriceFilterType.DIESEL);
 
-        assertTrue(Double.parseDouble(sut.getShownGasolineras().get(0).getDieselA().replace(",", ".")) < Double.parseDouble(sut.getShownGasolineras().get(1).getDieselA().replace(",", ".")));
-        assertTrue(Double.parseDouble(sut.getShownGasolineras().get(1).getDieselA().replace(",", ".")) < Double.parseDouble(sut.getShownGasolineras().get(2).getDieselA().replace(",", ".")));
+        assertEquals(5, sut.getShownGasolineras().size());
+        assertEquals(sut.getShownGasolineras().get(0).getId(), "1036");
+        assertEquals(sut.getShownGasolineras().get(1).getId(), "1039");
+        assertEquals(sut.getShownGasolineras().get(2).getId(), "1095");
 
         //Caso exito: ordena Gasolina de forma ascendente
         sut.orderByPrice(PriceOrderType.ASC, PriceFilterType.GASOLINA);
 
-        assertTrue(Double.parseDouble(sut.getShownGasolineras().get(0).getNormal95().replace(",", ".")) < Double.parseDouble(sut.getShownGasolineras().get(1).getNormal95().replace(",", ".")));
-        assertTrue(Double.parseDouble(sut.getShownGasolineras().get(1).getNormal95().replace(",", ".")) < Double.parseDouble(sut.getShownGasolineras().get(2).getNormal95().replace(",", ".")));
+        assertEquals(5, sut.getShownGasolineras().size());
+        assertEquals(sut.getShownGasolineras().get(0).getId(), "1048");
+        assertEquals(sut.getShownGasolineras().get(1).getId(), "1095");
+        assertEquals(sut.getShownGasolineras().get(2).getId(), "1039");
 
         //Caso exito: ordena PrecioSumario de forma descendente
         sut.orderByPrice(PriceOrderType.DESC, PriceFilterType.SUMARIO);
 
+        assertEquals(5, sut.getShownGasolineras().size());
         assertEquals(sut.getShownGasolineras().get(0).getId(), "1039");
         assertEquals(sut.getShownGasolineras().get(1).getId(), "1095");
-
+        assertEquals(sut.getShownGasolineras().get(2).getId(), "1048");
 
     }
 }

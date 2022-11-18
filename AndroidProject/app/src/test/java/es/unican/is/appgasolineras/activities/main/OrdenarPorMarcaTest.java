@@ -1,5 +1,6 @@
 package es.unican.is.appgasolineras.activities.main;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -107,35 +108,32 @@ public class OrdenarPorMarcaTest extends TestCase {
 
     @Test
     public void testOrderGasolineras() {
-        fuelStationsOrdenada.add(fuelStation2);
-        fuelStationsOrdenada.add(fuelStation1);
-        fuelStationsOrdenada.add(fuelStation3);
-        fuelStationsOrdenada.add(fuelStation4);
+
         //Caso exito: ordena Diesel de forma ascendente
         sut.orderByPrice(PriceOrderType.ASC, PriceFilterType.DIESEL);
-        assertTrue(Double.parseDouble(sut.getShownGasolineras().get(0).getDieselA().replace(",", ".")) < Double.parseDouble(sut.getShownGasolineras().get(1).getDieselA().replace(",", ".")));
-        assertTrue(Double.parseDouble(sut.getShownGasolineras().get(1).getDieselA().replace(",", ".")) < Double.parseDouble(sut.getShownGasolineras().get(2).getDieselA().replace(",", ".")));
-        assertTrue(Double.parseDouble(sut.getShownGasolineras().get(2).getDieselA().replace(",", ".")) < Double.parseDouble(sut.getShownGasolineras().get(3).getDieselA().replace(",", ".")));
-        //assertTrue(Double.parseDouble(sut.getShownGasolineras().get(1).getDieselA().replace(",", ".")) < Double.parseDouble(sut.getShownGasolineras().get(2).getDieselA().replace(",", ".")));
+        assertEquals(4, sut.getShownGasolineras().size());
+        assertEquals(fuelStation2.getId(), sut.getShownGasolineras().get(0).getId());
+        assertEquals(fuelStation1.getId(), sut.getShownGasolineras().get(1).getId());
+        assertEquals(fuelStation3.getId(), sut.getShownGasolineras().get(2).getId());
+        assertEquals(fuelStation4.getId(), sut.getShownGasolineras().get(3).getId());
 
         //Caso exito: ordena Gasolina de forma ascendente
         sut.orderByPrice(PriceOrderType.ASC, PriceFilterType.GASOLINA);
-        assertTrue(Double.parseDouble(sut.getShownGasolineras().get(0).getDieselA().replace(",", ".")) < Double.parseDouble(sut.getShownGasolineras().get(1).getDieselA().replace(",", ".")));
-        assertTrue(Double.parseDouble(sut.getShownGasolineras().get(1).getDieselA().replace(",", ".")) < Double.parseDouble(sut.getShownGasolineras().get(2).getDieselA().replace(",", ".")));
-        assertTrue(Double.parseDouble(sut.getShownGasolineras().get(2).getDieselA().replace(",", ".")) < Double.parseDouble(sut.getShownGasolineras().get(3).getDieselA().replace(",", ".")));
+        assertEquals(4, sut.getShownGasolineras().size());
+        assertEquals(fuelStation2.getId(), sut.getShownGasolineras().get(0).getId());
+        assertEquals(fuelStation1.getId(), sut.getShownGasolineras().get(1).getId());
+        assertEquals(fuelStation3.getId(), sut.getShownGasolineras().get(2).getId());
+        assertEquals(fuelStation4.getId(), sut.getShownGasolineras().get(3).getId());
 
 
-        fuelStationsOrdenada.clear();
-        fuelStationsOrdenada.add(fuelStation4);
-        fuelStationsOrdenada.add(fuelStation3);
-        fuelStationsOrdenada.add(fuelStation1);
-        fuelStationsOrdenada.add(fuelStation2);
+
         //Caso exito: ordena PrecioSumario de forma descendente
         sut.orderByPrice(PriceOrderType.DESC, PriceFilterType.SUMARIO);
-        assertEquals(fuelStationsOrdenada.get(0).getId(), sut.getShownGasolineras().get(0).getId());
-        assertEquals(fuelStationsOrdenada.get(1).getId(), sut.getShownGasolineras().get(1).getId());
-        assertEquals(fuelStationsOrdenada.get(2).getId(), sut.getShownGasolineras().get(2).getId());
-        assertEquals(fuelStationsOrdenada.get(3).getId(), sut.getShownGasolineras().get(3).getId());
+        assertEquals(4, sut.getShownGasolineras().size());
+        assertEquals(fuelStation4.getId(), sut.getShownGasolineras().get(0).getId());
+        assertEquals(fuelStation3.getId(), sut.getShownGasolineras().get(1).getId());
+        assertEquals(fuelStation1.getId(), sut.getShownGasolineras().get(2).getId());
+        assertEquals(fuelStation2.getId(), sut.getShownGasolineras().get(3).getId());
 
 
 
