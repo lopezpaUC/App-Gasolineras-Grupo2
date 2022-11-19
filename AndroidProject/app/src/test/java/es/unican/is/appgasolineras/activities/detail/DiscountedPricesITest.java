@@ -33,7 +33,7 @@ import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(manifest=Config.NONE)
+@Config(manifest=Config.NONE, sdk = {Build.VERSION_CODES.O_MR1})
 public class DiscountedPricesITest {
 
     @Mock

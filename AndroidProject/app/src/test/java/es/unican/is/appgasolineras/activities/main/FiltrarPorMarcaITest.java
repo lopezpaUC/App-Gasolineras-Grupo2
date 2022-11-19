@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
 import android.content.Context;
+import android.os.Build;
 
 import androidx.test.core.app.ApplicationProvider;
 
@@ -28,7 +29,7 @@ import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
-@Config(manifest=Config.NONE)
+@Config(manifest=Config.NONE, sdk = {Build.VERSION_CODES.O_MR1})
 
 @RunWith(RobolectricTestRunner.class)
 public class FiltrarPorMarcaITest {

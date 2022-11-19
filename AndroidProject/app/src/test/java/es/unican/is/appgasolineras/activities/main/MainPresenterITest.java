@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
 import android.content.Context;
+import android.os.Build;
 
 import androidx.test.core.app.ApplicationProvider;
 
@@ -28,7 +29,7 @@ import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
-@Config(manifest=Config.NONE)
+@Config(manifest=Config.NONE , sdk = {Build.VERSION_CODES.O_MR1})
 
 @RunWith(RobolectricTestRunner.class)
 
@@ -115,11 +116,11 @@ public class MainPresenterITest {
         assertEquals("1,879", sut.getShownGasolineras().get(54).getNormal95());
 
         // Caso valido: lista de gasolineras lowcost con gasolina y diesel
-        //sut.filter(CombustibleType.ALL_COMB, emptyBrandList, true);
-        //assertEquals(9, sut.getShownGasolineras().size());
-        //assertEquals("CEPSA", sut.getShownGasolineras().get(0).getRotulo());
-        //assertEquals("G2", sut.getShownGasolineras().get(5).getRotulo());
-        //assertEquals("REPSOL", sut.getShownGasolineras().get(9).getRotulo());
+        sut.filter(CombustibleType.ALL_COMB, emptyBrandList, true);
+        assertEquals(10, sut.getShownGasolineras().size());
+        assertEquals("PETROPRIX", sut.getShownGasolineras().get(0).getRotulo());
+        assertEquals("BALLENOIL", sut.getShownGasolineras().get(1).getRotulo());
+
 
         // Caso no valido: lista con una marca no existente
         sut.filter(CombustibleType.ALL_COMB, wrongBrandList, false);
