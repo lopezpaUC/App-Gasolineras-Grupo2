@@ -60,6 +60,8 @@ public class OrdenarPorMarcaUITest {
 
         }
         onView(withText("Ordenar por precio")).perform(click());
+        //onView((withId(R.id.spnTipoPrecio))).perform(click());
+        //onView(withText("Gasolina")).inRoot(RootMatchers.isDialog()).perform(click());
         onView((withId(R.id.spnTipoOrdenacion))).perform(click());
         onView(withText("Descendente")).inRoot(RootMatchers.isDialog()).perform(click());
         onView(withId(R.id.tvApply)).perform(click());
@@ -73,5 +75,13 @@ public class OrdenarPorMarcaUITest {
         gasolinera.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
         gasolinera.onChildView(withId(R.id.tvDieselA)).check(matches(withText("2,019")));
 
+        /* Comprobamos los datos de una gasolinera, los cuáles deberían ser los esperados.*/
+        gasolinera = onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(1);
+        gasolinera.onChildView(withId(R.id.tvName)).check(matches(withText("REPSOL")));
+        gasolinera.onChildView(withId(R.id.tvAddress)).check(matches(withText("AU A-8, 182")));
+        gasolinera.onChildView(withId(R.id.tv95Label)).check(matches(withText("Gasolina:")));
+        gasolinera.onChildView(withId(R.id.tv95)).check(matches(withText("1,809")));
+        gasolinera.onChildView(withId(R.id.tvDieselALabel)).check(matches(withText("Diésel:")));
+        gasolinera.onChildView(withId(R.id.tvDieselA)).check(matches(withText("1,999")));
     }
 }
