@@ -57,7 +57,6 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
     public void promocionAEnsenhar(Promocion promocion){
         List<Gasolinera> listaGasolineras = repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId());
         String marca = listaGasolineras.get(0).getRotulo();
-        Boolean variasMarcas = false;
         if(listaGasolineras.size()>1){
             // Comprobamos si solo es una marca o varias
             if(repositoryPromociones.getMarcasRelacionadasConPromocion(promocion.getId()).size()>1)
