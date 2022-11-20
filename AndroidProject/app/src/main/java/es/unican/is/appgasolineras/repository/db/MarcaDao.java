@@ -7,7 +7,7 @@ import androidx.room.Query;
 import java.util.List;
 
 import es.unican.is.appgasolineras.model.Marca;
-import es.unican.is.appgasolineras.model.MarcaPromocionCrossRef;
+import es.unican.is.appgasolineras.model.CrossRefs.MarcaPromocionCrossRef;
 
 @Dao
 public interface MarcaDao {

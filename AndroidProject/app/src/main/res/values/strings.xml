@@ -14,8 +14,8 @@
     <string name="prices">Precios</string>
     <string name="schedule">Horario</string>
     <string name="sumPrice">Precio Sumario</string>
-    <string name="ascending">Ascendente</string>
-    <string name="descending">Descendente</string>
+    <string name="ascending">Asc.</string>
+    <string name="descending">Desc.</string>
     <string name="error">Error</string>
     <string name="no_detail_info">Ha habido un error cargando la información en detalle de la gasolinera.</string>
     <string name="accept">Aceptar</string>
@@ -147,5 +147,6 @@
     <string name="instLowcost">Se consideran gasolineras low-cost aquellas que se corresponden con
     las siguientes marcas:</string>
 
+    <string name="ordenarPrecio">Ordenar por precio</string>
 
 </resources>

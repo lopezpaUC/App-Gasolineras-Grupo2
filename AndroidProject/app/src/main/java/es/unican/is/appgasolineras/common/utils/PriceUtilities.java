@@ -7,6 +7,7 @@ import java.util.Locale;
 import es.unican.is.appgasolineras.model.Promocion;
 
 public class PriceUtilities {
+
     private static final double ERROR_CONVERSION = -1.0; // Error convirtiendo String a double
 
     public PriceUtilities() {
@@ -43,6 +44,21 @@ public class PriceUtilities {
 
         if (precio > 0.0) { // Si el precio es valido
             precioTxt = String.format(Locale.FRANCE, "%.2f", precio);
+        }
+
+        return precioTxt;
+    }
+
+    /**
+     * Converts the summary price from a numeric value to text
+     * @param precio the price to be converted
+     * @return the price as text
+     */
+    public String precioSumarioTo3Str(double precio) {
+        String precioTxt = "-";
+
+        if (precio > 0.0) { // Si el precio es valido
+            precioTxt = String.format(Locale.FRANCE, "%.3f", precio);
         }
 
         return precioTxt;

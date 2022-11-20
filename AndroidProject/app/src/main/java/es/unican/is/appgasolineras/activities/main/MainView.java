@@ -81,6 +81,8 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         SharedPreferences.Editor editor = filterPref.edit();
         editor.putInt(getString(R.string.saved_comb_type_filter), 0);
         editor.putBoolean(getString(R.string.saved_lowcost_sele), false);
+        saveIntPrefFilter(getString(R.string.saved_price_type_order), 0);
+        saveIntPrefFilter(getString(R.string.saved_price_order), 0);
         editor.apply();
     }
 
@@ -167,19 +169,20 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
     @Override
     public void showGasolinerasAdvanced(List<Gasolinera> shownGasolineras,
-                                        CombustibleType combustibleDestacado) {
+                                        CombustibleType combustibleDestacado, boolean
+                                        summary) {
         GasolinerasArrayAdapter adapter;
         switch (combustibleDestacado) {
             case GASOLINA:
                 adapter = new GasolinerasArrayAdapter(this, shownGasolineras,
-                        getResources().getString(R.string.gasolina95label));
+                        getResources().getString(R.string.gasolina95label), summary);
                 break;
             case DIESEL:
                 adapter = new GasolinerasArrayAdapter(this, shownGasolineras,
-                        getResources().getString(R.string.dieselAlabel));
+                        getResources().getString(R.string.dieselAlabel), summary);
                 break;
             default:
-                adapter = new GasolinerasArrayAdapter(this, shownGasolineras);
+                adapter = new GasolinerasArrayAdapter(this, shownGasolineras, summary);
                 break;
         }
 
@@ -483,7 +486,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         // Requests presenter to order the list and to update the shown gas stations
         presenter.orderByPrice(selectedOrderType, selectedPriceType);
 
-        String filterStr = CombustibleType.ALL_COMB.getCombStringFromInt(savedFilter - 1);
+        String filterStr = CombustibleType.getCombStringFromInt(savedFilter - 1);
 
         presenter.prepareUpdate(selectedPriceType, filterStr);
     }

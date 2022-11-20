@@ -124,7 +124,6 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
             nombreAcortado = nombreAcortado.substring(0, nombreAcortado.length()-5);
         if (nombreAcortado.contains("S.L"))
             nombreAcortado = nombreAcortado.substring(0, nombreAcortado.length()-4);
-        System.out.println(nombreAcortado);
         if (nombreAcortado.contains("AREA"))
             nombreAcortado = nombreAcortado.substring(17, nombreAcortado.length());
         if (nombreAcortado.contains("ESTACION"))

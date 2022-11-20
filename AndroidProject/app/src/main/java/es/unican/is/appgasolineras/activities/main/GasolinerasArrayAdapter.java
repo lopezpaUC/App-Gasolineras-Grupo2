@@ -57,8 +57,25 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
                                    String precioDestacar) {
         super(context, 0, objects);
         this.precioDestacar = precioDestacar;
-
         summaryPrice = false;
+
+        utilities = new PriceUtilities();
+    }
+
+    public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects,
+                                   String precioDestacar, boolean summaryPrice) {
+            super(context, 0, objects);
+            this.precioDestacar = precioDestacar;
+            this.summaryPrice = summaryPrice;
+            utilities = new PriceUtilities();
+    }
+
+
+    public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects,
+                                   boolean summaryPrice) {
+        super(context, 0, objects);
+        precioDestacar = null;
+        this.summaryPrice = summaryPrice;
 
         utilities = new PriceUtilities();
     }
@@ -256,13 +273,13 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         String summaryStr = "-";
 
         // Converts price to double
-        NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
+        NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
 
         try {
             double diesel = format.parse(gasolinera.getDieselA()).doubleValue();
             double unleaded95 = format.parse(gasolinera.getNormal95()).doubleValue();
             double summary = utilities.calculateSummary(diesel, unleaded95);
-            summaryStr = utilities.precioSumarioToStr(summary);
+            summaryStr = utilities.precioSumarioTo3Str(summary);
             Number number = format.parse(summaryStr);
             precioDouble = number.doubleValue();
         } catch (Exception e) {

@@ -1,4 +1,4 @@
-package es.unican.is.appgasolineras.model;
+package es.unican.is.appgasolineras.model.CrossRefs;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;

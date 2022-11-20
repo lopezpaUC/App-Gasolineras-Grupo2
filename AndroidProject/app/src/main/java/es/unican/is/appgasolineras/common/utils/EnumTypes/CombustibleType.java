@@ -52,7 +52,7 @@ public enum CombustibleType {
         return typeEnum;
     }
 
-    public String getCombStringFromInt(int value) {
+    public static String getCombStringFromInt(int value) {
         String comb;
 
         switch (value) {

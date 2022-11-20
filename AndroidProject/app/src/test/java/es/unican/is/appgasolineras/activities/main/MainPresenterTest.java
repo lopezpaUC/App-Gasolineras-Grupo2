@@ -174,17 +174,17 @@ public class MainPresenterTest {
 
         sut.filter(CombustibleType.ALL_COMB, brandsList.subList(0, 1), false);
         assertEquals(fuelStationsCepsa, sut.getShownGasolineras());
-        verify(mockMainView).showGasolinerasAdvanced(sut.getShownGasolineras(), CombustibleType.ALL_COMB);
+        verify(mockMainView).showGasolinerasAdvanced(sut.getShownGasolineras(), CombustibleType.ALL_COMB, false);
 
         // Caso válido: lista con mas de una marca existente
         sut.filter(CombustibleType.ALL_COMB, brandsList, false);
         assertEquals(fuelStationsList, sut.getShownGasolineras());
-        verify(mockMainView, atLeast(1)).showGasolinerasAdvanced(sut.getShownGasolineras(), CombustibleType.ALL_COMB);
+        verify(mockMainView, atLeast(1)).showGasolinerasAdvanced(sut.getShownGasolineras(), CombustibleType.ALL_COMB, false);
 
         // Caso valido: lista vacia
         sut.filter(CombustibleType.ALL_COMB, brandsList.subList(0, 0), false);
         assertEquals(fuelStationsList, sut.getShownGasolineras());
-        verify(mockMainView, atLeast(2)).showGasolinerasAdvanced(sut.getShownGasolineras(), CombustibleType.ALL_COMB);
+        verify(mockMainView, atLeast(2)).showGasolinerasAdvanced(sut.getShownGasolineras(), CombustibleType.ALL_COMB, false);
 
         // Caso no valido: lista con una marca no existente
         sut.filter(CombustibleType.ALL_COMB, wrongBrandList, false);
@@ -234,7 +234,7 @@ public class MainPresenterTest {
     }
 
     @Test
-    public void testFilterByLowcost() {
+    public void testFilter() {
         fuelStationsList.add(fuelStation1);
         fuelStationsList.add(fuelStation5);
         fuelStationsList.add(fuelStation6);
@@ -266,17 +266,17 @@ public class MainPresenterTest {
         // Caso valido: lista de gasolineras Repsol con diesel
         sut.filter(CombustibleType.DIESEL, brandsList1Element, false);
         assertEquals(fuelStationsRepsol, sut.getShownGasolineras());
-        verify(mockMainView).showGasolinerasAdvanced(sut.getShownGasolineras(), CombustibleType.DIESEL);
+        verify(mockMainView).showGasolinerasAdvanced(sut.getShownGasolineras(), CombustibleType.DIESEL, false);
 
         // Caso valido: lista de gasolineras Cepsa y Repsol con gasolina
         sut.filter(CombustibleType.GASOLINA, brandsList2Element, false);
         assertEquals(fuelStationsCepsaYRepsol, sut.getShownGasolineras());
-        verify(mockMainView).showGasolinerasAdvanced(sut.getShownGasolineras(), CombustibleType.GASOLINA);
+        verify(mockMainView).showGasolinerasAdvanced(sut.getShownGasolineras(), CombustibleType.GASOLINA, false);
 
         // Caso valido: lista de gasolineras lowcost con gasolina y diesel
         sut.filter(CombustibleType.ALL_COMB, emptyBrandList, true);
         assertEquals(fuelStationsLowcost, sut.getShownGasolineras());
-        verify(mockMainView).showGasolinerasAdvanced(sut.getShownGasolineras(), CombustibleType.ALL_COMB);
+        verify(mockMainView).showGasolinerasAdvanced(sut.getShownGasolineras(), CombustibleType.ALL_COMB, false);
 
         // Caso no valido: lista con una marca no existente
         sut.filter(CombustibleType.ALL_COMB, wrongBrandList, false);

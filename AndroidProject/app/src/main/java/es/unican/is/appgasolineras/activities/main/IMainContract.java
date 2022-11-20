@@ -116,7 +116,8 @@ public interface IMainContract {
          * @param combustibleDestacado Combustible a destacar.
          */
         void showGasolinerasAdvanced(List<Gasolinera> shownGasolineras,
-                                     CombustibleType combustibleDestacado);
+                                     CombustibleType combustibleDestacado,
+                                     boolean summary);
 
         /**
          * Returns the Gasolineras Repository object.

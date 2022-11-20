@@ -32,11 +32,7 @@
         <menu>
             <item
                 android:id="@+id/menuOrdenarPorPrecio"
-                android:title="Ordenar por precio" />
-
-            <item
-                android:id="@+id/menuOrdenarPorDistancia"
-                android:title="Ordenar por distancia" />
+                android:title="@string/ordenarPrecio" />
 
         </menu>
     </item>

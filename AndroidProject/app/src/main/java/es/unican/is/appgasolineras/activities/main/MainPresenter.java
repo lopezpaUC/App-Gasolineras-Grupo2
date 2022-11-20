@@ -41,6 +41,8 @@ public class MainPresenter implements IMainContract.Presenter {
     // Metodo utilizado para la carga de gasolineras
     private int loadMethod;
 
+    private boolean summary = false;
+
     /**
      * Constructor del presenter de la vista principal.
      *
@@ -159,7 +161,6 @@ public class MainPresenter implements IMainContract.Presenter {
     @Override
     public void filter(CombustibleType combustibleType, List<String> brands, boolean lowcost) {
         shownGasolineras = repositoryGasolineras.getGasolineras(); // Lista Completa
-
         filterByCombustible(combustibleType);
         filterByBrand(brands);
 
@@ -168,7 +169,7 @@ public class MainPresenter implements IMainContract.Presenter {
         }
 
         if (!shownGasolineras.isEmpty()) { // Si hay gasolineras a mostrar despues de filtrado
-            view.showGasolinerasAdvanced(shownGasolineras, combustibleType);
+            view.showGasolinerasAdvanced(shownGasolineras, combustibleType, summary);
 
             // Muestra la informacion de la obtencion de las gasolineras
             if (loadMethod == LOAD_ONLINE) {
@@ -186,11 +187,10 @@ public class MainPresenter implements IMainContract.Presenter {
 
     @Override
     public void prepareUpdate(PriceFilterType selectedPriceType, String filterStr) {
-        if (selectedPriceType == PriceFilterType.SUMARIO) {
-            view.showGasolinerasAdvanced(shownGasolineras, CombustibleType.ALL_COMB);
-        } else {
-            view.showGasolinerasAdvanced(shownGasolineras, CombustibleType.getCombTypeFromString(filterStr));
-        }
+            view.showGasolinerasAdvanced(shownGasolineras, CombustibleType.getCombTypeFromString(filterStr),
+                    summary);
+            summary = false;
+
     }
 
     @Override
@@ -200,12 +200,15 @@ public class MainPresenter implements IMainContract.Presenter {
 
         // Orders by defined criterion
         if (orderedValue == PriceFilterType.DIESEL) { // Diesel
+            summary = false;
             ordered = filterByDiesel();
             Collections.sort(ordered, new SortByDieselPrice(repositoryGasolineras, repositoryPromotions));
         } else if (orderedValue == PriceFilterType.GASOLINA) { // 95-octanes
+            summary = false;
             ordered = filterByGasolina();
             Collections.sort(ordered, new SortBy95OctanesPrice(repositoryGasolineras, repositoryPromotions));
         } else { // Summary price
+            summary = true;
             ordered = filterBySummaryPrice();
             Collections.sort(ordered, new SortBySummaryPrice(repositoryGasolineras, repositoryPromotions));
         }
