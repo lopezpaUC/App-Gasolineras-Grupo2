@@ -35,6 +35,9 @@ import es.unican.is.appgasolineras.activities.info.InfoView;
 import es.unican.is.appgasolineras.activities.promotion.AnhadirPromocionView;
 import es.unican.is.appgasolineras.activities.promotion.ListaPromocionesView;
 import es.unican.is.appgasolineras.common.prefs.Prefs;
+import es.unican.is.appgasolineras.common.utils.EnumTypes.CombustibleType;
+import es.unican.is.appgasolineras.common.utils.EnumTypes.PriceFilterType;
+import es.unican.is.appgasolineras.common.utils.EnumTypes.PriceOrderType;
 import es.unican.is.appgasolineras.common.utils.MultipleSpinner;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
@@ -44,6 +47,9 @@ import es.unican.is.appgasolineras.repository.PromocionesRepository;
 
 /**
  * Vista principal abierta al iniciar la aplicacion.
+ *
+ * @author Grupo 02-CarbuRed
+ * @version 1.0
  */
 public class MainView extends AppCompatActivity implements IMainContract.View {
     private IMainContract.Presenter presenter;
@@ -317,6 +323,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         dialogFilter.show();
     }
 
+    @Override
     public void openOrderByPrice() {
 
         Dialog dialogOrder = new Dialog(MainView.this);
@@ -367,7 +374,6 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         tvCancelar.setOnClickListener(view -> dialogOrder.dismiss());
 
         dialogOrder.show();
-
     }
 
     /**
@@ -391,6 +397,12 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         spinnerCombustible.setSelection(savedCombValue);
     }
 
+    /**
+     * Inicializa el spinner para seleccionar el precio por el que ordenar.
+     *
+     * @param spinnerPrice Spinner.
+     * @param dialogFilter Cuadro de dialogo a utilizar.
+     */
     private void initialiseSpinnerPrice(Spinner spinnerPrice, Dialog dialogFilter) {
         // ArrayAdapter con los tipos de combustibles
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(
@@ -406,6 +418,12 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         spinnerPrice.setSelection(savedPriceValue);
     }
 
+    /**
+     * Inicializa el spinner para seleccionar el orden a aplicar.
+     *
+     * @param spinnerOrder Spinner.
+     * @param dialogFilter Cuadro de dialogo a utilizar.
+     */
     private void initialiseSpinnerOrder(Spinner spinnerOrder, Dialog dialogFilter) {
         // ArrayAdapter con los tipos de combustibles
         ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(
@@ -447,6 +465,13 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         presenter.filter(combustibleSeleccionado, marcasSeleccionadas, lowcost);
     }
 
+    /**
+     * Actualizar orden de la lista al ordenar por precio.
+     *
+     * @param price Tipo precio
+     * @param order Tipo orden
+     * @param savedFilter Filtro
+     */
     private void updateListPrice(int price, int order, int savedFilter)
     {
         // Converts position to diesel / 95-octanes / summary price
@@ -460,19 +485,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         String filterStr = CombustibleType.ALL_COMB.getCombStringFromInt(savedFilter - 1);
 
-        // Prepares ArrayAdapter for the list to be shown
-        GasolinerasArrayAdapter adapter;
-        if (selectedPriceType == PriceFilterType.SUMARIO) {
-            adapter =
-                    new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
-        } else {
-            adapter = new GasolinerasArrayAdapter
-                    (this, presenter.getShownGasolineras(), filterStr);
-        }
-
-        // Updates the list
-        ListView list = findViewById(R.id.lvGasolineras);
-        list.setAdapter(adapter);
+        presenter.prepareUpdate(selectedPriceType, filterStr);
     }
 
     /**

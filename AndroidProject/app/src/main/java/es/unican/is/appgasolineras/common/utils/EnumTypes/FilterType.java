@@ -1,4 +1,4 @@
-package es.unican.is.appgasolineras.activities.main;
+package es.unican.is.appgasolineras.common.utils.EnumTypes;
 
 public enum FilterType {
     FUEL_BRAND, PRICE;

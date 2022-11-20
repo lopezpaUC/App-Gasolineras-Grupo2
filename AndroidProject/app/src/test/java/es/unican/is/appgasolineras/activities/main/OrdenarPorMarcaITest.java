@@ -21,15 +21,8 @@ import org.mockito.MockitoAnnotations;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import es.unican.is.appgasolineras.activities.detail.IGasolineraDetailContract;
-import es.unican.is.appgasolineras.activities.main.IMainContract;
-import es.unican.is.appgasolineras.activities.main.MainPresenter;
-import es.unican.is.appgasolineras.activities.main.PriceFilterType;
-import es.unican.is.appgasolineras.activities.main.PriceOrderType;
+import es.unican.is.appgasolineras.common.utils.EnumTypes.PriceFilterType;
+import es.unican.is.appgasolineras.common.utils.EnumTypes.PriceOrderType;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
