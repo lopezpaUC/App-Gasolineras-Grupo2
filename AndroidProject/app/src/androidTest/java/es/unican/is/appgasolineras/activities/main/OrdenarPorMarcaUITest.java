@@ -63,7 +63,7 @@ public class OrdenarPorMarcaUITest {
         //onView((withId(R.id.spnTipoPrecio))).perform(click());
         //onView(withText("Gasolina")).inRoot(RootMatchers.isDialog()).perform(click());
         onView((withId(R.id.spnTipoOrdenacion))).perform(click());
-        onView(withText("Descendente")).inRoot(RootMatchers.isDialog()).perform(click());
+        onView(withText("Desc.")).inRoot(RootMatchers.isDialog()).perform(click());
         onView(withId(R.id.tvApply)).perform(click());
 
         /* Comprobamos los datos de una gasolinera, los cuáles deberían ser los esperados.*/
