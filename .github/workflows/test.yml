@@ -49,12 +49,12 @@ jobs:
             - name: Android UI tests
               uses: reactivecircus/android-emulator-runner@v2
               with:
-                api-level: 29  # api level > 27 seems to be failing at sdk installation step
+                api-level: 27  # api level > 27 seems to be failing at sdk installation step
                 working-directory: ./AndroidProject
                 profile: pixel_2
                 target: google_apis
                 disable-animations: true
-                emulator-options: -no-window -gpu off -no-snapshot -noaudio -no-boot-anim
+                #emulator-options: -no-window -gpu off -no-snapshot -noaudio -no-boot-anim
                 script: ./gradlew connectedCheck
                 
             - name: Android UI tests artifacts
