@@ -22,6 +22,7 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.unican.is.appgasolineras.common.utils.EnumTypes.CombustibleType;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;

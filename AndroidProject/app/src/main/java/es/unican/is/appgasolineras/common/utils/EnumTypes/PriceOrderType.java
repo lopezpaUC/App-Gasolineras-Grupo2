@@ -1,4 +1,4 @@
-package es.unican.is.appgasolineras.activities.main;
+package es.unican.is.appgasolineras.common.utils.EnumTypes;
 
 /**
  * Enumerado con los diferentes tipos de combustibles.
