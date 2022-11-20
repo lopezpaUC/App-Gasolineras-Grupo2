@@ -13,12 +13,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import es.unican.is.appgasolineras.common.utils.EnumTypes.PriceFilterType;
+import es.unican.is.appgasolineras.common.utils.EnumTypes.PriceOrderType;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;

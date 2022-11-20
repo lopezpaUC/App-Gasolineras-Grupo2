@@ -1,19 +1,28 @@
 package es.unican.is.appgasolineras.activities.main;
 
-
-
 import java.util.ArrayList;
 import java.util.Collections;
 
 
 import java.util.List;
 
-
+import es.unican.is.appgasolineras.common.utils.EnumTypes.CombustibleType;
+import es.unican.is.appgasolineras.common.utils.EnumTypes.PriceFilterType;
+import es.unican.is.appgasolineras.common.utils.EnumTypes.PriceOrderType;
+import es.unican.is.appgasolineras.common.utils.Sort.SortBy95OctanesPrice;
+import es.unican.is.appgasolineras.common.utils.Sort.SortByDieselPrice;
+import es.unican.is.appgasolineras.common.utils.Sort.SortBySummaryPrice;
 import es.unican.is.appgasolineras.model.Gasolinera;
 
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 
+/**
+ * Main Presenter.
+ *
+ * @author Grupo 02-CarbuRed
+ * @version 1.0
+ */
 public class MainPresenter implements IMainContract.Presenter {
 
     // Constante para indicar si las gasolineras se cargan de forma online u offline
@@ -31,8 +40,6 @@ public class MainPresenter implements IMainContract.Presenter {
 
     // Metodo utilizado para la carga de gasolineras
     private int loadMethod;
-
-
 
     /**
      * Constructor del presenter de la vista principal.
@@ -58,8 +65,6 @@ public class MainPresenter implements IMainContract.Presenter {
         if (repositoryGasolineras != null) { // Si ya consta un repositorio
             doSyncInit();
         }
-
-
     }
 
     /** NO USADO POR EL MOMENTO
@@ -111,11 +116,6 @@ public class MainPresenter implements IMainContract.Presenter {
             view.showLoadError();
         }
 
-    }
-
-    @Override
-    public List<Gasolinera> getShownGasolineras() {
-        return this.shownGasolineras;
     }
 
     @Override
@@ -184,6 +184,51 @@ public class MainPresenter implements IMainContract.Presenter {
         }
     }
 
+    @Override
+    public void prepareUpdate(PriceFilterType selectedPriceType, String filterStr) {
+        if (selectedPriceType == PriceFilterType.SUMARIO) {
+            view.showGasolinerasAdvanced(shownGasolineras, CombustibleType.ALL_COMB);
+        } else {
+            view.showGasolinerasAdvanced(shownGasolineras, CombustibleType.getCombTypeFromString(filterStr));
+        }
+    }
+
+    @Override
+    public void orderByPrice(PriceOrderType order, PriceFilterType orderedValue) {
+        // List with results
+        List<Gasolinera> ordered;
+
+        // Orders by defined criterion
+        if (orderedValue == PriceFilterType.DIESEL) { // Diesel
+            ordered = filterByDiesel();
+            Collections.sort(ordered, new SortByDieselPrice(repositoryGasolineras, repositoryPromotions));
+        } else if (orderedValue == PriceFilterType.GASOLINA) { // 95-octanes
+            ordered = filterByGasolina();
+            Collections.sort(ordered, new SortBy95OctanesPrice(repositoryGasolineras, repositoryPromotions));
+        } else { // Summary price
+            ordered = filterBySummaryPrice();
+            Collections.sort(ordered, new SortBySummaryPrice(repositoryGasolineras, repositoryPromotions));
+        }
+
+        // Descending order (highest first, lowest last) --> reversed ascending list
+        if (order == PriceOrderType.DESC) {
+            Collections.reverse(ordered);
+        }
+
+        // Anhade las restantes
+        for (Gasolinera g:shownGasolineras) {
+            if (!ordered.contains(g)) {
+                ordered.add(ordered.size(), g);
+            }
+        }
+
+        if (ordered.isEmpty()) { // If empty list (no compatible gas stations)
+            shownGasolineras = new ArrayList<>();
+        } else {
+            shownGasolineras = ordered;
+        }
+    }
+
     /**
      * Filtra por tipo de combustible.
      *
@@ -226,42 +271,6 @@ public class MainPresenter implements IMainContract.Presenter {
         }
     }
 
-    @Override
-    public void orderByPrice(PriceOrderType order, PriceFilterType orderedValue) {
-        // List with results
-        List<Gasolinera> ordered;
-
-        // Orders by defined criterion
-        if (orderedValue == PriceFilterType.DIESEL) { // Diesel
-            ordered = filterByDiesel();
-            Collections.sort(ordered, new SortByDieselPrice(repositoryGasolineras, repositoryPromotions));
-        } else if (orderedValue == PriceFilterType.GASOLINA) { // 95-octanes
-            ordered = filterByGasolina();
-            Collections.sort(ordered, new SortBy95OctanesPrice(repositoryGasolineras, repositoryPromotions));
-        } else { // Summary price
-            ordered = filterBySummaryPrice();
-            Collections.sort(ordered, new SortBySummaryPrice(repositoryGasolineras, repositoryPromotions));
-        }
-
-        // Descending order (highest first, lowest last) --> reversed ascending list
-        if (order == PriceOrderType.DESC) {
-            Collections.reverse(ordered);
-        }
-
-        // Anhade las restantes
-        for (Gasolinera g:shownGasolineras) {
-            if (!ordered.contains(g)) {
-                ordered.add(ordered.size(), g);
-            }
-        }
-
-        if (ordered.isEmpty()) { // If empty list (no compatible gas stations)
-            shownGasolineras = new ArrayList<>();
-        } else {
-            shownGasolineras = ordered;
-        }
-    }
-
     /**
      * Orders the list of gas stations based on the order (ascending or descending).
      * @return the ordered list
@@ -270,7 +279,7 @@ public class MainPresenter implements IMainContract.Presenter {
         List<Gasolinera> filtered = new ArrayList<>();
 
         // Applies promotions
-        for (Gasolinera gasolinera : getShownGasolineras()) {
+        for (Gasolinera gasolinera : shownGasolineras) {
             if (!gasolinera.getDieselA().equals("") && !gasolinera.getNormal95().equals("")) {
                 filtered.add(gasolinera);
             }
@@ -338,5 +347,9 @@ public class MainPresenter implements IMainContract.Presenter {
             }
         }
         return compatibles;
+    }
+
+    public List<Gasolinera> getShownGasolineras() {
+        return this.shownGasolineras;
     }
 }

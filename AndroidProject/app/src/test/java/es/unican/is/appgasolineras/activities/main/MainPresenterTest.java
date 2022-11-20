@@ -1,6 +1,5 @@
 package es.unican.is.appgasolineras.activities.main;
 
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -16,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.unican.is.appgasolineras.common.utils.EnumTypes.CombustibleType;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 
