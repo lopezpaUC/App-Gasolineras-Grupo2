@@ -1,133 +1,127 @@
 package es.unican.is.appgasolineras.activities.detail;
 
-import static org.mockito.Mockito.*;
-
 import android.content.Context;
+import android.os.Build;
 
-import androidx.room.RoomDatabase;
-import androidx.test.core.app.ActivityScenario;
-import androidx.test.core.app.ApplicationProvider;
-import androidx.test.platform.app.InstrumentationRegistry;
-
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.junit.MockitoRule;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
-import java.text.NumberFormat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import androidx.test.core.app.ApplicationProvider;
+
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
-import es.unican.is.appgasolineras.common.utils.PriceUtilities;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
+import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
+import es.unican.is.appgasolineras.repository.PromocionesRepository;
+import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
+import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
-/**
- * Test class for the calculation of discounted prices given one or more promotions
- */
-@RunWith(MockitoJUnitRunner.class)
-public class DiscountedPricesTest {
+@RunWith(RobolectricTestRunner.class)
+@Config(manifest=Config.NONE, sdk = {Build.VERSION_CODES.O_MR1})
+public class GasolineraDetailIPresenterTest {
 
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
+    @Mock
+    private IGasolineraDetailContract.View mockDetailView;
 
+    private IPromocionesRepository promocionesRepository;
+    private IGasolinerasRepository gasolinerasRepository;
     private Gasolinera gasStation;
+    private Context context;
+    private List<Promocion> promotions;
     private Promocion promotion;
     private GasolineraDetailPresenter sut;
 
-    private Context context;
-    private List<Promocion> promotions;
-    private NumberFormat format;
+    @BeforeClass
+    public static void setUpClass() {
+        GasolinerasServiceConstants.setStaticURL2();
+    }
 
-    @Mock
-    IGasolineraDetailContract.View mockDetailView;
-
-    @Mock
-    IPromocionesRepository mockPromocionesRepository;
-
-    @Mock
-    IGasolinerasRepository mockGasolinerasRepository;
+    @AfterClass
+    public static void clean() {
+        GasolinerasServiceConstants.setMinecoURL();
+    }
 
     @Before
     public void setUp() {
         // Gas station data
         gasStation = new Gasolinera();
-        gasStation.setId("123"); // ID
-        gasStation.setRotulo("CEPSA"); // Brand name
-        gasStation.setCp("39234"); // Postal code
-        gasStation.setHorario("Nunca"); // Schedule
-        gasStation.setDireccion("Calle Falsa, 123"); // Address
-        gasStation.setMunicipio("Santander"); // City
-        gasStation.setDieselA("1"); // Diesel price (€/L)
-        gasStation.setNormal95("3"); // 95-octanes price (€/L)
+        gasStation.setId("123");                        // ID
+        gasStation.setRotulo("CEPSA");                  // Brand name
+        gasStation.setCp("39234");                      // Postal code
+        gasStation.setHorario("Nunca");                 // Schedule
+        gasStation.setDireccion("Calle Falsa, 123");    // Address
+        gasStation.setMunicipio("Santander");           // Municipality
+        gasStation.setDieselA("1");                     // Diesel price (€/L)
+        gasStation.setNormal95("3");                    // 95-octanes price (€/L)
 
-        // Creates promotion list
+        MockitoAnnotations.openMocks(this);
+
+
+        context = ApplicationProvider.getApplicationContext();
         promotions = new LinkedList<>();
 
-        format = NumberFormat.getInstance(Locale.FRANCE);
+        promocionesRepository = new PromocionesRepository(context);
+        when(mockDetailView.getPromocionesRepository()).thenReturn(promocionesRepository);
 
-        // Defines mock behaviour
-        when (mockDetailView.getPromocionesRepository()).thenReturn(mockPromocionesRepository);
-        when (mockDetailView.getGasolinerasRepository()).thenReturn(mockGasolinerasRepository);
+        gasolinerasRepository = new GasolinerasRepository(context);
+        when(mockDetailView.getGasolinerasRepository()).thenReturn(gasolinerasRepository);
 
-        // Creates the tested class (SUT - System Under Test) and initialises it
         sut = new GasolineraDetailPresenter(mockDetailView, gasStation);
-        /*when (mockGasolinerasRepository.precioToDouble("1", format)).thenReturn(1.0);
-        when (mockGasolinerasRepository.precioToDouble("3", format)).thenReturn(3.0);
-        when (mockGasolinerasRepository.calculateSummary(anyDouble(), anyDouble())).thenReturn(2.333);
-        when (mockGasolinerasRepository.precioSumarioToStr(2.333)).thenReturn("2,33");
-        when (mockGasolinerasRepository.precioSumarioToStr(1.0)).thenReturn("1,00");
-        when (mockGasolinerasRepository.precioSumarioToStr(3.0)).thenReturn("3,00");*/
         sut.init();
     }
 
+    @After
+    public void cleanDatabase() {
+        promocionesRepository.deleteAllPromociones();
+        GasolineraDatabase db = GasolineraDatabase.getDB(ApplicationProvider.getApplicationContext());
+        db.close();
+    }
+
+
     @Test
     public void UT1aTest() {
-
         // XXX: UT.1a - no promotion applied
-        updatePromotions();
-
         Assert.assertEquals("2,33", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("1,00", sut.getDiscountedDieselPriceStr());
         Assert.assertEquals("3,00", sut.getDiscounted95OctanesPriceStr());
-
     }
 
     @Test
     public void UT1bTest() {
         // XXX: UT.1b - 20-cent promotion for all fuels
-        promotion = null;
         promotion = new Promocion();
         promotion.setDescuentoEurosLitro(0.2);
         promotion.setDescuentoPorcentual(-1);
         promotion.setCombustibles("Diésel-Gasolina");
-        promotions.clear();
         promotions.add(promotion);
-        updatePromotions();
 
-        when (mockGasolinerasRepository.bestPromotion(1.0, promotions, "Diésel"))
-                .thenReturn(promotion);
-        when (mockGasolinerasRepository.bestPromotion(3.0, promotions, "Gasolina"))
-                .thenReturn(promotion);
+        updatePromocionesRepository();
 
         Assert.assertEquals("2,13", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("0,80", sut.getDiscountedDieselPriceStr());
         Assert.assertEquals("2,80", sut.getDiscounted95OctanesPriceStr());
-
     }
 
 
     @Test
     public void calculateDiscountedSummaryPriceTest() {
+
 
         // XXX: UT.1c - 20-cent promotion only for diesel
         promotion = new Promocion();
@@ -136,17 +130,12 @@ public class DiscountedPricesTest {
         promotion.setCombustibles("Diésel");
         promotions.clear();
         promotions.add(promotion);
-        updatePromotions();
 
-        when (mockGasolinerasRepository.bestPromotion(1.0, promotions, "Diésel"))
-                .thenReturn(promotion);
-        when (mockGasolinerasRepository.bestPromotion(3.0, promotions, "Gasolina"))
-                .thenReturn(null);
+        updatePromocionesRepository();
 
         Assert.assertEquals("2,27", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("0,80", sut.getDiscountedDieselPriceStr());
         Assert.assertEquals("3,00", sut.getDiscounted95OctanesPriceStr());
-
 
         // XXX: UT.1d - 20-cent promotion only for 95-octanes
         promotion = new Promocion();
@@ -156,10 +145,7 @@ public class DiscountedPricesTest {
         promotions.clear();
         promotions.add(promotion);
 
-        when (mockGasolinerasRepository.bestPromotion(1.0, promotions, "Diésel"))
-                .thenReturn(null);
-        when (mockGasolinerasRepository.bestPromotion(3.0, promotions, "Gasolina"))
-                .thenReturn(promotion);
+        updatePromocionesRepository();
 
         Assert.assertEquals("2,20", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("1,00", sut.getDiscountedDieselPriceStr());
@@ -173,10 +159,7 @@ public class DiscountedPricesTest {
         promotions.clear();
         promotions.add(promotion);
 
-        when (mockGasolinerasRepository.bestPromotion(1.0, promotions, "Diésel"))
-                .thenReturn(promotion);
-        when (mockGasolinerasRepository.bestPromotion(3.0, promotions, "Gasolina"))
-                .thenReturn(promotion);
+        updatePromocionesRepository();
 
         Assert.assertEquals("2,10", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("0,90", sut.getDiscountedDieselPriceStr());
@@ -190,10 +173,7 @@ public class DiscountedPricesTest {
         promotions.clear();
         promotions.add(promotion);
 
-        when (mockGasolinerasRepository.bestPromotion(1.0, promotions, "Diésel"))
-                .thenReturn(promotion);
-        when (mockGasolinerasRepository.bestPromotion(3.0, promotions, "Gasolina"))
-                .thenReturn(null);
+        updatePromocionesRepository();
 
         Assert.assertEquals("2,30", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("0,90", sut.getDiscountedDieselPriceStr());
@@ -207,10 +187,7 @@ public class DiscountedPricesTest {
         promotions.clear();
         promotions.add(promotion);
 
-        when (mockGasolinerasRepository.bestPromotion(1.0, promotions, "Diésel"))
-                .thenReturn(null);
-        when (mockGasolinerasRepository.bestPromotion(3.0, promotions, "Gasolina"))
-                .thenReturn(promotion);
+        updatePromocionesRepository();
 
         Assert.assertEquals("2,13", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("1,00", sut.getDiscountedDieselPriceStr());
@@ -224,10 +201,7 @@ public class DiscountedPricesTest {
         promotions.clear();
         promotions.add(promotion);
 
-        when (mockGasolinerasRepository.bestPromotion(1.0, promotions, "Diésel"))
-                .thenReturn(promotion);
-        when (mockGasolinerasRepository.bestPromotion(3.0, promotions, "Gasolina"))
-                .thenReturn(promotion);
+        updatePromocionesRepository();
 
         Assert.assertEquals("-", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("-", sut.getDiscountedDieselPriceStr());
@@ -241,10 +215,7 @@ public class DiscountedPricesTest {
         promotions.clear();
         promotions.add(promotion);
 
-        when (mockGasolinerasRepository.bestPromotion(1.0, promotions, "Diésel"))
-                .thenReturn(promotion);
-        when (mockGasolinerasRepository.bestPromotion(3.0, promotions, "Gasolina"))
-                .thenReturn(null);
+        updatePromocionesRepository();
 
         Assert.assertEquals("3,00", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("-", sut.getDiscountedDieselPriceStr());
@@ -258,18 +229,22 @@ public class DiscountedPricesTest {
         promotions.clear();
         promotions.add(promotion);
 
-        when (mockGasolinerasRepository.bestPromotion(1.0, promotions, "Diésel"))
-                .thenReturn(null);
-        when (mockGasolinerasRepository.bestPromotion(3.0, promotions, "Gasolina"))
-                .thenReturn(promotion);
+        updatePromocionesRepository();
 
         Assert.assertEquals("1,00", sut.getDiscountedSummaryPriceStr());
         Assert.assertEquals("1,00", sut.getDiscountedDieselPriceStr());
         Assert.assertEquals("-", sut.getDiscounted95OctanesPriceStr());
     }
 
-    private void updatePromotions() {
-        when (mockPromocionesRepository.getPromocionesRelacionadasConGasolinera(gasStation.getId())).
-                thenReturn(promotions);
+    /**
+     * Restores the promotions repository, inserts a new promotion and programmes the view to
+     * return the updated repository
+     */
+    private void updatePromocionesRepository() {
+        promocionesRepository.deleteAllPromociones();
+        promocionesRepository.insertPromocion(promotion);
+        promocionesRepository.insertRelacionGasolineraPromocion(gasStation, promotion);
+        when(mockDetailView.getPromocionesRepository()).thenReturn(promocionesRepository);
     }
+
 }
