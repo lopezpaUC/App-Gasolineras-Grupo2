@@ -1,4 +1,4 @@
-package es.unican.is.appgasolineras.activities.promotion;
+package es.unican.is.appgasolineras.activities.addPromotion;
 
 /**
  * Enumerado con los diferentes tipos de estados despues de realizar una operacion

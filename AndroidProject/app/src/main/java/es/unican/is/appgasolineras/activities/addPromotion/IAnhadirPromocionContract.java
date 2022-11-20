@@ -1,8 +1,9 @@
-package es.unican.is.appgasolineras.activities.promotion;
+package es.unican.is.appgasolineras.activities.addPromotion;
 
 import java.util.List;
 import java.util.Map;
 
+import es.unican.is.appgasolineras.activities.addPromotion.EstadoOperacionAnhadirPromocion;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 
