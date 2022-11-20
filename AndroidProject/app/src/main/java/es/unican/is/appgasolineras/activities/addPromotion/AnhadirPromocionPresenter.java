@@ -1,4 +1,4 @@
-package es.unican.is.appgasolineras.activities.promotion;
+package es.unican.is.appgasolineras.activities.addPromotion;
 
 import java.util.ArrayList;
 import java.util.Iterator;

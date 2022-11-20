@@ -18,9 +18,9 @@
         android:theme="@style/Theme.AppGasolineras"
         tools:targetApi="32">
 
-        <activity android:name=".activities.promotion.AnhadirPromocionView"
+        <activity android:name=".activities.addPromotion.AnhadirPromocionView"
             android:exported="false" />
-        <activity android:name=".activities.promotion.ListaPromocionesView"
+        <activity android:name=".activities.listPromotions.ListaPromocionesView"
             android:exported="false" />
         <activity
             android:name=".activities.info.InfoView"

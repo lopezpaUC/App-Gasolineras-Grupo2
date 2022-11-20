@@ -5,7 +5,6 @@ import java.util.Set;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Marca;
-import es.unican.is.appgasolineras.model.MarcaPromocionCrossRef;
 import es.unican.is.appgasolineras.model.Promocion;
 
 public interface IPromocionesRepository {

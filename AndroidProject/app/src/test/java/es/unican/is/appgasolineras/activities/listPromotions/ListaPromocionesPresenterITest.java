@@ -1,4 +1,4 @@
-package es.unican.is.appgasolineras.activities.promotion;
+package es.unican.is.appgasolineras.activities.listPromotions;
 
 import static org.mockito.Mockito.when;
 
@@ -21,6 +21,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 
+import es.unican.is.appgasolineras.activities.listPromotions.IListaPromocionesContract;
+import es.unican.is.appgasolineras.activities.listPromotions.ListaPromocionesPresenter;
 import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
