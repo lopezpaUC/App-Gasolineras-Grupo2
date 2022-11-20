@@ -1,39 +1,28 @@
-package es.unican.is.appgasolineras.activities.promotion;
+package es.unican.is.appgasolineras.activities.listPromotions;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import junit.framework.TestCase;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
-
-import android.content.Context;
-
-import androidx.test.core.app.ApplicationProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import es.unican.is.appgasolineras.activities.listPromotions.IListaPromocionesContract;
+import es.unican.is.appgasolineras.activities.listPromotions.ListaPromocionesPresenter;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.model.Promocion;
-import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
-import es.unican.is.appgasolineras.repository.PromocionesRepository;
-import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
-import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
-import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EliminarPromocionPresenterITest extends TestCase{

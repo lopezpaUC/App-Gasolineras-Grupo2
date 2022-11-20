@@ -91,25 +91,25 @@ public class OrdenarPorMarcaITest {
         sut.orderByPrice(PriceOrderType.ASC, PriceFilterType.DIESEL);
 
         assertEquals(5, sut.getShownGasolineras().size());
-        assertEquals(sut.getShownGasolineras().get(0).getId(), "1036");
-        assertEquals(sut.getShownGasolineras().get(1).getId(), "1039");
-        assertEquals(sut.getShownGasolineras().get(2).getId(), "1095");
+        assertEquals("1036", sut.getShownGasolineras().get(0).getId());
+        assertEquals("1039", sut.getShownGasolineras().get(1).getId());
+        assertEquals("1095", sut.getShownGasolineras().get(2).getId());
 
         //Caso exito: ordena Gasolina de forma ascendente
         sut.orderByPrice(PriceOrderType.ASC, PriceFilterType.GASOLINA);
 
         assertEquals(5, sut.getShownGasolineras().size());
-        assertEquals(sut.getShownGasolineras().get(0).getId(), "1048");
-        assertEquals(sut.getShownGasolineras().get(1).getId(), "1095");
-        assertEquals(sut.getShownGasolineras().get(2).getId(), "1039");
+        assertEquals("1048", sut.getShownGasolineras().get(0).getId());
+        assertEquals("1095", sut.getShownGasolineras().get(1).getId());
+        assertEquals("1039", sut.getShownGasolineras().get(2).getId());
 
         //Caso exito: ordena PrecioSumario de forma descendente
         sut.orderByPrice(PriceOrderType.DESC, PriceFilterType.SUMARIO);
 
         assertEquals(5, sut.getShownGasolineras().size());
-        assertEquals(sut.getShownGasolineras().get(0).getId(), "1039");
-        assertEquals(sut.getShownGasolineras().get(1).getId(), "1095");
-        assertEquals(sut.getShownGasolineras().get(2).getId(), "1048");
+        assertEquals("1039", sut.getShownGasolineras().get(0).getId());
+        assertEquals("1095", sut.getShownGasolineras().get(1).getId());
+        assertEquals("1048", sut.getShownGasolineras().get(2).getId());
 
     }
 }

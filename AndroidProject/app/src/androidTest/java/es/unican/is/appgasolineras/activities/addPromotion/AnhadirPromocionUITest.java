@@ -1,4 +1,4 @@
-package es.unican.is.appgasolineras.activities.promotion;
+package es.unican.is.appgasolineras.activities.addPromotion;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;

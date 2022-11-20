@@ -1,4 +1,4 @@
-package es.unican.is.appgasolineras.activities.promotion;
+package es.unican.is.appgasolineras.activities.listPromotions;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
