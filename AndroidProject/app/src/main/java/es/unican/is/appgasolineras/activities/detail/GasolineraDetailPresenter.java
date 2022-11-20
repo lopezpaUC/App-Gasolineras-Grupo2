@@ -23,12 +23,14 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
 
     private final IGasolineraDetailContract.View view;   // Vista encargada de mostrar informacion
     private final Gasolinera gasolinera;                 // Gasolinera a mostrar
+    private final IPromocionesRepository repPromotions;  // Promotions repository
+    private final IGasolinerasRepository repGasolineras; // Gas stations repository
+    private final PriceUtilities utilities;
+
     private String precioSumarioStr;                     // Precio sumario de la gasolinera
-    private String discountedDieselPriceStr;
-    private String discounted95OctanesPriceStr;
-    private IPromocionesRepository repPromotions;          // Promotions repository
-    private IGasolinerasRepository repGasolineras;         // Gas stations repository
-    private PriceUtilities utilities;
+    private String discountedDieselPriceStr;             // Precio diesel de la gasolinera
+    private String discounted95OctanesPriceStr;          // Precio gasolina de la gasolinera
+
     /**
      * Constructor del presenter.
      *
@@ -58,31 +60,8 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
     }
 
     /**
-     * Retorna el precio sumario de la gasolinera.
-     * @return Precio sumario de la gasolinera como cadena de caracteres.
-     */
-    @Override
-    public String getPrecioSumario() {
-        return precioSumarioStr;
-    }
-
-    @Override
-    public String getDiscountedDieselPriceStr() {
-        return discountedDieselPriceStr;
-    }
-
-    @Override
-    public String getDiscounted95OctanesPriceStr() {
-        return discounted95OctanesPriceStr;
-    }
-
-    @Override
-    public String getDiscountedSummaryPriceStr() {
-        return utilities.precioSumarioToStr(calculateDiscountedSummaryPrice());
-    }
-
-    /**
      * Calcula el precio sumario de la gasolinera.
+     *
      * @return Precio sumario.
      */
     private double calculateSummaryPrice() {
@@ -107,9 +86,10 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
     }
 
     /**
-     * Calculates the discounted summary price and updates the discounted diesel and 95-octanes
-     * prices
-     * @return the discounted summary price
+     * Calcula el precio sumario con descuento y actualiza los precios con descuento para cada
+     * combustible.
+     *
+     * @return precio sumario con descuento.
      */
     private double calculateDiscountedSummaryPrice() {
         // Obtains the list of promotions assigned to the gas station
@@ -179,17 +159,36 @@ public class GasolineraDetailPresenter implements IGasolineraDetailContract.Pres
             info.put("schedule", utilities.checkValid(gasolinera.getHorario()));
 
             view.showInfo(info);
+            view.loadDiscount(utilities.precioSumarioToStr(calculateDiscountedSummaryPrice()),
+                    discountedDieselPriceStr, discounted95OctanesPriceStr);
         }
     }
 
     /**
-     * Truncates price to 2 decimal places
-     * @param price the price to be truncated
-     * @return the truncated price
+     * Trunca el precio a 2 decimales.
+     *
+     * @param price Precio a truncar.
+     * @return precio truncado.
      */
     private double truncateFuelPrice(double price) {
         price = price * Math.pow(10, 2);
         price = Math.floor(price);
         return price / Math.pow(10, 2);
+    }
+
+    public String getDiscountedSummaryPriceStr() {
+        return utilities.precioSumarioToStr(calculateDiscountedSummaryPrice());
+    }
+
+    public String getPrecioSumario() {
+        return precioSumarioStr;
+    }
+
+    public String getDiscountedDieselPriceStr() {
+        return discountedDieselPriceStr;
+    }
+
+    public String getDiscounted95OctanesPriceStr() {
+        return discounted95OctanesPriceStr;
     }
 }

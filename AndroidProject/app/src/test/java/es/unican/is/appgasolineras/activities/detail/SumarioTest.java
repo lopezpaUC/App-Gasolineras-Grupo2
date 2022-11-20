@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import org.checkerframework.checker.units.qual.A;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,10 +14,12 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
+import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -28,6 +31,9 @@ public class SumarioTest {
 
     @Mock
     private IGasolinerasRepository mockGasolinerasRepository;
+
+    @Mock
+    private IPromocionesRepository mockPromocionesRepository;
 
     private Gasolinera gasolinera;
     private GasolineraDetailPresenter sut;
@@ -49,12 +55,15 @@ public class SumarioTest {
         format = NumberFormat.getInstance(Locale.FRANCE);
 
         when (mockDetailView.getGasolinerasRepository()).thenReturn(mockGasolinerasRepository);
-
+        when (mockDetailView.getPromocionesRepository()).thenReturn(mockPromocionesRepository);
         sut = new GasolineraDetailPresenter(mockDetailView, gasolinera);
         /*when (mockGasolinerasRepository.precioToDouble(anyString(), any())).thenReturn(2.333);
         when (mockGasolinerasRepository.calculateSummary(anyDouble(), anyDouble())).thenReturn(2.333);
         when (mockGasolinerasRepository.precioSumarioToStr(anyDouble())).thenReturn("2,33");
-        */sut.init();
+        */
+        when (mockPromocionesRepository.getPromocionesRelacionadasConGasolinera(any())).thenReturn(
+                new ArrayList<>());
+        sut.init();
     }
 
     @Test
@@ -67,7 +76,8 @@ public class SumarioTest {
         /*when (mockGasolinerasRepository.precioToDouble(anyString(), any())).thenReturn(-1.0);
         when (mockGasolinerasRepository.calculateSummary(anyDouble(), anyDouble())).thenReturn(-1.0);
         when (mockGasolinerasRepository.precioSumarioToStr(anyDouble())).thenReturn("-");
-        */sut.init();
+        */
+        sut.init();
 
         precioSumario = sut.getPrecioSumario();
         Assert.assertEquals("-", precioSumario);
