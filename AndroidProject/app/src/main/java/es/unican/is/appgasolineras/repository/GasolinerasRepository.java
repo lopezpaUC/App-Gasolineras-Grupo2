@@ -202,4 +202,5 @@ public class GasolinerasRepository implements IGasolinerasRepository {
         }
         return bestPromotion;
     }
+
 }
