@@ -33,6 +33,7 @@ public interface IGasolinerasRepository {
      */
     List<Gasolinera> getGasolineras();
 
+
     /**
      * Retorna gasolinera que se corresponda con los parametros indicados.
      *
