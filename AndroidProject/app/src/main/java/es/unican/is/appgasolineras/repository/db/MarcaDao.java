@@ -7,7 +7,7 @@ import androidx.room.Query;
 import java.util.List;
 
 import es.unican.is.appgasolineras.model.Marca;
-import es.unican.is.appgasolineras.model.MarcaPromocionCrossRef;
+import es.unican.is.appgasolineras.model.CrossRefs.MarcaPromocionCrossRef;
 
 @Dao
 public interface MarcaDao {
@@ -41,8 +41,11 @@ public interface MarcaDao {
     /**
      * Inserta varias marcas en la base de datos.
      *
-     * @param marcas Colección de marcas a insertar.
+     * @param nombre Colección de marcas a insertar.
      */
+    @Query("SELECT * FROM marcas where nombre = :nombre")
+    Marca getMarca(String nombre);
+
     @Insert
     void insertAll(Marca... marcas);
 

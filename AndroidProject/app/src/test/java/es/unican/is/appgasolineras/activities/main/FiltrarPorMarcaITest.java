@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
 import android.content.Context;
+import android.os.Build;
 
 import androidx.test.core.app.ApplicationProvider;
 
@@ -22,13 +23,14 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.unican.is.appgasolineras.common.utils.EnumTypes.CombustibleType;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
-@Config(manifest=Config.NONE)
+@Config(manifest=Config.NONE, sdk = {Build.VERSION_CODES.O_MR1})
 
 @RunWith(RobolectricTestRunner.class)
 public class FiltrarPorMarcaITest {

@@ -2,6 +2,9 @@ package es.unican.is.appgasolineras.activities.main;
 
 import java.util.List;
 
+import es.unican.is.appgasolineras.common.utils.EnumTypes.CombustibleType;
+import es.unican.is.appgasolineras.common.utils.EnumTypes.PriceFilterType;
+import es.unican.is.appgasolineras.common.utils.EnumTypes.PriceOrderType;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
@@ -9,6 +12,9 @@ import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 /**
  * The Main Activity is composed of a Presenter and View, which must expose the methods
  * defined in the following interfaces.
+ *
+ * @author Grupo 02-CarbuRed
+ * @version 1.0
  */
 public interface IMainContract {
 
@@ -66,12 +72,6 @@ public interface IMainContract {
         void onOrderByPriceClicked();
 
         /**
-         * Obtiene la lista de gasolineras que debe mostrar la vista.
-         * @return lista de gasolineras que debe mostrar la vista.
-         */
-        List<Gasolinera> getShownGasolineras();
-
-        /**
          * Filtra gasolineras a mostrar en funcion de los parametros especificados.
          * @param combustibleType Tipo de combustible.
          * @param brands Mara o listado de marcas.
@@ -87,6 +87,15 @@ public interface IMainContract {
          * @return
          */
         void orderByPrice(PriceOrderType order, PriceFilterType orderedValue);
+
+        /**
+         * Prepara los datos necesarios para actualizar el Adapter de Gasolineras.
+         *
+         * @param selectedPriceType Tipo de precio seleccionado.
+         * @param filterStr String de combustible a destacar
+         */
+        void prepareUpdate(PriceFilterType selectedPriceType, String filterStr);
+
     }
 
     /**
@@ -107,7 +116,8 @@ public interface IMainContract {
          * @param combustibleDestacado Combustible a destacar.
          */
         void showGasolinerasAdvanced(List<Gasolinera> shownGasolineras,
-                                     CombustibleType combustibleDestacado);
+                                     CombustibleType combustibleDestacado,
+                                     boolean summary);
 
         /**
          * Returns the Gasolineras Repository object.
@@ -119,7 +129,11 @@ public interface IMainContract {
          */
         IGasolinerasRepository getGasolineraRepository();
 
-
+        /**
+         * Retorna repositorio de promociones.
+         *
+         * @return repositorio de promociones.
+         */
         IPromocionesRepository getPromotionsRepository();
 
         /**

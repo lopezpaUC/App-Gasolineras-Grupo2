@@ -3,7 +3,6 @@ package es.unican.is.appgasolineras.activities.main;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,44 +20,63 @@ import java.util.Locale;
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.common.utils.PriceUtilities;
 import es.unican.is.appgasolineras.model.Gasolinera;
-import es.unican.is.appgasolineras.model.Promocion;
-import es.unican.is.appgasolineras.repository.GasolinerasRepository;
-import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
-import es.unican.is.appgasolineras.repository.IPromocionesRepository;
-import es.unican.is.appgasolineras.repository.PromocionesRepository;
 
+/**
+ * Array Adapter para el listado de gasolineras principal de la aplicacion.
+ *
+ * @author Grupo 02-CarbuRed
+ * @version 1.0
+ */
 public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
-    private String precioDestacar;
+    private final PriceUtilities utilities;
+    private final String precioDestacar;
+
     private boolean summaryPrice;
 
-    private IGasolinerasRepository gasolinerasRepository = new GasolinerasRepository(getContext());
-    private IPromocionesRepository promocionesRepository = new PromocionesRepository(getContext());
-    private PriceUtilities utilities;
-    private NumberFormat format;
-
-
+    /**
+     * Construye un adapter basico por defecto.
+     *
+     * @param context Contexto.
+     * @param objects Lista de gasolineras.
+     */
     public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects) {
         super(context, 0, objects);
         precioDestacar = null;
-        format = NumberFormat.getInstance(Locale.getDefault());
+
         utilities = new PriceUtilities();
     }
 
+    /**
+     * Construye un adapter con un precio destacado.
+     *
+     * @param context Contexto.
+     * @param objects Lista de gasolineras.
+     * @param precioDestacar Precio a destacar.
+     */
     public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects,
                                    String precioDestacar) {
         super(context, 0, objects);
         this.precioDestacar = precioDestacar;
-
         summaryPrice = false;
-        format = NumberFormat.getInstance(Locale.getDefault());
+
         utilities = new PriceUtilities();
     }
 
     public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects,
+                                   String precioDestacar, boolean summaryPrice) {
+            super(context, 0, objects);
+            this.precioDestacar = precioDestacar;
+            this.summaryPrice = summaryPrice;
+            utilities = new PriceUtilities();
+    }
+
+
+    public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects,
                                    boolean summaryPrice) {
         super(context, 0, objects);
+        precioDestacar = null;
         this.summaryPrice = summaryPrice;
-        format = NumberFormat.getInstance(Locale.getDefault());
+
         utilities = new PriceUtilities();
     }
 
@@ -95,6 +113,12 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         return convertView;
     }
 
+    /**
+     * Establece el logo.
+     *
+     * @param gasolinera Gasolinera.
+     * @param convertView View.
+     */
     private void logo(Gasolinera gasolinera, View convertView) {
         String rotulo = gasolinera.getRotulo().toLowerCase();
 
@@ -115,16 +139,34 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         }
     }
 
+    /**
+     * Establece el nombre/rotulo.
+     *
+     * @param gasolinera Gasolinera.
+     * @param convertView View.
+     */
     private void name(Gasolinera gasolinera, View convertView){
         TextView tv = convertView.findViewById(R.id.tvName);
         tv.setText(gasolinera.getRotulo());
     }
 
+    /**
+     * Establece la direccion.
+     *
+     * @param gasolinera Gasolinera.
+     * @param convertView View.
+     */
     private void address(Gasolinera gasolinera, View convertView){
         TextView tv = convertView.findViewById(R.id.tvAddress);
         tv.setText(gasolinera.getDireccion());
     }
 
+    /**
+     * Establece precio Gasolina 95.
+     *
+     * @param gasolinera Gasolinera.
+     * @param convertView View.
+     */
     private void priceNinetyFive(Gasolinera gasolinera, View convertView){
         TextView tvLabel = convertView.findViewById(R.id.tv95Label);
         String label = getContext().getResources().getString(R.string.gasolina95label);
@@ -166,6 +208,12 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         summaryTv.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * Establece precio Diesel.
+     *
+     * @param gasolinera Gasolinera.
+     * @param convertView View.
+     */
     private void priceDiesel(Gasolinera gasolinera, View convertView){
         TextView tvLabel = convertView.findViewById(R.id.tvDieselALabel);
         String label = getContext().getResources().getString(R.string.dieselAlabel);
@@ -207,6 +255,12 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         summaryTv.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * Establece precio Sumario.
+     *
+     * @param gasolinera Gasolinera.
+     * @param convertView View.
+     */
     private void summaryPrice(Gasolinera gasolinera, View convertView) {
         TextView tvLabel = convertView.findViewById(R.id.tvSummaryLabel);
         String label = getContext().getResources().getString(R.string.sumPrice);
@@ -219,13 +273,13 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         String summaryStr = "-";
 
         // Converts price to double
-        NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
+        NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
 
         try {
             double diesel = format.parse(gasolinera.getDieselA()).doubleValue();
             double unleaded95 = format.parse(gasolinera.getNormal95()).doubleValue();
             double summary = utilities.calculateSummary(diesel, unleaded95);
-            summaryStr = utilities.precioSumarioToStr(summary);
+            summaryStr = utilities.precioSumarioTo3Str(summary);
             Number number = format.parse(summaryStr);
             precioDouble = number.doubleValue();
         } catch (Exception e) {
@@ -260,6 +314,4 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         tvLabel.setVisibility(View.VISIBLE);
         tv.setVisibility(View.VISIBLE);
     }
-
-
 }
