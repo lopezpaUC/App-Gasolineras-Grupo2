@@ -19,27 +19,35 @@ public class GasolinerasServiceConstants {
     private static final String STATIC_API_URL_VIEW_PROMOTION_IN_GAS_STATION =
             "https://raw.githubusercontent.com/isunican/App-Gasolineras-Grupo2/feature/464976-MostrarPromocionEnGasolinera/StaticREST/ServiciosRESTCarburantes/PrecioCarburantes_SP02_VerPromocionGasolinera/";
 
-    private static String API_URL = MINECO_API_URL;
+    private static final String STATIC_API_URL_FILTER_BY_LOWCOST =
+            "https://raw.githubusercontent.com/isunican/App-Gasolineras-Grupo2/feature/466920-FiltrarPorLowcost/StaticREST/ServiciosRESTCarburantes/PrecioCarburantes_SP03_FiltrarPorLowcost/";
+
+
+    private static String apiURL = MINECO_API_URL;
 
     public static void setStaticURL() {
-        API_URL = STATIC_API_URL;
+        apiURL = STATIC_API_URL;
     }
 
     public static void setStaticURL2() {
-        API_URL = STATIC_API_URL2;
+        apiURL = STATIC_API_URL2;
     }
 
-    public static void setStaticURL3() {API_URL = STATIC_API_URL3;}
+    public static void setStaticURL3() {apiURL = STATIC_API_URL3;}
 
     public static void setStaticURLMostrarPromocionEnGasolinera() {
-        API_URL = STATIC_API_URL_VIEW_PROMOTION_IN_GAS_STATION;
+        apiURL = STATIC_API_URL_VIEW_PROMOTION_IN_GAS_STATION;
+    }
+
+    public static void setStaticURLFiltrarPorLowcost() {
+        apiURL = STATIC_API_URL_FILTER_BY_LOWCOST;
     }
 
     public static void setMinecoURL() {
-        API_URL = MINECO_API_URL;
+        apiURL = MINECO_API_URL;
     }
 
     public static final String getAPIURL() {
-        return API_URL;
+        return apiURL;
     }
 }

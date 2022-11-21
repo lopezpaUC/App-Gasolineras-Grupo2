@@ -7,9 +7,9 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import es.unican.is.appgasolineras.model.Gasolinera;
-import es.unican.is.appgasolineras.model.GasolineraPromocionCrossRef;
+import es.unican.is.appgasolineras.model.CrossRefs.GasolineraPromocionCrossRef;
 import es.unican.is.appgasolineras.model.Marca;
-import es.unican.is.appgasolineras.model.MarcaPromocionCrossRef;
+import es.unican.is.appgasolineras.model.CrossRefs.MarcaPromocionCrossRef;
 import es.unican.is.appgasolineras.model.Promocion;
 
 /**
@@ -40,4 +40,5 @@ public abstract class GasolineraDatabase extends RoomDatabase {
     public abstract PromocionDao promocionDao();
 
     public abstract MarcaDao marcaDao();
+
 }

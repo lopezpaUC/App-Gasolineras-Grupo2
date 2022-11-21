@@ -1,6 +1,7 @@
 package es.unican.is.appgasolineras.model;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -14,11 +15,18 @@ public class Marca {
     @PrimaryKey
     private String nombre;
 
+    @ColumnInfo(name = "esLowcost")
+    private boolean esLowcost;
+
     /**
      * Crea una marca, cuyo nombre es su identificador.
+     *
+     * @param nombre Nombre de la marca.
+     * @param esLowcost Booleano que indica si la marca es lowcost.
      */
-    public Marca(String nombre) {
+    public Marca(@NonNull String nombre, boolean esLowcost) {
         this.nombre = nombre;
+        this.esLowcost = esLowcost;
     }
 
     @NonNull
@@ -28,6 +36,14 @@ public class Marca {
 
     public void setId(@NonNull String nombre) {
         this.nombre = nombre;
+    }
+
+    public boolean getEsLowcost() {
+        return esLowcost;
+    }
+
+    public void setEsLowcost(boolean lowcost) {
+        this.esLowcost = lowcost;
     }
 
     @Override

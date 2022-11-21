@@ -22,9 +22,11 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.unican.is.appgasolineras.common.utils.EnumTypes.CombustibleType;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.db.GasolineraDatabase;
+import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
 
 @RunWith(RobolectricTestRunner.class)
@@ -39,6 +41,7 @@ public class FiltrarPorTipoCombustibleITest {
 
     @AfterClass
     public static void clean() {
+        GasolinerasService.resetAPI();
         GasolinerasServiceConstants.setMinecoURL();
     }
 
@@ -69,7 +72,7 @@ public class FiltrarPorTipoCombustibleITest {
     public void testFilterByCombustible() {
 
         // Filtrar por diésel
-        sut.filter(CombustibleType.DIESEL, ls.subList(0,0));
+        sut.filter(CombustibleType.DIESEL, ls.subList(0,0), false);
         assertEquals(6, sut.getShownGasolineras().size());
         assertEquals("CEPSA", sut.getShownGasolineras().get(0).getRotulo());
         assertEquals("PETRONOR", sut.getShownGasolineras().get(1).getRotulo());
@@ -79,7 +82,7 @@ public class FiltrarPorTipoCombustibleITest {
 
 
         // Filtrar por gasolina
-        sut.filter(CombustibleType.GASOLINA, ls.subList(0,0));
+        sut.filter(CombustibleType.GASOLINA, ls.subList(0,0), false);
         assertEquals(8, sut.getShownGasolineras().size());
         assertEquals("CEPSA", sut.getShownGasolineras().get(0).getRotulo());
         assertEquals("REPSOL", sut.getShownGasolineras().get(1).getRotulo());
@@ -92,7 +95,7 @@ public class FiltrarPorTipoCombustibleITest {
 
 
         // Filtrar por todos
-        sut.filter(CombustibleType.ALL_COMB, ls.subList(0,0));
+        sut.filter(CombustibleType.ALL_COMB, ls.subList(0,0), false);
         assertEquals(10, sut.getShownGasolineras().size());
         assertEquals("CEPSA", sut.getShownGasolineras().get(0).getRotulo());
         assertEquals("REPSOL", sut.getShownGasolineras().get(1).getRotulo());
