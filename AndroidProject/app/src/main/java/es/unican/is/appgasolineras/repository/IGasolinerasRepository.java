@@ -14,6 +14,7 @@ import es.unican.is.appgasolineras.model.Marca;
  */
 public interface IGasolinerasRepository {
 
+
     /**
      * Request gas stations asynchronously
      * This method returns immediately. Once the gas stations have been retrieved from the source,
