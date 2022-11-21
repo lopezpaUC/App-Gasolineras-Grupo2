@@ -12,7 +12,7 @@ import es.unican.is.appgasolineras.model.Marca;
  * A Repository to access gas stations/
  * This class abstracts away the source of the gas stations (REST API, local DB, etc.)
  */
-public interface gIGasolinerasRepository {
+public interface IGasolinerasRepository {
 
     /**
      * Request gas stations asynchronously
