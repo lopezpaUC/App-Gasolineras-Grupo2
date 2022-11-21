@@ -89,7 +89,8 @@ public class ListaPromocionesView extends AppCompatActivity implements IListaPro
                     if(presenter.listaPromocionesVacia()){
                         setContentView(R.layout.activity_promotions_list);
                     }else{
-                        presenter.init();
+                        finish();
+                        startActivity(getIntent());
                     }
                 }));
 
