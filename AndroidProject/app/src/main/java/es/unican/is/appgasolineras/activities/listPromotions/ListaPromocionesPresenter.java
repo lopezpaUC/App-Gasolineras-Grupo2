@@ -59,9 +59,11 @@ public class ListaPromocionesPresenter implements IListaPromocionesContract.Pres
         String marca = listaGasolineras.get(0).getRotulo();
         if(listaGasolineras.size()>1){
             // Comprobamos si solo es una marca o varias
-            if(repositoryPromociones.getMarcasRelacionadasConPromocion(promocion.getId()).size()>1)
+            if((repositoryPromociones.getMarcasRelacionadasConPromocion(promocion.getId()).size()>1)
+            || (repositoryGasolineras.getGasolineras().size() ==
+                    repositoryGasolineras.getGasolinerasRelacionadasConPromocion(promocion.getId()).size())) {
                 listaImagenPromocion.add("composicion");
-            else
+            } else
                 listaImagenPromocion.add(marca.toLowerCase());
             listaNombreGasolineras.add("Varias");
         } else {
