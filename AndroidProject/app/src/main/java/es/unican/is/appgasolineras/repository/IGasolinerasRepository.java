@@ -23,6 +23,7 @@ public interface IGasolinerasRepository {
      */
     void requestGasolineras(Callback<List<Gasolinera>> cb);
 
+
     /**
      * Request gas stations synchronously
      * This method returns the list of gas stations directly, therefore it may impose a delay in
