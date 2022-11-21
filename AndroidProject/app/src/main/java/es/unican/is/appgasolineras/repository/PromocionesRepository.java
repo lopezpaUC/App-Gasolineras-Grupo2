@@ -151,4 +151,5 @@ public class PromocionesRepository implements IPromocionesRepository {
         }
         return marcas;
     }
+
 }
