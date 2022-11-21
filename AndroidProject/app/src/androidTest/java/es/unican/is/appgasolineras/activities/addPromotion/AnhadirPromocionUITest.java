@@ -58,6 +58,7 @@ public class AnhadirPromocionUITest {
             .outerRule(activityRule)
             .around(new ScreenshotTestRule());
 
+    // Regla para garantizar permisos
     @Rule
     public GrantPermissionRule permissionRule =
             GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
