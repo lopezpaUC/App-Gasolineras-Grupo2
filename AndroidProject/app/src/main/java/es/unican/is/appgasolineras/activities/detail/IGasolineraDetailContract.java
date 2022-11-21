@@ -4,13 +4,16 @@ import android.content.Context;
 
 import java.util.Map;
 
+import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IPromocionesRepository;
 
 /**
  * La actividad Detalle esta compuesta por un presentador y una vista, que deben presentar
  * los metodos definidos en las siguientes interfaces.
+ *
+ * @author Grupo 02-CarbuRed
+ * @version 1.0
  */
-
 public interface IGasolineraDetailContract {
 
     /**
@@ -29,28 +32,6 @@ public interface IGasolineraDetailContract {
          */
         void onAcceptClicked();
 
-        /**
-         * Retorna el precio sumario de la gasolinera.
-         */
-        String getPrecioSumario();
-
-        /**
-         * Returns the discounted summary price as text
-         * @return the discounted summary price as text
-         */
-        String getDiscountedSummaryPriceStr();
-
-        /**
-         * Returns the discounted diesel price as text
-         * @return the discounted diesel price as text
-         */
-        String getDiscountedDieselPriceStr();
-
-        /**
-         * Returns the discounted 95-octanes price as text
-         * @return the discounted 95-octanes price as text
-         */
-        String getDiscounted95OctanesPriceStr();
     }
 
     /**
@@ -79,11 +60,30 @@ public interface IGasolineraDetailContract {
         void openMainView();
 
         /**
-         * Returns the context of the activity
-         * @return the context of the activity
+         * Muestra descuentos si existiesen.
+         * @param discountedSummaryPrice Precio sumario con descuento.
+         * @param discountedDieselPrice Precio diesel con descuento.
+         * @param discounted95OctanesPrice Precio gasolina con descuento.
+         */
+        void loadDiscount(String discountedSummaryPrice, String discountedDieselPrice,
+                          String discounted95OctanesPrice);
+
+        /**
+         * Retorna el contexto de la actividad.
+         * @return contexto de la actividad.
          */
         Context getContext();
 
+        /**
+         * Obtiene repositorio de promociones.
+         * @return repositorio de promociones.
+         */
         IPromocionesRepository getPromocionesRepository();
+
+        /**
+         * Obtiene repositorio de gasolineras.
+         * @return repostiorio de gasolineras.
+         */
+        IGasolinerasRepository getGasolinerasRepository();
     }
 }
