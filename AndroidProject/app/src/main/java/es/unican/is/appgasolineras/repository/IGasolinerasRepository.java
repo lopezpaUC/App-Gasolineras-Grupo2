@@ -44,6 +44,7 @@ public interface IGasolinerasRepository {
      */
     Gasolinera getGasolineraByNameDirLocalidad(String name, String dir, String municipio);
 
+
     /**
      * Retorna lista de gasolineras que posean la promocion indicada.
      *
