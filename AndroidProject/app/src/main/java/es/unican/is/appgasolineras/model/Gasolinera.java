@@ -19,7 +19,8 @@ import com.google.gson.annotations.SerializedName;
  * defined in this class.
  */
 @Entity(tableName = "gasolineras")
-public class Gasolinera implements Parcelable {
+public class
+Gasolinera implements Parcelable {
 
     @SerializedName("IDEESS") @NonNull @PrimaryKey  private String id;
 

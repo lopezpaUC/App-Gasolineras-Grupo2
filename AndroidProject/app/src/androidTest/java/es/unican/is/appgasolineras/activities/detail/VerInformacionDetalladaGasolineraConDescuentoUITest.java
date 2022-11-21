@@ -13,47 +13,69 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.anything;
 
+import android.Manifest;
 import android.content.Context;
 
 import androidx.test.espresso.NoMatchingViewException;
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
+import org.junit.runner.RunWith;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.MainView;
-import es.unican.is.appgasolineras.model.Promocion;
 import es.unican.is.appgasolineras.repository.PromocionesRepository;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasService;
 import es.unican.is.appgasolineras.repository.rest.GasolinerasServiceConstants;
+import es.unican.is.appgasolineras.utils.ScreenshotTestRule;
 
+@RunWith(AndroidJUnit4.class)
 public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
-    @Rule
+    // IMPORTANTE: No tiene rule, se incluye en el rule de abajo
     public ActivityScenarioRule<MainView> activityRule =
-            new ActivityScenarioRule<>(MainView.class);
+            new ActivityScenarioRule(MainView.class);
 
-    private Promocion promocion;
+    // Aquí se combinan el ActivityScenarioRule y el ScreenshotTestRule,
+    // de forma que la captura de pantalla se haga antes de que se cierre la actividad
+    @Rule
+    public final TestRule activityAndScreenshotRule = RuleChain
+            .outerRule(activityRule)
+            .around(new ScreenshotTestRule());
+
+    @Rule
+    public GrantPermissionRule permissionRule =
+            GrantPermissionRule.grant(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
     @BeforeClass
     public static void setUp() {
         InstrumentationRegistry.getInstrumentation().getTargetContext().deleteDatabase("gasolineras-database");
-
         GasolinerasServiceConstants.setStaticURLMostrarPromocionEnGasolinera();
     }
 
+    @Before
+    public void insert() {
+        addPromotions();
+    }
+
     @After
-    public void cleanDatabase() {
+    public void cleanDB() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         PromocionesRepository repPromociones = new PromocionesRepository(context);
-        repPromociones.deleteAllPromociones();    }
+        repPromociones.deleteAllPromociones();
+    }
 
     @AfterClass
     public static void clean() {
@@ -63,9 +85,19 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
     @Test
     public void VerInformacionDetalladaGasolineraConDescuentoTest() {
-        addPromotions();
+        UIT1aTest();
+        UIT1bTest();
+        UIT1cTest();
+        UIT1dTest();
+        UIT1eTest();
+        UIT1fTest();
+        UIT1gTest();
+        UIT1hTest();
+        UIT1iTest();
+        UIT1jTest();
+    }
 
-        /** UIT.1a - Correct data, no discount **/
+    private void UIT1aTest() {
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(0).perform(click());
         onView(withId(R.id.tvDireccion)).check(matches(withText("CARRETERA 6316 KM. 10,5")));
         onView(withId(R.id.tvMunicipio)).check(matches(withText("Alfoz de Lloredo")));
@@ -82,8 +114,9 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("")));
         onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("")));
+    }
 
-        // XXX: UIT.1b - Promotion applied to both fuels in Repsol, gas station has no 95-octanes
+    private void UIT1bTest() {
         onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(1).perform(click());
         onView(withId(R.id.tvDireccion)).check(matches(withText("CR N-629 79,7")));
@@ -99,9 +132,10 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         // Discounted price (only for diesel)
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("1,50 €/L")));
-        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,50 €/L")));
+        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,51 €/L")));
+    }
 
-        /** UIT.1c - Promotion applied to diesel in Petronor, gas station has no 95-octanes **/
+    private void UIT1cTest() {
         onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(2).perform(click());
         onView(withId(R.id.tvDireccion)).check(matches(withText("CARRETERA N-611 KM. 163,2")));
@@ -115,9 +149,11 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("")));
-        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,78 €/L")));
 
-        /** UIT.1d - Promotion applied to 95-octanes in this gas station **/
+        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("")));
+    }
+
+    private void UIT1dTest() {
         onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(3).perform(click());
         onView(withId(R.id.tvDireccion)).check(matches(withText("CARRETERA ARGOÑOS SOMO KM. 28,7")));
@@ -131,9 +167,10 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("1,61 €/L")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("")));
-        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,74 €/L")));
+        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,75 €/L")));
+    }
 
-        /** UIT.1e - Promotion applied to all fuels in CEPSA **/
+    private void UIT1eTest() {
         onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(4).perform(click());
 
@@ -149,8 +186,9 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("1,64 €/L")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("1,81 €/L")));
         onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,70 €/L")));
+    }
 
-        /** UIT.1f - Promotion applied to diesel in Shell **/
+    private void UIT1fTest() {
         onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(5).perform(click());
 
@@ -165,9 +203,11 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("1,69 €/L")));
-        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,78 €/L")));
+        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,79 €/L")));
+    }
 
-        /** UIT.1g - Promotion applied to 95-octanes in this gas station **/
+
+    private void UIT1gTest() {
         onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(6).perform(click());
 
@@ -182,9 +222,10 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("1,63 €/L")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("")));
-        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,74 €/L")));
+        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,75 €/L")));
+    }
 
-        /** UIT.1h - Promotion applied to both fuels in this gas station **/
+    private void UIT1hTest() {
         onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(7).perform(click());
 
@@ -200,8 +241,9 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("- €/L")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("- €/L")));
         onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("- €/L")));
+    }
 
-        /** UIT.1i - Promotion applied to diesel in all GALP gas stations **/
+    private void UIT1iTest() {
         onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(8).perform(click());
 
@@ -216,9 +258,10 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("- €/L")));
-        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,81 €/L")));
+        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,82 €/L")));
+    }
 
-        /** UIT.1j - Promotion applied to 95-octanes in this gas station **/
+    private void UIT1jTest() {
         onView(isRoot()).perform(ViewActions.pressBack());
         onData(anything()).inAdapterView(withId(R.id.lvGasolineras)).atPosition(9).perform(click());
 
@@ -233,13 +276,15 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
         onView(withId(R.id.tvDiscounted95Price)).check(matches(withText("- €/L")));
         onView(withId(R.id.tvDiscountedDieselPrice)).check(matches(withText("")));
-        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("1,99 €/L")));
+        onView(withId(R.id.tvDiscountedPrecioSumarioDet)).check(matches(withText("2,00 €/L")));
+
     }
 
     private static void addPromotions() {
 
         /*** Promotion 1 - UIT.1b ***/
-        clickAdd();onView(withId(R.id.etNombre)).perform(scrollTo(), typeText("50centRepsol"),
+        clickAdd();
+        onView(withId(R.id.etNombre)).perform(scrollTo(), typeText("50centRepsol"),
                 closeSoftKeyboard()); // Name
 
         // Fuels
@@ -494,6 +539,7 @@ public class VerInformacionDetalladaGasolineraConDescuentoUITest {
 
         // Accept button
         onView(withId(android.R.id.button1)).perform(click());
+
     }
 
     private static void clickAdd() {

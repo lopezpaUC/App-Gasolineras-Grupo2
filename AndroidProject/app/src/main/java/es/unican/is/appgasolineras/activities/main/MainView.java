@@ -2,6 +2,7 @@ package es.unican.is.appgasolineras.activities.main;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,33 +11,45 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.detail.GasolineraDetailView;
 import es.unican.is.appgasolineras.activities.info.InfoView;
-import es.unican.is.appgasolineras.activities.promotion.AnhadirPromocionView;
-import es.unican.is.appgasolineras.activities.promotion.ListaPromocionesView;
+import es.unican.is.appgasolineras.activities.addPromotion.AnhadirPromocionView;
+import es.unican.is.appgasolineras.activities.listPromotions.ListaPromocionesView;
 import es.unican.is.appgasolineras.common.prefs.Prefs;
+import es.unican.is.appgasolineras.common.utils.EnumTypes.CombustibleType;
+import es.unican.is.appgasolineras.common.utils.EnumTypes.PriceFilterType;
+import es.unican.is.appgasolineras.common.utils.EnumTypes.PriceOrderType;
 import es.unican.is.appgasolineras.common.utils.MultipleSpinner;
 import es.unican.is.appgasolineras.model.Gasolinera;
 import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.IGasolinerasRepository;
+import es.unican.is.appgasolineras.repository.IPromocionesRepository;
+import es.unican.is.appgasolineras.repository.PromocionesRepository;
 
 /**
  * Vista principal abierta al iniciar la aplicacion.
+ *
+ * @author Grupo 02-CarbuRed
+ * @version 1.0
  */
 public class MainView extends AppCompatActivity implements IMainContract.View {
     private IMainContract.Presenter presenter;
@@ -67,6 +80,9 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
                 Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = filterPref.edit();
         editor.putInt(getString(R.string.saved_comb_type_filter), 0);
+        editor.putBoolean(getString(R.string.saved_lowcost_sele), false);
+        saveIntPrefFilter(getString(R.string.saved_price_type_order), 0);
+        saveIntPrefFilter(getString(R.string.saved_price_order), 0);
         editor.apply();
     }
 
@@ -99,6 +115,7 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
                         Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = filterPref.edit();
                 editor.putInt(getString(R.string.saved_comb_type_filter), 0);
+                editor.putBoolean(getString(R.string.saved_lowcost_sele), false);
                 editor.apply();
 
                 checkedBrandBoxes = new ArrayList<>();
@@ -111,6 +128,9 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
                 return true;
             case R.id.menuListaPromociones:
                 presenter.onListPromotionsClicked();
+                return true;
+            case R.id.menuOrdenarPorPrecio:
+                presenter.onOrderByPriceClicked();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -134,9 +154,39 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         return new GasolinerasRepository(this);
     }
 
+
+    @Override
+    public IPromocionesRepository getPromotionsRepository() {
+        return new PromocionesRepository(this);
+    }
+
     @Override
     public void showGasolineras(List<Gasolinera> gasolineras) {
         GasolinerasArrayAdapter adapter = new GasolinerasArrayAdapter(this, gasolineras);
+        ListView list = findViewById(R.id.lvGasolineras);
+        list.setAdapter(adapter);
+    }
+
+    @Override
+    public void showGasolinerasAdvanced(List<Gasolinera> shownGasolineras,
+                                        CombustibleType combustibleDestacado, boolean
+                                        summary) {
+        GasolinerasArrayAdapter adapter;
+        switch (combustibleDestacado) {
+            case GASOLINA:
+                adapter = new GasolinerasArrayAdapter(this, shownGasolineras,
+                        getResources().getString(R.string.gasolina95label), summary);
+                break;
+            case DIESEL:
+                adapter = new GasolinerasArrayAdapter(this, shownGasolineras,
+                        getResources().getString(R.string.dieselAlabel), summary);
+                break;
+            default:
+                adapter = new GasolinerasArrayAdapter(this, shownGasolineras, summary);
+                break;
+        }
+
+        // Actualiza la lista
         ListView list = findViewById(R.id.lvGasolineras);
         list.setAdapter(adapter);
     }
@@ -217,18 +267,54 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         MultipleSpinner spinnerMarcas = dialogFilter.findViewById(R.id.spnMarca);
         initializeSpinnerMarcas(spinnerMarcas);
 
+        // Inicializacion checkbox
+        CheckBox chckLowcost = dialogFilter.findViewById(R.id.chckLowcost);
+
+        // Recupera la seleccion previa a cerrar la ventana
+        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                Context.MODE_PRIVATE);
+        boolean savedCheckValue = filterPref.getBoolean(getString(R.string.saved_lowcost_sele), false);
+        chckLowcost.setChecked(savedCheckValue);
+
+        // Listener para boton de informacion
+        ImageButton btnInfo = dialogFilter.findViewById(R.id.btnInfo);
+        btnInfo.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setPositiveButton(getResources().getString(R.string.accept),
+                    ((DialogInterface dialogInterface, int i) -> dialogInterface.cancel()));
+            builder.setTitle(getResources().getString(R.string.marcasLowcost));
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(getResources().getString(R.string.instLowcost));
+            sb.append("\n\n");
+
+            for (String s:getResources().getStringArray(R.array.lowcost_array)) {
+                sb.append("-> ");
+                sb.append(s);
+                sb.append("\n");
+            }
+            builder.setMessage(sb.toString());
+            AlertDialog ad = builder.create();
+            ad.show();
+        });
+
         // Listener para aplicar
         tvAplicar.setOnClickListener(view -> {
+            // Obtener estado del checkbox para gasolineras lowcost
+            boolean mostrarSoloLowcost = chckLowcost.isChecked();
 
             // Guardar en el atributo las marcas seleccionadas
             checkedBrandBoxes = spinnerMarcas.getSelectedStrings();
 
             // Actualizar lista
             int itemPositionComb = spinnerCombustible.getSelectedItemPosition();
-            updateList(itemPositionComb, checkedBrandBoxes);
+            updateList(itemPositionComb, checkedBrandBoxes, mostrarSoloLowcost);
 
             // Guardar el filtro por tipo de combustible
             saveIntPrefFilter(getString(R.string.saved_comb_type_filter), itemPositionComb);
+
+            // Guardar la seleccion de filtrado lowcost
+            saveBoolPrefFilter(getString(R.string.saved_lowcost_sele), mostrarSoloLowcost);
 
             dialogFilter.dismiss();
         });
@@ -238,6 +324,59 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
 
         // Mostrar ventana de filtro
         dialogFilter.show();
+    }
+
+    @Override
+    public void openOrderByPrice() {
+
+        Dialog dialogOrder = new Dialog(MainView.this);
+
+        // Deshabilitar titulo (ya asignado en layout)
+        dialogOrder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogOrder.setContentView(R.layout.activity_order_by_precio);
+
+        // Inicializar elementos
+        TextView tvCancelar = dialogOrder.findViewById(R.id.tvCancel);
+        TextView tvAplicar = dialogOrder.findViewById(R.id.tvApply);
+
+        // Inicializacion spinner tipo combustible
+        Spinner spinnerPrice = dialogOrder.findViewById(R.id.spnTipoPrecio);
+        initialiseSpinnerPrice(spinnerPrice, dialogOrder);
+
+        // Inicializacion spinner marcas
+        Spinner spinnerOrderType = dialogOrder.findViewById(R.id.spnTipoOrdenacion);
+        initialiseSpinnerOrder(spinnerOrderType, dialogOrder);
+
+        // Listener para aplicar
+        tvAplicar.setOnClickListener(view -> {
+
+            // Guardar en el atributo el precio y el orden seleccionados
+            int price = spinnerPrice.getSelectedItemPosition();
+            int order = spinnerOrderType.getSelectedItemPosition();
+
+            // Recupera la seleccion previa a cerrar la ventana
+            SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                    Context.MODE_PRIVATE);
+
+            int savedFilter = filterPref.getInt(getString(R.string.saved_comb_type_filter), 0);
+
+            // Actualizar lista
+            int itemPositionPrice = spinnerPrice.getSelectedItemPosition();
+            int itemPositionOrder = spinnerOrderType.getSelectedItemPosition();
+
+            // Saves selected price and order
+            saveIntPrefFilter(getString(R.string.saved_price_type_order), itemPositionPrice);
+            saveIntPrefFilter(getString(R.string.saved_price_order), itemPositionOrder);
+
+            updateListPrice(price, order, savedFilter);
+
+            dialogOrder.dismiss();
+        });
+
+        // Listener para cancelar
+        tvCancelar.setOnClickListener(view -> dialogOrder.dismiss());
+
+        dialogOrder.show();
     }
 
     /**
@@ -262,6 +401,48 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
     }
 
     /**
+     * Inicializa el spinner para seleccionar el precio por el que ordenar.
+     *
+     * @param spinnerPrice Spinner.
+     * @param dialogFilter Cuadro de dialogo a utilizar.
+     */
+    private void initialiseSpinnerPrice(Spinner spinnerPrice, Dialog dialogFilter) {
+        // ArrayAdapter con los tipos de combustibles
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(
+                dialogFilter.getContext(), R.array.price_type_order_array,
+                android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        spinnerPrice.setAdapter(arrayAdapter);
+
+        // Recupera la seleccion previa a cerrar la ventana
+        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                Context.MODE_PRIVATE);
+        int savedPriceValue = filterPref.getInt(getString(R.string.saved_price_type_order), 0);
+        spinnerPrice.setSelection(savedPriceValue);
+    }
+
+    /**
+     * Inicializa el spinner para seleccionar el orden a aplicar.
+     *
+     * @param spinnerOrder Spinner.
+     * @param dialogFilter Cuadro de dialogo a utilizar.
+     */
+    private void initialiseSpinnerOrder(Spinner spinnerOrder, Dialog dialogFilter) {
+        // ArrayAdapter con los tipos de combustibles
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(
+                dialogFilter.getContext(), R.array.price_order_array,
+                android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        spinnerOrder.setAdapter(arrayAdapter);
+
+        // Recupera la seleccion previa a cerrar la ventana
+        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                Context.MODE_PRIVATE);
+        int savedOrderValue = filterPref.getInt(getString(R.string.saved_price_order), 0);
+        spinnerOrder.setSelection(savedOrderValue);
+    }
+
+    /**
      * Inicializa el spinner del filtro por marcas.
      * @param spinnerMarcas Spinner con las opciones de marcas.
      */
@@ -276,34 +457,38 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
      *
      * @param itemPositionComb Posicion marcada en el filtro por tipo de combustible.
      * @param marcasSeleccionadas Gasolineras marcadas para ser mostradas en el filtro por marcas.
+     * @param lowcost Booleano que indica si solo se deben mostrar gasolineras lowcost (true).
      */
-    private void updateList(int itemPositionComb, List<String> marcasSeleccionadas) {
+    private void updateList(int itemPositionComb, List<String> marcasSeleccionadas, boolean lowcost) {
         // Convierte la posicion a un tipo de combustible, para mayor claridad
         CombustibleType combustibleSeleccionado = CombustibleType.getCombTypeFromInt(
                 itemPositionComb);
 
         // Solicita al presenter que realice el filtrado y actualice las gasolineras a mostrar
-        presenter.filter(combustibleSeleccionado, marcasSeleccionadas);
+        presenter.filter(combustibleSeleccionado, marcasSeleccionadas, lowcost);
+    }
 
-        // Prepara ArrayAdapter para la lista a mostrar
-        GasolinerasArrayAdapter adapter;
-        switch (combustibleSeleccionado) {
-            case GASOLINA:
-                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
-                        getResources().getString(R.string.gasolina95label));
-                break;
-            case DIESEL:
-                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras(),
-                        getResources().getString(R.string.dieselAlabel));
-                break;
-            default:
-                adapter = new GasolinerasArrayAdapter(this, presenter.getShownGasolineras());
-                break;
-        }
+    /**
+     * Actualizar orden de la lista al ordenar por precio.
+     *
+     * @param price Tipo precio
+     * @param order Tipo orden
+     * @param savedFilter Filtro
+     */
+    private void updateListPrice(int price, int order, int savedFilter)
+    {
+        // Converts position to diesel / 95-octanes / summary price
+        PriceFilterType selectedPriceType = PriceFilterType.getPriceFilterType(price);
 
-        // Actualiza la lista
-        ListView list = findViewById(R.id.lvGasolineras);
-        list.setAdapter(adapter);
+        // Converts position to order (ascending / descending)
+        PriceOrderType selectedOrderType = PriceOrderType.getPriceOrder(order);
+
+        // Requests presenter to order the list and to update the shown gas stations
+        presenter.orderByPrice(selectedOrderType, selectedPriceType);
+
+        String filterStr = CombustibleType.getCombStringFromInt(savedFilter - 1);
+
+        presenter.prepareUpdate(selectedPriceType, filterStr);
     }
 
     /**
@@ -320,6 +505,23 @@ public class MainView extends AppCompatActivity implements IMainContract.View {
         // Guarda el valor
         SharedPreferences.Editor editor = filterPref.edit();
         editor.putInt(key, value);
+        editor.apply();
+    }
+
+    /**
+     * Guarda un booleano relacionado con los filtros.
+     *
+     * @param key Clave para realizar la persistencia.
+     * @param value Valor booleano a guardar.
+     */
+    private void saveBoolPrefFilter(String key, boolean value) {
+        // Obtiene Preference de los filtros
+        SharedPreferences filterPref = this.getSharedPreferences(getString(R.string.preference_filter_file_key_),
+                Context.MODE_PRIVATE);
+
+        // Guarda el valor
+        SharedPreferences.Editor editor = filterPref.edit();
+        editor.putBoolean(key, value);
         editor.apply();
     }
 

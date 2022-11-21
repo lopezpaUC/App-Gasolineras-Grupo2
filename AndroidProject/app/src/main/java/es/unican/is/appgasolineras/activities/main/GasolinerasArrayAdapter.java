@@ -18,20 +18,66 @@ import java.util.List;
 import java.util.Locale;
 
 import es.unican.is.appgasolineras.R;
+import es.unican.is.appgasolineras.common.utils.PriceUtilities;
 import es.unican.is.appgasolineras.model.Gasolinera;
 
+/**
+ * Array Adapter para el listado de gasolineras principal de la aplicacion.
+ *
+ * @author Grupo 02-CarbuRed
+ * @version 1.0
+ */
 public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
-    private String precioDestacar;
+    private final PriceUtilities utilities;
+    private final String precioDestacar;
 
+    private boolean summaryPrice;
+
+    /**
+     * Construye un adapter basico por defecto.
+     *
+     * @param context Contexto.
+     * @param objects Lista de gasolineras.
+     */
     public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects) {
         super(context, 0, objects);
         precioDestacar = null;
+
+        utilities = new PriceUtilities();
     }
 
+    /**
+     * Construye un adapter con un precio destacado.
+     *
+     * @param context Contexto.
+     * @param objects Lista de gasolineras.
+     * @param precioDestacar Precio a destacar.
+     */
     public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects,
                                    String precioDestacar) {
         super(context, 0, objects);
         this.precioDestacar = precioDestacar;
+        summaryPrice = false;
+
+        utilities = new PriceUtilities();
+    }
+
+    public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects,
+                                   String precioDestacar, boolean summaryPrice) {
+            super(context, 0, objects);
+            this.precioDestacar = precioDestacar;
+            this.summaryPrice = summaryPrice;
+            utilities = new PriceUtilities();
+    }
+
+
+    public GasolinerasArrayAdapter(@NonNull Context context, @NonNull List<Gasolinera> objects,
+                                   boolean summaryPrice) {
+        super(context, 0, objects);
+        precioDestacar = null;
+        this.summaryPrice = summaryPrice;
+
+        utilities = new PriceUtilities();
     }
 
     @NonNull
@@ -51,17 +97,28 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         name(gasolinera, convertView);
 
         // address
-        adress(gasolinera, convertView);
+        address(gasolinera, convertView);
 
         // 95 octanes price
-        prizeNintyFive(gasolinera, convertView);
+        priceNinetyFive(gasolinera, convertView);
 
         // diesel A price
-        prizeDiesel(gasolinera, convertView);
+        priceDiesel(gasolinera, convertView);
+
+        if (summaryPrice) {
+            // Summary price
+            summaryPrice(gasolinera, convertView);
+        }
 
         return convertView;
     }
 
+    /**
+     * Establece el logo.
+     *
+     * @param gasolinera Gasolinera.
+     * @param convertView View.
+     */
     private void logo(Gasolinera gasolinera, View convertView) {
         String rotulo = gasolinera.getRotulo().toLowerCase();
 
@@ -82,17 +139,35 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
         }
     }
 
+    /**
+     * Establece el nombre/rotulo.
+     *
+     * @param gasolinera Gasolinera.
+     * @param convertView View.
+     */
     private void name(Gasolinera gasolinera, View convertView){
         TextView tv = convertView.findViewById(R.id.tvName);
         tv.setText(gasolinera.getRotulo());
     }
 
-    private void adress(Gasolinera gasolinera, View convertView){
+    /**
+     * Establece la direccion.
+     *
+     * @param gasolinera Gasolinera.
+     * @param convertView View.
+     */
+    private void address(Gasolinera gasolinera, View convertView){
         TextView tv = convertView.findViewById(R.id.tvAddress);
         tv.setText(gasolinera.getDireccion());
     }
 
-    private void prizeNintyFive(Gasolinera gasolinera, View convertView){
+    /**
+     * Establece precio Gasolina 95.
+     *
+     * @param gasolinera Gasolinera.
+     * @param convertView View.
+     */
+    private void priceNinetyFive(Gasolinera gasolinera, View convertView){
         TextView tvLabel = convertView.findViewById(R.id.tv95Label);
         String label = getContext().getResources().getString(R.string.gasolina95label);
         tvLabel.setText(label + ":");
@@ -124,9 +199,22 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
             tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.BOLD);
             tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
         }
+
+        // Hides summary price
+        TextView summaryLabelTv = convertView.findViewById(R.id.tvSummaryLabel);
+        TextView summaryTv = convertView.findViewById(R.id.tvSummary);
+
+        summaryLabelTv.setVisibility(View.INVISIBLE);
+        summaryTv.setVisibility(View.INVISIBLE);
     }
 
-    private void prizeDiesel(Gasolinera gasolinera, View convertView){
+    /**
+     * Establece precio Diesel.
+     *
+     * @param gasolinera Gasolinera.
+     * @param convertView View.
+     */
+    private void priceDiesel(Gasolinera gasolinera, View convertView){
         TextView tvLabel = convertView.findViewById(R.id.tvDieselALabel);
         String label = getContext().getResources().getString(R.string.dieselAlabel);
         tvLabel.setText(label + ":");
@@ -158,5 +246,72 @@ public class GasolinerasArrayAdapter extends ArrayAdapter<Gasolinera> {
             tvLabel.setTypeface(tvLabel.getTypeface(), Typeface.BOLD);
             tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
         }
+
+        // Hides summary price
+        TextView summaryLabelTv = convertView.findViewById(R.id.tvSummaryLabel);
+        TextView summaryTv = convertView.findViewById(R.id.tvSummary);
+
+        summaryLabelTv.setVisibility(View.INVISIBLE);
+        summaryTv.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * Establece precio Sumario.
+     *
+     * @param gasolinera Gasolinera.
+     * @param convertView View.
+     */
+    private void summaryPrice(Gasolinera gasolinera, View convertView) {
+        TextView tvLabel = convertView.findViewById(R.id.tvSummaryLabel);
+        String label = getContext().getResources().getString(R.string.sumPrice);
+        tvLabel.setText(label + ":");
+
+        TextView tv = convertView.findViewById(R.id.tvSummary);
+        Double precioDouble = -1.0;
+        String precioString = "-";
+
+        String summaryStr = "-";
+
+        // Converts price to double
+        NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
+
+        try {
+            double diesel = format.parse(gasolinera.getDieselA()).doubleValue();
+            double unleaded95 = format.parse(gasolinera.getNormal95()).doubleValue();
+            double summary = utilities.calculateSummary(diesel, unleaded95);
+            summaryStr = utilities.precioSumarioTo3Str(summary);
+            Number number = format.parse(summaryStr);
+            precioDouble = number.doubleValue();
+        } catch (Exception e) {
+            precioString = "-";
+        }
+
+        // Checks if the price is valid
+        if (precioDouble < 0.0) {
+            tv.setText(precioString);
+        } else {
+            precioString = summaryStr;
+        }
+
+        tv.setText(precioString);
+
+        if (precioDestacar != null && precioDestacar.equals(getContext().getResources().
+                getString(R.string.gasolina95label))) {
+
+            TextView tv95Label = convertView.findViewById(R.id.tv95Label);
+            TextView tv95 = convertView.findViewById(R.id.tv95);
+            tv95Label.setTypeface(tv95Label.getTypeface(), Typeface.BOLD);
+            tv95.setTypeface(tv95.getTypeface(), Typeface.BOLD);
+        } else if (precioDestacar != null && precioDestacar.equals(getContext().getResources().
+                getString(R.string.dieselAlabel))) {
+            TextView tvDieselLabel = convertView.findViewById(R.id.tvDieselALabel);
+            TextView tvDiesel = convertView.findViewById(R.id.tvDieselA);
+            tvDieselLabel.setTypeface(tvDieselLabel.getTypeface(), Typeface.BOLD);
+            tvDiesel.setTypeface(tvDiesel.getTypeface(), Typeface.BOLD);
+        }
+
+        // Shows summary price
+        tvLabel.setVisibility(View.VISIBLE);
+        tv.setVisibility(View.VISIBLE);
     }
 }

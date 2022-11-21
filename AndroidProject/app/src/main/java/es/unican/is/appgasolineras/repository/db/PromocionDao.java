@@ -6,7 +6,7 @@ import androidx.room.Query;
 
 import java.util.List;
 
-import es.unican.is.appgasolineras.model.GasolineraPromocionCrossRef;
+import es.unican.is.appgasolineras.model.CrossRefs.GasolineraPromocionCrossRef;
 import es.unican.is.appgasolineras.model.Promocion;
 
 /**

@@ -16,7 +16,8 @@ import retrofit2.Response;
  */
 class CallRunnable<T> implements Runnable {
     private final Call<T> call;
-    public T response = null;
+
+    private T response = null;
 
     CallRunnable(Call<T> call) {
         this.call = call;
@@ -25,10 +26,20 @@ class CallRunnable<T> implements Runnable {
     @Override
     public void run() {
         try {
+
             Response<T> callResponse = call.execute();
-            this.response = callResponse.body();
+            T r = callResponse.body();
+            setResponse(r);
         } catch (IOException e) {
             Log.i("control", "printStackTrace", e);
         }
+    }
+
+    public T getResponse() {
+        return response;
+    }
+
+    public void setResponse(T response) {
+        this.response = response;
     }
 }

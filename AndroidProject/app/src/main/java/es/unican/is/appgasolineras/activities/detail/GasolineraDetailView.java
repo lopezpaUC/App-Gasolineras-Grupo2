@@ -15,6 +15,7 @@ import java.util.Map;
 
 import es.unican.is.appgasolineras.R;
 import es.unican.is.appgasolineras.activities.main.MainView;
+import es.unican.is.appgasolineras.repository.GasolinerasRepository;
 import es.unican.is.appgasolineras.repository.PromocionesRepository;
 
 /**
@@ -96,9 +97,6 @@ public class GasolineraDetailView extends AppCompatActivity
             label = "generic";
         }
         ivRotulo.setImageResource(loadLogoID(label));
-
-        // Shows info with discounts
-        applyDiscount();
     }
 
     @Override
@@ -126,6 +124,33 @@ public class GasolineraDetailView extends AppCompatActivity
         startActivity(intent);
     }
 
+    @Override
+    public void loadDiscount(String discountedSummaryPrice, String discountedDieselPrice,
+                             String discounted95OctanesPrice) {
+
+        comparePrices(discountedSummaryPrice + PRICE_UNITS, tvPrecioSumarioDet,
+                tvDiscountedPrecioSumarioDet);
+        comparePrices(discounted95OctanesPrice + PRICE_UNITS, tv95PrecioDet,
+                tvDiscounted95Price);
+        comparePrices(discountedDieselPrice + PRICE_UNITS, tvDieselAPrecioDet,
+                tvDiscountedDieselPrice);
+    }
+
+    @Override
+    public Context getContext() {
+        return super.getApplicationContext();
+    }
+
+    @Override
+    public PromocionesRepository getPromocionesRepository() {
+        return new PromocionesRepository(this);
+    }
+
+    @Override
+    public GasolinerasRepository getGasolinerasRepository() {
+        return new GasolinerasRepository(this);
+    }
+
     /**
      * Obtiene el identificiador del logo a cargar adecuado, en funcion del rotulo de la gasolinera
      * indicado.
@@ -149,20 +174,12 @@ public class GasolineraDetailView extends AppCompatActivity
         return imageID;
     }
 
-    private void applyDiscount() {
-        String discountedDieselPrice;
-        String discounted95OctanesPrice;
-        String discountedSummaryPrice;
-
-        discountedSummaryPrice = presenter.getDiscountedSummaryPriceStr() + PRICE_UNITS;
-        discounted95OctanesPrice = presenter.getDiscounted95OctanesPriceStr() + PRICE_UNITS;
-        discountedDieselPrice = presenter.getDiscountedDieselPriceStr() + PRICE_UNITS;
-
-        comparePrices(discountedSummaryPrice, tvPrecioSumarioDet, tvDiscountedPrecioSumarioDet);
-        comparePrices(discounted95OctanesPrice, tv95PrecioDet, tvDiscounted95Price);
-        comparePrices(discountedDieselPrice, tvDieselAPrecioDet, tvDiscountedDieselPrice);
-    }
-
+    /**
+     * Tacha precio original y muestra el descuento si existe.
+     * @param discountedPrice Precio con descuento.
+     * @param tvOriginalPrice TextView con el precio original.
+     * @param tvDiscountedPrice TextView con el precio con descuento.
+     */
     private void comparePrices(String discountedPrice, TextView tvOriginalPrice, TextView tvDiscountedPrice) {
         if (!discountedPrice.equals(tvOriginalPrice.getText().toString())) {
 
@@ -172,15 +189,5 @@ public class GasolineraDetailView extends AppCompatActivity
             // Sets discountedPrice
             tvDiscountedPrice.setText(discountedPrice);
         }
-    }
-
-    @Override
-    public Context getContext() {
-        return super.getApplicationContext();
-    }
-
-    @Override
-    public PromocionesRepository getPromocionesRepository() {
-        return new PromocionesRepository(this);
     }
 }
